@@ -13,8 +13,10 @@ int main(int argc, char *argv[])
 
     SDL_Texture *texture = SDL_CreateTexture(window.renderer, SDL_PIXELFORMAT_RGBX8888, SDL_TEXTUREACCESS_STREAMING, window.width, window.height);
 
-    bool running = true;
+    const Uint64 PerfCountFrequency = SDL_GetPerformanceFrequency();
+    Uint64       LastCounter        = SDL_GetPerformanceCounter();
 
+    bool running = true;
     while (running)
     {
         SDL_Event event;
@@ -27,42 +29,53 @@ int main(int argc, char *argv[])
             }
         }
 
-        Uint32 *pixels = NULL;
-        int     pitch  = 0;
-        { // LOCK
-            if (SDL_LockTexture(texture, NULL, &(void *)pixels, &pitch) < 0)
-            {
-                fprintf(stderr, "Couldn't lock texture: %s\n", SDL_GetError());
+        // Uint32 *pixels = NULL;
+        // int     pitch  = 0;
+        //{ // LOCK
+        //     if (SDL_LockTexture(texture, NULL, &(void *)pixels, &pitch) < 0)
+        //     {
+        //         fprintf(stderr, "Couldn't lock texture: %s\n", SDL_GetError());
 
-                running = false;
-                break;
-            }
+        //        running = false;
+        //        break;
+        //    }
 
-            // clear to black background
-            SDL_memset((void *)pixels, 0, pitch * window.height);
+        //    // clear to black background
+        //    SDL_memset((void *)pixels, 0, pitch * window.height);
 
-            // splat down some random pixels
-            for (unsigned int i = 0; i < 1000; i++)
-            {
-                const unsigned int x = rand() % window.width;
-                const unsigned int y = rand() % window.height;
+        //    // splat down some random pixels
+        //    for (unsigned int i = 0; i < 1000; i++)
+        //    {
+        //        const unsigned int x = rand() % window.width;
+        //        const unsigned int y = rand() % window.height;
 
-                const Uint8 blue  = 000;              // b
-                const Uint8 green = 255;              // g
-                const Uint8 red   = 000;              // r
-                const Uint8 alpha = SDL_ALPHA_OPAQUE; // a
+        //        const Uint8 blue  = 000;              // b
+        //        const Uint8 green = 255;              // g
+        //        const Uint8 red   = 000;              // r
+        //        const Uint8 alpha = SDL_ALPHA_OPAQUE; // a
 
-                // Uint32 *pixel = (Uint32 *)((Uint8 *)pixels + y * pitch);
-                const int index = (int)y * window.width + (int)x;
+        //        // Uint32 *pixel = (Uint32 *)((Uint8 *)pixels + y * pitch);
+        //        const int index = (int)y * window.width + (int)x;
 
-                pixels[index] = (Uint32)((alpha << 24) + (blue << 16) + (green << 8) + (red << 0)); // 0xAABBGGRR
-            }
-        }
-        SDL_UnlockTexture(texture);
+        //        pixels[index] = (Uint32)((alpha << 24) + (blue << 16) + (green << 8) + (red << 0)); // 0xAABBGGRR
+        //    }
+        //}
+        // SDL_UnlockTexture(texture);
 
         // Copy to window
         SDL_RenderCopy(window.renderer, texture, NULL, NULL);
         SDL_RenderPresent(window.renderer);
+
+        // End frame timing
+        Uint64 EndCounter     = SDL_GetPerformanceCounter();
+        Uint64 CounterElapsed = EndCounter - LastCounter;
+
+        const double MSPerFrame = (((1000.0f * (double)CounterElapsed) / (double)PerfCountFrequency));
+        const double FPS        = (double)PerfCountFrequency / (double)CounterElapsed;
+
+        fprintf(stdout, "%8.02f ms/f \t%8.02f f/s\n", MSPerFrame, FPS);
+
+        LastCounter = EndCounter;
     }
 
     return 0;
