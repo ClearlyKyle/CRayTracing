@@ -1,6 +1,6 @@
-#include "Window.h"
+#include "App.h"
 
-Window_t SDL_Startup(const int width, const int height, const char *title)
+Application_t SDL_Startup(const int width, const int height, const char *title)
 {
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -9,7 +9,7 @@ Window_t SDL_Startup(const int width, const int height, const char *title)
         exit(1);
     }
 
-    Window_t window;
+    Application_t window;
     window.window = SDL_CreateWindow(
         title,
         SDL_WINDOWPOS_UNDEFINED,
@@ -44,7 +44,7 @@ Window_t SDL_Startup(const int width, const int height, const char *title)
     return window;
 }
 
-void SDL_Exit(Window_t *window)
+void SDL_Exit(Application_t *window)
 {
     SDL_DestroyRenderer(window->renderer);
     SDL_DestroyWindow(window->window);

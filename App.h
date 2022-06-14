@@ -3,7 +3,7 @@
 
 #include "SDL2/SDL.h"
 
-typedef struct Window_s
+typedef struct Application_s
 {
     SDL_Window   *window;
     SDL_Renderer *renderer;
@@ -12,9 +12,9 @@ typedef struct Window_s
     unsigned int height;
 
     double frame_time, last_frame_time; // ms
-} Window_t;
+} Application_t;
 
-Window_t SDL_Startup(const int width, const int height, const char *title);
-void     SDL_Exit(Window_t *window);
+Application_t SDL_Startup(const int width, const int height, const char *title);
+void          SDL_Exit(Application_t *window);
 
 #endif // __WINDOW_H__
