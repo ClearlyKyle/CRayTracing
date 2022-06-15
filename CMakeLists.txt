@@ -7,7 +7,7 @@ set(CMAKE_C_STANDARD_REQUIRED TRUE)
 
 find_package(SDL2 CONFIG REQUIRED)
 
-add_executable(${CMAKE_PROJECT_NAME} main.c Window.c Window.h)
+add_executable(${CMAKE_PROJECT_NAME} main.c App.c App.h Image.h Image.c)
 
 # SDL2::SDL2main needs to come first to compile with GCC 10.3.0
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE SDL2::SDL2main SDL2::SDL2)
