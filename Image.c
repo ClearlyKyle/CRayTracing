@@ -1,21 +1,8 @@
 #include "Image.h"
 
-struct Image_s
+static void Image_Init_Texture(Image_t *image)
 {
-    double *r_channel;
-    double *g_channel;
-    double *b_channel;
-
-    unsigned int x_size;
-    unsigned int y_size;
-
-    SDL_Renderer *renderer;
-    SDL_Texture  *texture;
-};
-
-static void Image_Init_Texture(const Image_t *image)
-{
-    // Initialise the texture.
+    // Initialise the texture
     Uint32 rmask, gmask, bmask, amask;
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
@@ -30,34 +17,101 @@ static void Image_Init_Texture(const Image_t *image)
     amask               = 0xff000000;
 #endif
 
-    // Delete any previously created texture before we create a new one.
-    if (image.texture != NULL)
+    // Delete any previously created texture before we create a new one
+    if (image->texture != NULL)
     {
-        SDL_DestroyTexture(m_pTexture);
+        SDL_DestroyTexture(image->texture);
     }
 
     // TODO : Check this..
-    SDL_Surface *tempSurface = SDL_CreateRGBSurface(0, m_xSize, m_ySize, 32, rmask, gmask, bmask, amask);
-    image.texture            = SDL_CreateTextureFromSurface(m_pRenderer, tempSurface);
-    SDL_FreeSurface(tempSurface);
+    // SDL_Surface *tmp_surface = SDL_CreateRGBSurface(0, image->x_size, image->y_size, 32, rmask, gmask, bmask, amask);
+    // if (tmp_surface == NULL)
+    //{
+    //    fprintf(stderr, "SDL_CreateRGBSurface() failed: %s", SDL_GetError());
+    //    // Image_Free(image);
+    //    exit(1);
+    //}
+    fprintf(stderr, "SDL_CreateRGBSurfaceWithFormat() failed: %s", SDL_GetError());
+
+    SDL_Surface *tmp_surface;
+    tmp_surface = SDL_CreateRGBSurfaceWithFormat(0, image->x_size, image->y_size, 32, SDL_PIXELFORMAT_ABGR8888);
+    if (tmp_surface == NULL)
+    {
+        fprintf(stderr, "SDL_CreateRGBSurfaceWithFormat() failed: %s", SDL_GetError());
+        exit(1);
+    }
+    image->texture = SDL_CreateTextureFromSurface(image->renderer, tmp_surface);
+    SDL_FreeSurface(tmp_surface);
 }
 
 Image_t Image_Initialize(const int x_size, const int y_size, SDL_Renderer *renderer)
 {
     Image_t image;
 
-    image.red    = (double *)malloc(sizeof(double) * y_size);
-    image.greeen = (double *)malloc(sizeof(double) * y_size);
-    image.blue   = (double *)malloc(sizeof(double) * y_size);
+    image.r = (double *)calloc(y_size * x_size, sizeof(double));
+    image.g = (double *)calloc(y_size * x_size, sizeof(double));
+    image.b = (double *)calloc(y_size * x_size, sizeof(double));
 
     image.x_size = x_size;
     image.y_size = y_size;
 
     image.renderer = renderer;
 
-    Image_Init_Texture(&image);
+    SDL_Surface *tmp_surface;
+    tmp_surface = SDL_CreateRGBSurfaceWithFormat(0, image.x_size, image.y_size, 32, SDL_PIXELFORMAT_ABGR8888);
+    if (tmp_surface == NULL)
+    {
+        fprintf(stderr, "SDL_CreateRGBSurfaceWithFormat() failed: %s", SDL_GetError());
+        exit(1);
+    }
+    image.texture = SDL_CreateTextureFromSurface(image.renderer, tmp_surface);
+    SDL_FreeSurface(tmp_surface);
 
     return image;
+}
+
+void Image_SetPixel(Image_t *image, const int x, const int y, const double red, const double green, const double blue)
+{
+    const int index = y * image->x_size + x;
+
+    image->r[index] = red;
+    image->g[index] = green;
+    image->b[index] = blue;
+}
+
+void Image_Display(const Image_t *const image)
+{
+    // Allocate memory for a pixel buffer
+    Uint32 *tmp_pixels = (Uint32 *)malloc(sizeof(Uint32) * (image->x_size * image->y_size));
+
+    // Clear the pixel buffer
+    memset(tmp_pixels, 0, sizeof(Uint32) * (image->x_size * image->y_size));
+
+    for (unsigned x = 0; x < image->x_size; ++x)
+    {
+        for (unsigned y = 0; y < image->y_size; ++y)
+        {
+            const unsigned index = y * image->x_size + x;
+
+            tmp_pixels[(y * image->x_size) + x] = ConvertColor(image->r[index], image->g[index], image->b[index]);
+        }
+    }
+
+    // Update the texture with the pixel buffer
+    SDL_UpdateTexture(image->texture, NULL, tmp_pixels, image->x_size * sizeof(Uint32));
+
+    // Destroy the pixel buffer.
+    free(tmp_pixels);
+    tmp_pixels = NULL;
+
+    // Copy the texture to the renderer.
+    SDL_Rect srcRect, bounds;
+    srcRect.x = 0;
+    srcRect.y = 0;
+    srcRect.w = 800;
+    srcRect.h = 800;
+    bounds    = srcRect;
+    SDL_RenderCopy(image->renderer, image->texture, &srcRect, &bounds);
 }
 
 Uint32 ConvertColor(const double red, const double green, const double blue)
@@ -73,4 +127,20 @@ Uint32 ConvertColor(const double red, const double green, const double blue)
 #endif
 
     return colour;
+}
+
+void Image_Free(Image_t *image)
+{
+    free(image->r);
+    free(image->g);
+    free(image->b);
+
+    SDL_DestroyTexture(image->texture);
+
+    image->r       = NULL;
+    image->g       = NULL;
+    image->b       = NULL;
+    image->texture = NULL;
+
+    image = NULL;
 }
