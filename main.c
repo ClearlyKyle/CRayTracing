@@ -5,16 +5,32 @@
 #include <stdbool.h>
 #include <time.h>
 
-#include "Window.h"
+#include "App.h"
+#include "Image.h"
 
 int main(int argc, char *argv[])
 {
-    Window_t window = SDL_Startup(800, 800, "Window Title something...");
+    Application_t app = SDL_Startup(800, 800, "Window Title something...");
 
-    SDL_Texture *texture = SDL_CreateTexture(window.renderer, SDL_PIXELFORMAT_RGBX8888, SDL_TEXTUREACCESS_STREAMING, window.width, window.height);
+    SDL_Texture *texture = SDL_CreateTexture(app.renderer, SDL_PIXELFORMAT_RGBX8888, SDL_TEXTUREACCESS_STREAMING, app.width, app.height);
 
     const Uint64 PerfCountFrequency = SDL_GetPerformanceFrequency();
     Uint64       LastCounter        = SDL_GetPerformanceCounter();
+
+    // Initialise image
+    Image_t image = Image_Initialize(800, 800, app.renderer);
+
+    // Create some colour variations
+    for (int x = 0; x < 800; x++)
+    {
+        for (int y = 0; y < 800; y++)
+        {
+            const double red   = ((double)x / 800.0) * 255.0;
+            const double green = ((double)y / 800.0) * 255.0;
+
+            Image_SetPixel(&image, x, y, red, green, 0.0);
+        }
+    }
 
     bool running = true;
     while (running)
@@ -29,6 +45,12 @@ int main(int argc, char *argv[])
             }
         }
 
+        // Background colour to white
+        SDL_SetRenderDrawColor(app.renderer, 255, 255, 255, 255);
+        SDL_RenderClear(app.renderer);
+
+        // On Render
+        Image_Display(&image);
         // Uint32 *pixels = NULL;
         // int     pitch  = 0;
         //{ // LOCK
@@ -41,13 +63,13 @@ int main(int argc, char *argv[])
         //    }
 
         //    // clear to black background
-        //    SDL_memset((void *)pixels, 0, pitch * window.height);
+        //    SDL_memset((void *)pixels, 0, pitch * app.height);
 
         //    // splat down some random pixels
         //    for (unsigned int i = 0; i < 1000; i++)
         //    {
-        //        const unsigned int x = rand() % window.width;
-        //        const unsigned int y = rand() % window.height;
+        //        const unsigned int x = rand() % app.width;
+        //        const unsigned int y = rand() % app.height;
 
         //        const Uint8 blue  = 000;              // b
         //        const Uint8 green = 255;              // g
@@ -55,7 +77,7 @@ int main(int argc, char *argv[])
         //        const Uint8 alpha = SDL_ALPHA_OPAQUE; // a
 
         //        // Uint32 *pixel = (Uint32 *)((Uint8 *)pixels + y * pitch);
-        //        const int index = (int)y * window.width + (int)x;
+        //        const int index = (int)y * app.width + (int)x;
 
         //        pixels[index] = (Uint32)((alpha << 24) + (blue << 16) + (green << 8) + (red << 0)); // 0xAABBGGRR
         //    }
@@ -63,8 +85,10 @@ int main(int argc, char *argv[])
         // SDL_UnlockTexture(texture);
 
         // Copy to window
-        SDL_RenderCopy(window.renderer, texture, NULL, NULL);
-        SDL_RenderPresent(window.renderer);
+        // SDL_RenderCopy(app.renderer, texture, NULL, NULL);
+
+        // Show results...
+        SDL_RenderPresent(app.renderer);
 
         // End frame timing
         Uint64 EndCounter     = SDL_GetPerformanceCounter();
