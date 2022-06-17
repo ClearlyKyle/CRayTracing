@@ -51,41 +51,6 @@ int main(int argc, char *argv[])
 
         // On Render
         Image_Display(&image);
-        // Uint32 *pixels = NULL;
-        // int     pitch  = 0;
-        //{ // LOCK
-        //     if (SDL_LockTexture(texture, NULL, &(void *)pixels, &pitch) < 0)
-        //     {
-        //         fprintf(stderr, "Couldn't lock texture: %s\n", SDL_GetError());
-
-        //        running = false;
-        //        break;
-        //    }
-
-        //    // clear to black background
-        //    SDL_memset((void *)pixels, 0, pitch * app.height);
-
-        //    // splat down some random pixels
-        //    for (unsigned int i = 0; i < 1000; i++)
-        //    {
-        //        const unsigned int x = rand() % app.width;
-        //        const unsigned int y = rand() % app.height;
-
-        //        const Uint8 blue  = 000;              // b
-        //        const Uint8 green = 255;              // g
-        //        const Uint8 red   = 000;              // r
-        //        const Uint8 alpha = SDL_ALPHA_OPAQUE; // a
-
-        //        // Uint32 *pixel = (Uint32 *)((Uint8 *)pixels + y * pitch);
-        //        const int index = (int)y * app.width + (int)x;
-
-        //        pixels[index] = (Uint32)((alpha << 24) + (blue << 16) + (green << 8) + (red << 0)); // 0xAABBGGRR
-        //    }
-        //}
-        // SDL_UnlockTexture(texture);
-
-        // Copy to window
-        // SDL_RenderCopy(app.renderer, texture, NULL, NULL);
 
         // Show results...
         SDL_RenderPresent(app.renderer);
