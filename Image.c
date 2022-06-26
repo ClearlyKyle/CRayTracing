@@ -1,49 +1,5 @@
 #include "Image.h"
 
-static void Image_Init_Texture(Image_t *image)
-{
-    // Initialise the texture
-    Uint32 rmask, gmask, bmask, amask;
-
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    rmask = 0xff000000;
-    gmask = 0x00ff0000;
-    bmask = 0x0000ff00;
-    amask = 0x000000ff;
-#else
-    rmask               = 0x000000ff;
-    gmask               = 0x0000ff00;
-    bmask               = 0x00ff0000;
-    amask               = 0xff000000;
-#endif
-
-    // Delete any previously created texture before we create a new one
-    if (image->texture != NULL)
-    {
-        SDL_DestroyTexture(image->texture);
-    }
-
-    // TODO : Check this..
-    // SDL_Surface *tmp_surface = SDL_CreateRGBSurface(0, image->x_size, image->y_size, 32, rmask, gmask, bmask, amask);
-    // if (tmp_surface == NULL)
-    //{
-    //    fprintf(stderr, "SDL_CreateRGBSurface() failed: %s", SDL_GetError());
-    //    // Image_Free(image);
-    //    exit(1);
-    //}
-    fprintf(stderr, "SDL_CreateRGBSurfaceWithFormat() failed: %s", SDL_GetError());
-
-    SDL_Surface *tmp_surface;
-    tmp_surface = SDL_CreateRGBSurfaceWithFormat(0, image->x_size, image->y_size, 32, SDL_PIXELFORMAT_ABGR8888);
-    if (tmp_surface == NULL)
-    {
-        fprintf(stderr, "SDL_CreateRGBSurfaceWithFormat() failed: %s", SDL_GetError());
-        exit(1);
-    }
-    image->texture = SDL_CreateTextureFromSurface(image->renderer, tmp_surface);
-    SDL_FreeSurface(tmp_surface);
-}
-
 Image_t Image_Initialize(const int x_size, const int y_size, SDL_Renderer *renderer)
 {
     Image_t image;
