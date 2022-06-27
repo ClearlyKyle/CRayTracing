@@ -2,14 +2,23 @@
 #define __VEC3_H__
 
 #include <stdio.h>
+#include <math.h>
 
+//-----------------------------------------------------------
 typedef struct vector
 {
     double x, y, z;
 } vec3;
 
+// MACROS
+//-----------------------------------------------------------
 #define VEC3_INIT_ZERO \
     (vec3) { 0.0f, 0.0f, 0.0f }
+#define VEC3_INIT_VALUE(VAL) \
+    (vec3) { (VAL), (VAL), (VAL) }
+
+// FUNCTIONS
+//-----------------------------------------------------------
 
 inline vec3 vec3_add(const vec3 v1, const vec3 v2)
 {
@@ -44,7 +53,7 @@ inline vec3 vec3_div_scal(const vec3 v1, const double val)
 inline double vec3_length(const vec3 v1)
 {
     const vec3 tmp = vec3_mul(v1, v1);
-    return tmp.x + tmp.y + tmp.z;
+    return sqrt(tmp.x + tmp.y + tmp.z);
 }
 
 #define NORMALISE_VEC3(V) (V) = vec3_normalise((V))

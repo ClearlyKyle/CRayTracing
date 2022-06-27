@@ -2,10 +2,14 @@
 
 #include "SDL2/SDL.h"
 #include "Image.h"
+#include "Ray.h"
+#include "Camera.h"
+#include "Sphere.h"
 
 static struct Scene_s
 {
-    Image_t output_image;
+    Image_t  output_image;
+    Camera_t cam;
 } Scene;
 
 void Scene_Init()
@@ -15,6 +19,17 @@ void Scene_Init()
     // Initialise image
     Image_t image      = Image_Initialize(800, 800, app.renderer);
     Scene.output_image = image;
+
+    Scene.cam = (Camera_t){
+        .position        = {0.0, -10.0, 0.0},
+        .lookat          = {0.0, 0.0, 0.0},
+        .up              = {0.0, 0.0, 1.0},
+        .length          = 1.0,
+        .horizontal_size = 1.0,
+        .aspect_ratio    = 1.0, // 800x800
+    };
+
+    Camera_Update_Geometry(&Scene.cam);
 }
 
 void Scene_Update()
@@ -22,16 +37,54 @@ void Scene_Update()
     const unsigned int x_size = Scene.output_image.x_size;
     const unsigned int y_size = Scene.output_image.y_size;
 
+    // Loop over each pixel in our image.
+    vec3 intPoint    = VEC3_INIT_ZERO;
+    vec3 localNormal = VEC3_INIT_ZERO;
+    vec3 localColor  = VEC3_INIT_ZERO;
+
+    const double xFact   = 1.0 / ((double)(x_size) / 2.0);
+    const double yFact   = 1.0 / ((double)(y_size) / 2.0);
+    double       minDist = 1e6;
+    double       maxDist = 0.0;
+
     for (unsigned int x = 0; x < x_size; x++)
     {
         for (unsigned int y = 0; y < y_size; y++)
         {
-            const double r = ((double)x / (double)x_size) * 255.0;
-            const double g = ((double)y / (double)y_size) * 255.0;
+            // Normalize the x and y coordinates.
+            double normX = ((double)x * xFact) - 1.0;
+            double normY = ((double)y * yFact) - 1.0;
 
-            Image_SetPixel(&Scene.output_image, x, y, r, g, 0.0);
+            // Generate the ray for this pixel.
+            const Ray_t cameraRay = Camera_Generate_Ray(&Scene.cam, normX, normY);
+
+            // Test if we have a valid intersection.
+            const bool validInt = Sphere_Test_Intersection(&cameraRay, &intPoint, localNormal, localColor);
+
+            // If we have a valid intersection, change pixel color to red.
+            if (validInt)
+            {
+                // Compute the distance between the camera and the point of intersection.
+
+                const double dist = vec3_length(vec3_sub(intPoint, cameraRay.point1));
+                if (dist > maxDist)
+                    maxDist = dist;
+
+                if (dist < minDist)
+                    minDist = dist;
+
+                Image_SetPixel(&Scene.output_image, x, y, 255.0 - ((dist - 9.0) / 0.94605) * 255.0, 0.0, 0.0);
+            }
+            else
+            {
+                Image_SetPixel(&Scene.output_image, x, y, 0.0, 0.0, 0.0);
+            }
         }
     }
+
+    printf("Minimum distance: %f\n", minDist);
+    printf("Maximum distance: %f\n", maxDist);
+
     Image_Display(&Scene.output_image);
 }
 

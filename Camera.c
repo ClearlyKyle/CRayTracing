@@ -34,12 +34,13 @@ void Camera_Update_Geometry(Camera_t *cam)
     cam->projection_screen_V = vec3_mul_scal(cam->projection_screen_V, cam->horizontal_size / cam->aspect_ratio);
 }
 
+// This will return a Ray_t from a given Camera_t
 Ray_t Camera_Generate_Ray(const Camera_t *cam, const double screen_x, const double screen_y)
 {
     // Compute the location of the screen point in world coordinates
-    vec3 screenWorldPart1      = vec3_add(cam->projection_screen_center, vec3_mul_scal(cam->projection_screen_U, screen_x));
-    vec3 screenWorldCoordinate = vec3_add(screenWorldPart1, vec3_mul_scal(cam->projection_screen_V, screen_y));
+    const vec3 screenWorldPart1      = vec3_add(cam->projection_screen_center, vec3_mul_scal(cam->projection_screen_U, screen_x));
+    const vec3 screenWorldCoordinate = vec3_add(screenWorldPart1, vec3_mul_scal(cam->projection_screen_V, screen_y));
 
     // Use this point along with the camera position to compute the ray.
-    return Ray_Init(screenWorldPart1, screenWorldCoordinate);
+    return Ray_Init(cam->position, screenWorldCoordinate);
 }
