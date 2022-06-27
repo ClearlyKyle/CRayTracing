@@ -8,6 +8,9 @@ typedef struct vector
     double x, y, z;
 } vec3;
 
+#define VEC3_INIT_ZERO \
+    (vec3) { 0.0f, 0.0f, 0.0f }
+
 inline vec3 vec3_add(const vec3 v1, const vec3 v2)
 {
     return (vec3){v1.x + v2.x, v1.y + v2.y, v1.z + v2.z};
@@ -59,6 +62,11 @@ inline vec3 vec3_cross(const vec3 v1, const vec3 v2)
         v1.z * v2.x - v1.x * v2.z,
         v1.x * v2.y - v1.y * v2.x,
     };
+}
+
+inline double vec3_dot(const vec3 a, const vec3 b)
+{
+    return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
 
 #endif // __VEC3_H__
