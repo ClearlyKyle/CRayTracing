@@ -5,11 +5,13 @@
 #include "Ray.h"
 #include "Camera.h"
 #include "Sphere.h"
+#include "Light.h"
 
 static struct Scene_s
 {
     Image_t  output_image;
     Camera_t cam;
+    Light_t  point_light;
 } Scene;
 
 void Scene_Init()
@@ -25,11 +27,13 @@ void Scene_Init()
         .lookat          = {0.0, 0.0, 0.0},
         .up              = {0.0, 0.0, 1.0},
         .length          = 1.0,
-        .horizontal_size = 1.0,
+        .horizontal_size = 0.25,
         .aspect_ratio    = 1.0, // 800x800
     };
 
     Camera_Update_Geometry(&Scene.cam);
+
+    Scene.point_light = (Light_t){.location = {5.0, -10.0, 5.0}, .colour = {255.0, 255.0, 255.0}, .intensity = 1.0};
 }
 
 void Scene_Update()
@@ -58,14 +62,26 @@ void Scene_Update()
             // Generate the ray for this pixel.
             const Ray_t cameraRay = Camera_Generate_Ray(&Scene.cam, normX, normY);
 
+            // Loop over each object in the sceene
+            // for (Object *p = Scene.shapes, *end = &Scene.shapes[COUNT]; p != end; p++)
+            // Call the correct "Test_Intersection" for a given shape..
+            // Shape_Test_Intersection(shape.type, shape);
+
             // Test if we have a valid intersection.
-            const bool validInt = Sphere_Test_Intersection(&cameraRay, &intPoint, localNormal, localColor);
+            const bool validInt = Sphere_Test_Intersection(&cameraRay, &intPoint, &localNormal, localColor);
 
             // If we have a valid intersection, change pixel color to red.
             if (validInt)
             {
-                // Compute the distance between the camera and the point of intersection.
+                // Compute intensity of illumination.
+                double intensity;
+                vec3   colour;
+                bool   validIllum = false;
 
+                // Loop over all lights...
+                validIllum = Light_Compute_Illumination(&Scene.point_light, intPoint, localNormal, &colour, &intensity);
+
+                // Compute the distance between the camera and the point of intersection.
                 const double dist = vec3_length(vec3_sub(intPoint, cameraRay.point1));
                 if (dist > maxDist)
                     maxDist = dist;
@@ -73,7 +89,14 @@ void Scene_Update()
                 if (dist < minDist)
                     minDist = dist;
 
-                Image_SetPixel(&Scene.output_image, x, y, 255.0 - ((dist - 9.0) / 0.94605) * 255.0, 0.0, 0.0);
+                if (validIllum)
+                {
+                    Image_SetPixel(&Scene.output_image, x, y, 255.0 * intensity, 0.0, 0.0);
+                }
+                else
+                {
+                    Image_SetPixel(&Scene.output_image, x, y, 0.0, 0.0, 0.0);
+                }
             }
             else
             {

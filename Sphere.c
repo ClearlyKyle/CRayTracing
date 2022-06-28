@@ -4,7 +4,7 @@
 
 bool Sphere_Test_Intersection(const Ray_t *ray,
                               vec3        *int_point,
-                              vec3         nocal_normal,
+                              vec3        *local_normal,
                               vec3         local_colour)
 {
     // Compute the values of a, b and c.
@@ -48,6 +48,10 @@ bool Sphere_Test_Intersection(const Ray_t *ray,
             {
                 *int_point = vec3_add(ray->point1, vec3_mul_scal(vhat, t2));
             }
+
+            // Compute the local normal (easy for a sphere at the origin!).
+            *local_normal = *int_point;
+            NORMALISE_VEC3(*local_normal);
         }
         return true;
     }
