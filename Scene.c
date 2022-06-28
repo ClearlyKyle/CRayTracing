@@ -33,7 +33,7 @@ void Scene_Init()
 
     Camera_Update_Geometry(&Scene.cam);
 
-    Scene.point_light = (Light_t){.location = {5.0, -10.0, 5.0}, .colour = {255.0, 255.0, 255.0}, .intensity = 1.0};
+    Scene.point_light = (Light_t){.location = {5.0, -10.0, -5.0}, .colour = {255.0, 255.0, 255.0}, .intensity = 1.0};
 }
 
 void Scene_Update()
