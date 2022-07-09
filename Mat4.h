@@ -2,10 +2,11 @@
 #define __TRANSFORMS_H__
 
 #include "vec3.h"
+#include "vec4.h"
 
 typedef struct Mat4
 {
-    float elements[4][4];
+    double elements[4][4];
 } Mat4;
 
 inline Mat4 Mat3_Transpose(const Mat4 m)
@@ -43,11 +44,11 @@ inline Mat4 Mat4_Scale_Make(const Mat4 m, const vec3 v)
     return dest;
 }
 
-inline Mat4 Mat4_ZRot_Make(const Mat4 m, const float angle)
+inline Mat4 Mat4_ZRot_Make(const Mat4 m, const double angle)
 {
     Mat4 dest = {0};
 
-    dest.elements[0][0] = cosf(angle);
+    dest.elements[0][0] = cos(angle);
     dest.elements[0][1] = -sin(angle);
     dest.elements[1][0] = sin(angle);
     dest.elements[1][1] = cos(angle);
@@ -55,11 +56,11 @@ inline Mat4 Mat4_ZRot_Make(const Mat4 m, const float angle)
     return dest;
 }
 
-inline Mat4 Mat4_YRot_Make(const Mat4 m, const float angle)
+inline Mat4 Mat4_YRot_Make(const Mat4 m, const double angle)
 {
     Mat4 dest = {0};
 
-    dest.elements[0][0] = cosf(angle);
+    dest.elements[0][0] = cos(angle);
     dest.elements[0][2] = sin(angle);
     dest.elements[2][0] = -sin(angle);
     dest.elements[2][2] = cos(angle);
@@ -67,11 +68,11 @@ inline Mat4 Mat4_YRot_Make(const Mat4 m, const float angle)
     return dest;
 }
 
-inline Mat4 Mat4_XRot_Make(const Mat4 m, const float angle)
+inline Mat4 Mat4_XRot_Make(const Mat4 m, const double angle)
 {
     Mat4 dest = {0};
 
-    dest.elements[1][1] = cosf(angle);
+    dest.elements[1][1] = cos(angle);
     dest.elements[1][2] = -sin(angle);
     dest.elements[2][1] = sin(angle);
     dest.elements[2][2] = cos(angle);
@@ -83,16 +84,16 @@ inline Mat4 Mat4_Make_Rotation(const vec3 angles)
 {
     Mat4 dest = {0};
 
-    const float sx = sinf(angles.x);
-    const float cx = cosf(angles.x);
-    const float sy = sinf(angles.y);
-    const float cy = cosf(angles.y);
-    const float sz = sinf(angles.z);
-    const float cz = cosf(angles.z);
+    const double sx = sin(angles.x);
+    const double cx = cos(angles.x);
+    const double sy = sin(angles.y);
+    const double cy = cos(angles.y);
+    const double sz = sin(angles.z);
+    const double cz = cos(angles.z);
 
-    const float czsx = cz * sx;
-    const float cxcz = cx * cz;
-    const float sysz = sy * sz;
+    const double czsx = cz * sx;
+    const double cxcz = cx * cz;
+    const double sysz = sy * sz;
 
     dest.elements[0][0] = cy * cz;
     dest.elements[0][1] = czsx * sy + cx * sz;
@@ -116,38 +117,38 @@ inline Mat4 Mat4_Make_Rotation(const vec3 angles)
 
 inline Mat4 Mat4_Mul(const Mat4 m1, const Mat4 m2)
 {
-    const float a00 = m1.elements[0][0];
-    const float a01 = m1.elements[0][1];
-    const float a02 = m1.elements[0][2];
-    const float a03 = m1.elements[0][3];
-    const float a10 = m1.elements[1][0];
-    const float a11 = m1.elements[1][1];
-    const float a12 = m1.elements[1][2];
-    const float a13 = m1.elements[1][3];
-    const float a20 = m1.elements[2][0];
-    const float a21 = m1.elements[2][1];
-    const float a22 = m1.elements[2][2];
-    const float a23 = m1.elements[2][3];
-    const float a30 = m1.elements[3][0];
-    const float a31 = m1.elements[3][1];
-    const float a32 = m1.elements[3][2];
-    const float a33 = m1.elements[3][3];
-    const float b00 = m2.elements[0][0];
-    const float b01 = m2.elements[0][1];
-    const float b02 = m2.elements[0][2];
-    const float b03 = m2.elements[0][3];
-    const float b10 = m2.elements[1][0];
-    const float b11 = m2.elements[1][1];
-    const float b12 = m2.elements[1][2];
-    const float b13 = m2.elements[1][3];
-    const float b20 = m2.elements[2][0];
-    const float b21 = m2.elements[2][1];
-    const float b22 = m2.elements[2][2];
-    const float b23 = m2.elements[2][3];
-    const float b30 = m2.elements[3][0];
-    const float b31 = m2.elements[3][1];
-    const float b32 = m2.elements[3][2];
-    const float b33 = m2.elements[3][3];
+    const double a00 = m1.elements[0][0];
+    const double a01 = m1.elements[0][1];
+    const double a02 = m1.elements[0][2];
+    const double a03 = m1.elements[0][3];
+    const double a10 = m1.elements[1][0];
+    const double a11 = m1.elements[1][1];
+    const double a12 = m1.elements[1][2];
+    const double a13 = m1.elements[1][3];
+    const double a20 = m1.elements[2][0];
+    const double a21 = m1.elements[2][1];
+    const double a22 = m1.elements[2][2];
+    const double a23 = m1.elements[2][3];
+    const double a30 = m1.elements[3][0];
+    const double a31 = m1.elements[3][1];
+    const double a32 = m1.elements[3][2];
+    const double a33 = m1.elements[3][3];
+    const double b00 = m2.elements[0][0];
+    const double b01 = m2.elements[0][1];
+    const double b02 = m2.elements[0][2];
+    const double b03 = m2.elements[0][3];
+    const double b10 = m2.elements[1][0];
+    const double b11 = m2.elements[1][1];
+    const double b12 = m2.elements[1][2];
+    const double b13 = m2.elements[1][3];
+    const double b20 = m2.elements[2][0];
+    const double b21 = m2.elements[2][1];
+    const double b22 = m2.elements[2][2];
+    const double b23 = m2.elements[2][3];
+    const double b30 = m2.elements[3][0];
+    const double b31 = m2.elements[3][1];
+    const double b32 = m2.elements[3][2];
+    const double b33 = m2.elements[3][3];
 
     Mat4 dest = {0};
 
@@ -169,6 +170,17 @@ inline Mat4 Mat4_Mul(const Mat4 m1, const Mat4 m2)
     dest.elements[3][3] = a03 * b30 + a13 * b31 + a23 * b32 + a33 * b33;
 
     return dest;
+}
+
+inline vec4 Mat4_mul_vec4(const Mat4 m, const vec4 v)
+{
+    vec4 res = {0};
+    res.x    = m.elements[0][0] * v.x + m.elements[1][0] * v.y + m.elements[2][0] * v.z + m.elements[3][0] * v.w;
+    res.y    = m.elements[0][1] * v.x + m.elements[1][1] * v.y + m.elements[2][1] * v.z + m.elements[3][1] * v.w;
+    res.z    = m.elements[0][2] * v.x + m.elements[1][2] * v.y + m.elements[2][2] * v.z + m.elements[3][2] * v.w;
+    res.w    = m.elements[0][3] * v.x + m.elements[1][3] * v.y + m.elements[2][3] * v.z + m.elements[3][3] * v.w;
+
+    return res;
 }
 
 #endif // __TRANSFORMS_H__
