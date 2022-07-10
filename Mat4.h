@@ -9,7 +9,7 @@ typedef struct Mat4
     double elements[4][4];
 } Mat4;
 
-inline Mat4 Mat3_Transpose(const Mat4 m)
+inline Mat4 Mat4_Transpose(const Mat4 m)
 {
     Mat4 dest = {0};
 
@@ -33,7 +33,7 @@ inline Mat4 Mat3_Transpose(const Mat4 m)
     return dest;
 }
 
-inline Mat4 Mat4_Scale_Make(const Mat4 m, const vec3 v)
+inline Mat4 Mat4_Scale_Make(const vec3 v)
 {
     Mat4 dest = {0};
 
@@ -44,7 +44,7 @@ inline Mat4 Mat4_Scale_Make(const Mat4 m, const vec3 v)
     return dest;
 }
 
-inline Mat4 Mat4_ZRot_Make(const Mat4 m, const double angle)
+inline Mat4 Mat4_ZRot_Make(const double angle)
 {
     Mat4 dest = {0};
 
@@ -56,7 +56,7 @@ inline Mat4 Mat4_ZRot_Make(const Mat4 m, const double angle)
     return dest;
 }
 
-inline Mat4 Mat4_YRot_Make(const Mat4 m, const double angle)
+inline Mat4 Mat4_YRot_Make(const double angle)
 {
     Mat4 dest = {0};
 
@@ -68,7 +68,7 @@ inline Mat4 Mat4_YRot_Make(const Mat4 m, const double angle)
     return dest;
 }
 
-inline Mat4 Mat4_XRot_Make(const Mat4 m, const double angle)
+inline Mat4 Mat4_XRot_Make(const double angle)
 {
     Mat4 dest = {0};
 
@@ -115,7 +115,7 @@ inline Mat4 Mat4_Make_Rotation(const vec3 angles)
     return dest;
 }
 
-inline Mat4 Mat4_Mul(const Mat4 m1, const Mat4 m2)
+inline Mat4 Mat4_Mul_Mat4(const Mat4 m1, const Mat4 m2)
 {
     const double a00 = m1.elements[0][0];
     const double a01 = m1.elements[0][1];
@@ -170,6 +170,17 @@ inline Mat4 Mat4_Mul(const Mat4 m1, const Mat4 m2)
     dest.elements[3][3] = a03 * b30 + a13 * b31 + a23 * b32 + a33 * b33;
 
     return dest;
+}
+
+inline Mat4 Mat4_Make_Transform(const vec3 v)
+{
+    Mat4 res = {0};
+
+    res.elements[0][3] = v.x;
+    res.elements[1][3] = v.y;
+    res.elements[2][3] = v.z;
+
+    return res;
 }
 
 inline vec4 Mat4_mul_vec4(const Mat4 m, const vec4 v)
