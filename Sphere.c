@@ -2,13 +2,16 @@
 
 #include <math.h>
 
-bool Sphere_Test_Intersection(const Ray_t *ray,
+bool Sphere_Test_Intersection(const Sphere sphere,
+                              const Ray_t *ray,
                               vec3        *int_point,
                               vec3        *local_normal,
-                              vec3         local_colour)
+                              vec3        *local_colour)
 {
+    const Ray_t back_ray = Transform_Apply_Ray(sphere.transform, *ray, false);
+
     // Compute the values of a, b and c.
-    const vec3 vhat = vec3_normalise(ray->lab);
+    const vec3 vhat = vec3_normalise(back_ray.lab);
 
     /* Note that a is equal to the squared magnitude of the
             direction of the cast ray. As this will be a unit vector,
@@ -16,10 +19,10 @@ bool Sphere_Test_Intersection(const Ray_t *ray,
     // a = 1.0;
 
     // Calculate b.
-    const double b = 2.0 * vec3_dot(ray->point1, vhat);
+    const double b = 2.0 * vec3_dot(back_ray.point1, vhat);
 
     // Calculate c.
-    const double c = vec3_dot(ray->point1, ray->point1) - 1.0;
+    const double c = vec3_dot(back_ray.point1, back_ray.point1) - 1.0;
 
     // Test whether we actually have an intersection.
     // Qudratic formula...
@@ -42,16 +45,19 @@ bool Sphere_Test_Intersection(const Ray_t *ray,
             // Determine which point of intersection was closest to the camera.
             if (t1 < t2)
             {
-                *int_point = vec3_add(ray->point1, vec3_mul_scal(vhat, t1));
+                *int_point = vec3_add(back_ray.point1, vec3_mul_scal(vhat, t1));
             }
             else
             {
-                *int_point = vec3_add(ray->point1, vec3_mul_scal(vhat, t2));
+                *int_point = vec3_add(back_ray.point1, vec3_mul_scal(vhat, t2));
             }
 
             // Compute the local normal (easy for a sphere at the origin!).
             *local_normal = *int_point;
             NORMALISE_VEC3(*local_normal);
+
+            // Return the base Colour
+            *local_colour = sphere.colour;
         }
         return true;
     }
