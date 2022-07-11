@@ -50,19 +50,21 @@ Transform Transform_Set(const vec3 translation, const vec3 rotation, const vec3 
     Transform res = {0};
 
     // TRANSLATION
-    Mat4 translation_matrix = Mat4_Make_Transform(translation);
+    const Mat4 translation_matrix = Mat4_Make_Transform(translation);
 
     // ROTATION
-    Mat4 rotation_matrix = Mat4_Make_Rotation(rotation);
-    // Mat4 z_rotation_matrix = Mat4_ZRot_Make(rotation[2]);
-    // Mat4 y_rotation_matrix = Mat4_YRot_Make(rotation[1]);
-    // Mat4 x_rotation_matrix = Mat4_XRot_Make(rotation[0]);
+    // Mat4 rotation_matrix = Mat4_Make_Rotation(rotation);
+    const Mat4 z_rotation_matrix = Mat4_ZRot_Make(rotation.z);
+    const Mat4 y_rotation_matrix = Mat4_YRot_Make(rotation.y);
+    const Mat4 x_rotation_matrix = Mat4_XRot_Make(rotation.x);
+
+    const Mat4 rotation_matrix = Mat4_Mul_Mat4(Mat4_Mul_Mat4(x_rotation_matrix, y_rotation_matrix), z_rotation_matrix);
 
     // SCALE
-    Mat4 scale_matrix = Mat4_Scale_Make(scale);
+    const Mat4 scale_matrix = Mat4_Scale_Make(scale);
 
     res.forward   = Mat4_Mul_Mat4(Mat4_Mul_Mat4(translation_matrix, scale_matrix), rotation_matrix);
-    res.backwards = Mat4_Transpose(res.forward);
+    res.backwards = Mat4_Inverse(res.forward);
 
     return res;
 }
