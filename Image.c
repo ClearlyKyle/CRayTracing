@@ -73,9 +73,9 @@ void Image_Display(const Image_t *const image)
 
 Uint32 ConvertColor(const double red, const double green, const double blue)
 {
-    const unsigned char r = (unsigned char)(red);
-    const unsigned char g = (unsigned char)(green);
-    const unsigned char b = (unsigned char)(blue);
+    const unsigned char r = (unsigned char)(red * 255.0);
+    const unsigned char g = (unsigned char)(green * 255.0);
+    const unsigned char b = (unsigned char)(blue * 255.0);
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     const Uint32 colour = (b << 24) + (g << 16) + (r << 8) + 255;
