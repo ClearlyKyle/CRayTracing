@@ -3,12 +3,32 @@
 
 #include "Light.h"
 #include "Sphere.h"
+#include "Plane.h"
+
+// -------------------------------------------------
+// SHAPES
 
 enum Shapes
 {
     SHAPE_SPHERE,
+    SHAPE_PLANE,
     SHAPE_COUNT,
 };
+
+typedef union ShapeObjects
+{
+    Sphere sphere;
+    Plane  plane;
+} ShapeObjects;
+
+typedef struct ShapesArray
+{
+    enum Shape_Types type;
+    ShapeObjects     object;
+} ShapeArray;
+
+// -------------------------------------------------
+// LIGHTS
 
 enum Lights
 {
@@ -18,24 +38,13 @@ enum Lights
 
 typedef union
 {
-    Sphere_t *sphere;
-} ShapeObjects;
-
-typedef union
-{
     Light_t *pointLight;
 } LightObjects;
 
-typedef struct shape_array_data
-{
-    enum Shape_Types type;
-    ShapeObjects     object;
-} ShapeArray_t;
-
-typedef struct light_array_data
+typedef struct LightArray
 {
     enum Lights  type;
     LightObjects object;
-} LightArray_t;
+} LightArray;
 
 #endif // __OBJECTS_H__
