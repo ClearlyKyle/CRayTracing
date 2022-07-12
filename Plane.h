@@ -9,10 +9,10 @@
 
 typedef struct Plane
 {
-    vec3     colour;
+    vec3      colour;
     Transform transform;
 } Plane;
 
-bool Plane_Test_Intersection(const Plane p, const Transform trans, const Ray_t *ray, vec3 *int_point, vec3 *local_normal, vec3 *local_colour);
+bool Plane_Test_Intersection(const Plane plane, const Ray_t *ray, vec3 *int_point, vec3 *local_normal, vec3 *local_colour);
 
 #endif // __PLANE_H__
