@@ -113,6 +113,8 @@ void Scene_Update()
             double minDist            = 1e6;
             bool   intersection_found = false;
 
+            size_t closestShape;
+
             // Loop over each object in the sceene
             // Call the correct "Test_Intersection" for a given shape..
             // Shape_Test_Intersection(shape.type, shape);
@@ -146,6 +148,7 @@ void Scene_Update()
 
                     if (dist < minDist)
                     {
+                        closestShape       = i;
                         minDist            = dist;
                         closestIntPoint    = intPoint;
                         closestLocalNormal = localNormal;
@@ -153,49 +156,6 @@ void Scene_Update()
                     }
                 }
             }
-
-            // We need to find closest SPHERE
-            // for (int i = 0; i < NUMBER_OF_SPHERES; i++)
-            //{
-            //    // Test if we have a valid intersection.
-            //    const bool validInt = Sphere_Test_Intersection(Scene.spheres[i], &cameraRay, &intPoint, &localNormal, &localColor);
-            //    if (validInt)
-            //    {
-            //        intersection_found = true;
-
-            //        // Compute the distance between the camera and the point of intersection.
-            //        const double dist = vec3_length(vec3_sub(intPoint, cameraRay.point1));
-
-            //        if (dist < minDist)
-            //        {
-            //            minDist            = dist;
-            //            closestIntPoint    = intPoint;
-            //            closestLocalNormal = localNormal;
-            //            closestLocalColor  = localColor;
-            //        }
-            //    }
-            //}
-
-            // for (int i = 0; i < NUMBER_OF_PLANES; i++)
-            //{
-            //    // Test if we have a valid intersection.
-            //    const bool validInt = Plane_Test_Intersection(Scene.planes[i], &cameraRay, &intPoint, &localNormal, &localColor);
-            //    if (validInt)
-            //    {
-            //        intersection_found = true;
-
-            //        // Compute the distance between the camera and the point of intersection.
-            //        const double dist = vec3_length(vec3_sub(intPoint, cameraRay.point1));
-
-            //        if (dist < minDist)
-            //        {
-            //            minDist            = dist;
-            //            closestIntPoint    = intPoint;
-            //            closestLocalNormal = localNormal;
-            //            closestLocalColor  = localColor;
-            //        }
-            //    }
-            //}
 
             /* Compute the illumination for the closest object, assuming that there was a valid intersection. */
             if (intersection_found)
@@ -210,7 +170,14 @@ void Scene_Update()
 
                 for (int i = 0; i < NUMBER_OF_LIGHTS; i++)
                 {
-                    const bool validIllum = Light_Compute_Illumination(&Scene.lights[i], closestIntPoint, closestLocalNormal, &colour, &intensity);
+                    const bool validIllum = Light_Compute_Illumination(&Scene.lights[i],
+                                                                       closestShape,
+                                                                       Scene.shapes,
+                                                                       Scene.num_of_shapes,
+                                                                       closestIntPoint,
+                                                                       closestLocalNormal,
+                                                                       &colour,
+                                                                       &intensity);
                     // validIllum = currentLight->ComputeIllumination(closestIntPoint, closestLocalNormal, m_objectList, closestObject, color, intensity);
                     if (validIllum)
                     {
@@ -219,15 +186,15 @@ void Scene_Update()
                         green += colour.y * intensity;
                         blue += colour.z * intensity;
                     }
-                }
 
-                if (illumFound)
-                {
-                    red *= closestLocalColor.x;
-                    green *= closestLocalColor.y;
-                    blue *= closestLocalColor.z;
+                    if (illumFound)
+                    {
+                        red *= closestLocalColor.x;
+                        green *= closestLocalColor.y;
+                        blue *= closestLocalColor.z;
 
-                    Image_SetPixel(&Scene.output_image, x, y, red, green, blue);
+                        Image_SetPixel(&Scene.output_image, x, y, red, green, blue);
+                    }
                 }
             }
         }
