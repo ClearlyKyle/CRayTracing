@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include "vec3.h"
 
+#include "Objects.h"
+
 struct Light_s
 {
     vec3   location;
@@ -13,11 +15,13 @@ struct Light_s
 
 typedef struct Light_s Light_t;
 
-bool Light_Compute_Illumination(const Light_t *light, const vec3 intPoint, const vec3 localNormal, vec3 *colour, double *intensity);
-
-// virtual bool ComputeIllumination(const qbVector<double> &intPoint, const qbVector<double> &localNormal,
-//                                  const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
-//                                  const std::shared_ptr<qbRT::ObjectBase> &currentObject,
-//                                  qbVector<double> &color, double &intensity);
+bool Light_Compute_Illumination(const Light_t   *light,
+                                const size_t     current_object,
+                                const ShapeArray shapes[],
+                                const size_t     num_shapes,
+                                const vec3       intPoint,
+                                const vec3       localNormal,
+                                vec3            *colour,
+                                double          *intensity);
 
 #endif // __LIGHT_H__
