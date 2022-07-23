@@ -59,7 +59,7 @@ void Scene_Init()
     Scene.planes[0].transform = Transform_Set((vec3){0.0, 0.0, 0.75}, (vec3){0.0, 0.0, 0.0}, (vec3){4.0, 4.0, 1.0});
 
     // Scene Shapes
-    Scene.shapes[0] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.colour = {0.25, 0.5, 0.8}, .transform = Transform_Set((vec3){-2.5, -1.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.75})}};
+    Scene.shapes[0] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.colour = {0.25, 0.5, 0.8}, .transform = Transform_Set((vec3){-2.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.75})}};
     Scene.shapes[1] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.colour = {1.0, 0.5, 0.0}, .transform = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.5, 0.5})}};
     Scene.shapes[2] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.colour = {1.0, 0.8, 0.0}, .transform = Transform_Set((vec3){2.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75})}};
     Scene.shapes[3] = (ShapeArray){.type = SHAPE_PLANE, .object.plane = {.colour = {0.5, 0.5, 0.5}, .transform = Transform_Set((vec3){0.0, 0.0, 0.75}, (vec3){0.0, 0.0, 0.0}, (vec3){4.0, 4.0, 1.0})}};
