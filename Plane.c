@@ -5,10 +5,10 @@
 bool Plane_Test_Intersection(const Plane plane, const Ray_t *ray, vec3 *int_point, vec3 *local_normal, vec3 *local_colour)
 {
     // Copy the ray and apply the backwards transform.
-    Ray_t back_ray = Transform_Apply_Ray(plane.transform, *ray, false);
+    const Ray_t back_ray = Transform_Apply_Ray(plane.transform, *ray, false);
 
     // Copy the m_lab vector from bckRay and normalize it.
-    vec3 k = NORMALISE_VEC3(back_ray.lab);
+    const vec3 k = vec3_normalise(back_ray.lab);
 
     // Check if there is an intersection, ie. if the castRay is not parallel to the plane
     // if (!CloseEnough(k.GetElement(2), 0.0))
