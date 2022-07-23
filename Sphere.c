@@ -28,6 +28,7 @@ bool Sphere_Test_Intersection(const Sphere sphere,
     // Qudratic formula...
     const double intTest = (b * b) - 4.0 * c;
 
+    vec3 poi;
     if (intTest > 0.0)
     {
         const double numSQRT = sqrt(intTest);
@@ -45,18 +46,23 @@ bool Sphere_Test_Intersection(const Sphere sphere,
             // Determine which point of intersection was closest to the camera.
             if (t1 < t2)
             {
-                *int_point = vec3_add(back_ray.point1, vec3_mul_scal(vhat, t1));
+                poi = vec3_add(back_ray.point1, vec3_mul_scal(vhat, t1));
             }
             else
             {
-                *int_point = vec3_add(back_ray.point1, vec3_mul_scal(vhat, t2));
+                poi = vec3_add(back_ray.point1, vec3_mul_scal(vhat, t2));
             }
 
-            // Compute the local normal (easy for a sphere at the origin!).
-            *local_normal = *int_point;
-            NORMALISE_VEC3(*local_normal);
+            // Transform the intersection point back into world coordinates.
+            *int_point = Transform_Apply_Forward(sphere.transform, poi);
 
-            // Return the base Colour
+            // Compute the local normal (easy for a sphere at the origin!).
+            const vec3 origin     = {0.0, 0.0, 0.0};
+            const vec3 new_origin = Transform_Apply_Forward(sphere.transform, origin);
+
+            *local_normal = vec3_normalise(vec3_sub(*int_point, new_origin));
+
+            // Return the base color.
             *local_colour = sphere.colour;
         }
         return true;
