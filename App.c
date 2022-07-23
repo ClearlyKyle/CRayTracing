@@ -121,6 +121,9 @@ void App_Start()
         fprintf(stdout, "%8.02f ms/f \t%8.02f f/s\n", MSPerFrame, FPS);
 
         LastCounter = EndCounter;
+
+        SDL_Delay(5000);
+        app.running = false;
     }
 
     _OnExit();
