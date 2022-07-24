@@ -32,4 +32,10 @@ typedef struct Objects
     ShapeArray *shapes;
 } Objects;
 
+inline void Objects_Free(Objects *objects)
+{
+    free(objects->shapes);
+    objects->shapes = NULL;
+};
+
 #endif // __OBJECTS_H__

@@ -187,4 +187,6 @@ void Scene_Update()
 void Scene_Exit()
 {
     Image_Free(&Scene.output_image);
+
+    Objects_Free(&Scene.objects);
 }
