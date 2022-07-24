@@ -18,12 +18,10 @@ static struct Scene_s
     Image_t  output_image;
     Camera_t cam;
 
-    ShapeArray shapes[4];
-    size_t     num_of_shapes;
-
-    Sphere  spheres[NUMBER_OF_SPHERES];
-    Plane   planes[NUMBER_OF_PLANES];
+    size_t  num_of_lights;
     Light_t lights[NUMBER_OF_LIGHTS];
+
+    Objects objects;
 } Scene;
 
 void Scene_Init()
@@ -45,38 +43,20 @@ void Scene_Init()
     };
     Camera_Update_Geometry(&Scene.cam);
 
-    // Setup Spheres
-    Scene.spheres[0].colour = (vec3){0.25, 0.5, 0.8};
-    Scene.spheres[1].colour = (vec3){1.0, 0.5, 0.0};
-    Scene.spheres[2].colour = (vec3){1.0, 0.8, 0.0};
+    // Setup Objects (Spheres, Planes)
+    Scene.objects.count  = 4;
+    Scene.objects.shapes = (ShapeArray *)malloc(sizeof(ShapeArray) * Scene.objects.count);
 
-    Scene.spheres[0].transform = Transform_Set((vec3){-2.5, -1.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.75});
-    Scene.spheres[1].transform = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.5, 0.5});
-    Scene.spheres[2].transform = Transform_Set((vec3){2.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75});
-
-    // Setup Planes
-    Scene.planes[0].colour    = (vec3){0.5, 0.5, 0.5};
-    Scene.planes[0].transform = Transform_Set((vec3){0.0, 0.0, 0.75}, (vec3){0.0, 0.0, 0.0}, (vec3){4.0, 4.0, 1.0});
-
-    // Scene Shapes
-    Scene.shapes[0] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.colour = {0.25, 0.5, 0.8}, .transform = Transform_Set((vec3){-2.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.75})}};
-    Scene.shapes[1] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.colour = {1.0, 0.5, 0.0}, .transform = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.5, 0.5})}};
-    Scene.shapes[2] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.colour = {1.0, 0.8, 0.0}, .transform = Transform_Set((vec3){2.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75})}};
-    Scene.shapes[3] = (ShapeArray){.type = SHAPE_PLANE, .object.plane = {.colour = {0.5, 0.5, 0.5}, .transform = Transform_Set((vec3){0.0, 0.0, 0.75}, (vec3){0.0, 0.0, 0.0}, (vec3){4.0, 4.0, 1.0})}};
-
-    // ShapeArray shapes[] = {
-    //     {.type = SHAPE_SPHERE, .object.sphere = {.colour = {0.25, 0.5, 0.8}, .transform = Transform_Set((vec3){-2.5, -1.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.75})}},
-    //     {.type = SHAPE_SPHERE, .object.sphere = {.colour = {1.0, 0.5, 0.0}, .transform = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.5, 0.5})}},
-    //     {.type = SHAPE_SPHERE, .object.sphere = {.colour = {1.0, 0.8, 0.0}, .transform = Transform_Set((vec3){2.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75})}},
-    //     {.type = SHAPE_PLANE, .object.plane = {.colour = {0.5, 0.5, 0.5}, .transform = Transform_Set((vec3){0.0, 0.0, 0.75}, (vec3){0.0, 0.0, 0.0}, (vec3){4.0, 4.0, 1.0})}},
-    // };
-    // Scene.shapes        = shapes;
-    Scene.num_of_shapes = 4;
+    Scene.objects.shapes[0] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.colour = {0.25, 0.5, 0.8}, .transform = Transform_Set((vec3){-2.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.75})}};
+    Scene.objects.shapes[1] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.colour = {1.0, 0.5, 0.0}, .transform = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.5, 0.5})}};
+    Scene.objects.shapes[2] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.colour = {1.0, 0.8, 0.0}, .transform = Transform_Set((vec3){2.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75})}};
+    Scene.objects.shapes[3] = (ShapeArray){.type = SHAPE_PLANE, .object.plane = {.colour = {0.5, 0.5, 0.5}, .transform = Transform_Set((vec3){0.0, 0.0, 0.75}, (vec3){0.0, 0.0, 0.0}, (vec3){4.0, 4.0, 1.0})}};
 
     // Setup Lights
-    Scene.lights[0] = (Light_t){.location = {5.0, -10.0, -5.0}, .colour = {0.0, 0.0, 1.0}, .intensity = 1.0};
-    Scene.lights[1] = (Light_t){.location = {-5.0, -10.0, -5.0}, .colour = {1.0, 0.0, 0.0}, .intensity = 1.0};
-    Scene.lights[2] = (Light_t){.location = {0.0, -10.0, -5.0}, .colour = {0.0, 1.0, 0.0}, .intensity = 1.0};
+    Scene.lights[0]     = (Light_t){.location = {5.0, -10.0, -5.0}, .colour = {0.0, 0.0, 1.0}, .intensity = 1.0};
+    Scene.lights[1]     = (Light_t){.location = {-5.0, -10.0, -5.0}, .colour = {1.0, 0.0, 0.0}, .intensity = 1.0};
+    Scene.lights[2]     = (Light_t){.location = {0.0, -10.0, -5.0}, .colour = {0.0, 1.0, 0.0}, .intensity = 1.0};
+    Scene.num_of_lights = NUMBER_OF_LIGHTS;
 }
 
 void Scene_Update()
@@ -113,28 +93,28 @@ void Scene_Update()
             double minDist            = 1e6;
             bool   intersection_found = false;
 
-            size_t closestShape;
+            size_t closest_object_index = 0;
 
             // Loop over each object in the sceene
             // Call the correct "Test_Intersection" for a given shape..
             // Shape_Test_Intersection(shape.type, shape);
             // for (ShapeArray *shape = Scene.shapes, *end = &Scene.shapes[Scene.num_of_shapes]; shape != end; shape++)
-            for (size_t i = 0; i < Scene.num_of_shapes; i++)
+            for (size_t i = 0; i < Scene.objects.count; i++)
             {
                 bool validInt = false;
 
-                switch (Scene.shapes[i].type)
+                switch (Scene.objects.shapes[i].type)
                 {
                 case SHAPE_SPHERE:
-                    validInt = Sphere_Test_Intersection(Scene.shapes[i].object.sphere, &cameraRay, &intPoint, &localNormal, &localColor);
+                    validInt = Sphere_Test_Intersection(Scene.objects.shapes[i].object.sphere, &cameraRay, &intPoint, &localNormal, &localColor);
                     break;
 
                 case SHAPE_PLANE:
-                    validInt = Plane_Test_Intersection(Scene.shapes[i].object.plane, &cameraRay, &intPoint, &localNormal, &localColor);
+                    validInt = Plane_Test_Intersection(Scene.objects.shapes[i].object.plane, &cameraRay, &intPoint, &localNormal, &localColor);
                     break;
 
                 default:
-                    fprintf(stderr, "THIS SHAPE IS NOT SUPPORTED : %d\n", Scene.shapes[i].type);
+                    fprintf(stderr, "THIS SHAPE IS NOT SUPPORTED : %d\n", Scene.objects.shapes[i].type);
                     app.running = false;
                     break;
                 }
@@ -148,11 +128,11 @@ void Scene_Update()
 
                     if (dist < minDist)
                     {
-                        closestShape       = i;
-                        minDist            = dist;
-                        closestIntPoint    = intPoint;
-                        closestLocalNormal = localNormal;
-                        closestLocalColor  = localColor;
+                        closest_object_index = i;
+                        minDist              = dist;
+                        closestIntPoint      = intPoint;
+                        closestLocalNormal   = localNormal;
+                        closestLocalColor    = localColor;
                     }
                 }
             }
@@ -171,14 +151,13 @@ void Scene_Update()
                 for (int i = 0; i < NUMBER_OF_LIGHTS; i++)
                 {
                     const bool validIllum = Light_Compute_Illumination(&Scene.lights[i],
-                                                                       closestShape,
-                                                                       Scene.shapes,
-                                                                       Scene.num_of_shapes,
+                                                                       closest_object_index,
+                                                                       Scene.objects,
                                                                        closestIntPoint,
                                                                        closestLocalNormal,
                                                                        &colour,
                                                                        &intensity);
-                    // validIllum = currentLight->ComputeIllumination(closestIntPoint, closestLocalNormal, m_objectList, closestObject, color, intensity);
+
                     if (validIllum)
                     {
                         illumFound = true;

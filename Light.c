@@ -1,6 +1,12 @@
 #include "Light.h"
 
-bool Light_Compute_Illumination(const Light_t *light, const size_t current_object, const ShapeArray shapes[], const size_t num_shapes, const vec3 intPoint, const vec3 localNormal, vec3 *colour, double *intensity)
+bool Light_Compute_Illumination(const Light_t *light,
+                                const size_t   current_object_index,
+                                const Objects  objects,
+                                const vec3     intPoint,
+                                const vec3     localNormal,
+                                vec3 *const    colour,
+                                double *const  intensity)
 {
     // Construct a vector pointing from the intersection point to the light.
     const vec3 light_direction = vec3_normalise(vec3_sub(light->location, intPoint));
@@ -17,22 +23,22 @@ bool Light_Compute_Illumination(const Light_t *light, const size_t current_objec
     vec3 poiColor  = VEC3_INIT_ZERO;
     bool validInt  = false;
 
-    for (size_t i = 0; i < num_shapes; i++)
+    for (size_t i = 0; i < objects.count; i++)
     {
-        if (i != current_object)
+        if (i != current_object_index)
         {
-            switch (shapes[i].type)
+            switch (objects.shapes[i].type)
             {
             case SHAPE_SPHERE:
-                validInt = Sphere_Test_Intersection(shapes[i].object.sphere, &lightRay, &poi, &poiNormal, &poiColor);
+                validInt = Sphere_Test_Intersection(objects.shapes[i].object.sphere, &lightRay, &poi, &poiNormal, &poiColor);
                 break;
 
             case SHAPE_PLANE:
-                validInt = Plane_Test_Intersection(shapes[i].object.plane, &lightRay, &poi, &poiNormal, &poiColor);
+                validInt = Plane_Test_Intersection(objects.shapes[i].object.plane, &lightRay, &poi, &poiNormal, &poiColor);
                 break;
 
             default:
-                fprintf(stderr, "THIS SHAPE IS NOT SUPPORTED : %d\n", shapes[i].type);
+                fprintf(stderr, "THIS SHAPE IS NOT SUPPORTED : %d\n", objects.shapes[i].type);
                 // app.running = false;
                 break;
             }

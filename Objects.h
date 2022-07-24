@@ -1,7 +1,6 @@
 #ifndef __OBJECTS_H__
 #define __OBJECTS_H__
 
-#include "Light.h"
 #include "Sphere.h"
 #include "Plane.h"
 
@@ -27,24 +26,10 @@ typedef struct ShapesArray
     ShapeObjects     object;
 } ShapeArray;
 
-// -------------------------------------------------
-// LIGHTS
-
-enum Lights
+typedef struct Objects
 {
-    LIGHT_POINT,
-    LIGHT_COUNT,
-};
-
-typedef union
-{
-    Light_t *pointLight;
-} LightObjects;
-
-typedef struct LightArray
-{
-    enum Lights  type;
-    LightObjects object;
-} LightArray;
+    size_t      count;
+    ShapeArray *shapes;
+} Objects;
 
 #endif // __OBJECTS_H__
