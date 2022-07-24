@@ -186,15 +186,14 @@ void Scene_Update()
                         green += colour.y * intensity;
                         blue += colour.z * intensity;
                     }
+                }
+                if (illumFound)
+                {
+                    red *= closestLocalColor.x;
+                    green *= closestLocalColor.y;
+                    blue *= closestLocalColor.z;
 
-                    if (illumFound)
-                    {
-                        red *= closestLocalColor.x;
-                        green *= closestLocalColor.y;
-                        blue *= closestLocalColor.z;
-
-                        Image_SetPixel(&Scene.output_image, x, y, red, green, blue);
-                    }
+                    Image_SetPixel(&Scene.output_image, x, y, red, green, blue);
                 }
             }
         }
