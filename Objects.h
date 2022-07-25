@@ -4,6 +4,8 @@
 #include "Sphere.h"
 #include "Plane.h"
 
+#include <stdlib.h>
+
 // -------------------------------------------------
 // SHAPES
 
