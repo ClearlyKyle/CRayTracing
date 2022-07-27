@@ -25,6 +25,11 @@ inline vec3 vec3_add(const vec3 v1, const vec3 v2)
     return (vec3){v1.x + v2.x, v1.y + v2.y, v1.z + v2.z};
 }
 
+inline vec3 vec3_add_scal(const vec3 v1, const double val)
+{
+    return (vec3){v1.x + val, v1.y + val, v1.z + val};
+}
+
 inline vec3 vec3_sub(const vec3 v1, const vec3 v2)
 {
     return (vec3){v1.x - v2.x, v1.y - v2.y, v1.z - v2.z};
