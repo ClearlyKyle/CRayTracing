@@ -34,15 +34,15 @@ vec3 Material_Compute_Diffuse_Colour(const Material mat,
     bool   validIllum = false;
     bool   illumFound = false;
 
-    for (int i = 0; i < lights.count; i++)
+    for (int current_object_index = 0; current_object_index < lights.count; current_object_index++)
     {
-        switch (lights.lights[i].type)
+        switch (lights.lights[current_object_index].type)
         {
 
         case LIGHT_POINT:
-            validIllum = Light_Compute_Illumination(lights.lights[i].object.pointLight,
-                                                    i,
+            validIllum = Light_Compute_Illumination(lights.lights[current_object_index].object.pointLight,
                                                     objects,
+                                                    current_object_index,
                                                     *int_point,
                                                     *local_normal,
                                                     &colour,
@@ -50,7 +50,7 @@ vec3 Material_Compute_Diffuse_Colour(const Material mat,
             break;
 
         default:
-            fprintf(stderr, "THIS LIGHT IS NOT SUPPORTED : %d\n", lights.lights[i].type);
+            fprintf(stderr, "THIS LIGHT IS NOT SUPPORTED : %d\n", lights.lights[current_object_index].type);
             // app.running = false;
             break;
         }
@@ -88,7 +88,7 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
     const vec3 reflection_vector = vec3_reflection(incident_ray->lab, *local_normal);
 
     // Construct the reflection ray.
-    const Ray_t reflection_ray = Ray_Init(*int_point, vec3_add(*int_point, reflection_vector));
+    Ray_t reflection_ray = Ray_Init(*int_point, vec3_add(*int_point, reflection_vector));
 
     /* Cast this ray into the scene and find the closest object that it intersects with. */
     size_t closest_object_index;
