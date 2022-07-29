@@ -6,7 +6,7 @@
 #include "Ray.h"
 #include "Camera.h"
 #include "Sphere.h"
-#include "Light.h"
+#include "Lights.h"
 #include "Plane.h"
 
 #define NUMBER_OF_SPHERES 3
@@ -18,10 +18,8 @@ static struct Scene_s
     Image_t  output_image;
     Camera_t cam;
 
-    size_t  num_of_lights;
-    Light_t lights[NUMBER_OF_LIGHTS];
-
     Objects objects;
+    Lights  lights;
 } Scene;
 
 void Scene_Init()
@@ -53,10 +51,12 @@ void Scene_Init()
     Scene.objects.shapes[3] = (ShapeArray){.type = SHAPE_PLANE, .object.plane = {.colour = {0.5, 0.5, 0.5}, .transform = Transform_Set((vec3){0.0, 0.0, 0.75}, (vec3){0.0, 0.0, 0.0}, (vec3){4.0, 4.0, 1.0})}};
 
     // Setup Lights
-    Scene.lights[0]     = (Light_t){.location = {5.0, -10.0, -5.0}, .colour = {0.0, 0.0, 1.0}, .intensity = 1.0};
-    Scene.lights[1]     = (Light_t){.location = {-5.0, -10.0, -5.0}, .colour = {1.0, 0.0, 0.0}, .intensity = 1.0};
-    Scene.lights[2]     = (Light_t){.location = {0.0, -10.0, -5.0}, .colour = {0.0, 1.0, 0.0}, .intensity = 1.0};
-    Scene.num_of_lights = NUMBER_OF_LIGHTS;
+    Scene.lights.count  = 3;
+    Scene.lights.lights = (LightArray *)malloc(sizeof(LightArray) * Scene.lights.count);
+
+    Scene.lights.lights[0] = (LightArray){.type = LIGHT_POINT, .object.pointLight = {.location = {5.0, -10.0, -5.0}, .colour = {0.0, 0.0, 1.0}, .intensity = 1.0}};
+    Scene.lights.lights[1] = (LightArray){.type = LIGHT_POINT, .object.pointLight = {.location = {-5.0, -10.0, -5.0}, .colour = {1.0, 0.0, 0.0}, .intensity = 1.0}};
+    Scene.lights.lights[2] = (LightArray){.type = LIGHT_POINT, .object.pointLight = {.location = {0.0, -10.0, -5.0}, .colour = {0.0, 1.0, 0.0}, .intensity = 1.0}};
 }
 
 void Scene_Update()
@@ -150,9 +150,9 @@ void Scene_Update()
 
                 for (int i = 0; i < NUMBER_OF_LIGHTS; i++)
                 {
-                    const bool validIllum = Light_Compute_Illumination(&Scene.lights[i],
-                                                                       closest_object_index,
+                    const bool validIllum = Light_Compute_Illumination(Scene.lights.lights[i].object.pointLight,
                                                                        Scene.objects,
+                                                                       closest_object_index,
                                                                        closestIntPoint,
                                                                        closestLocalNormal,
                                                                        &colour,

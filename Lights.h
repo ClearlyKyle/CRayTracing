@@ -13,18 +13,18 @@ enum LightTypes
 
 typedef union
 {
-    Light_t *pointLight;
+    Light_t pointLight;
 } LightObjects;
 
 typedef struct LightArray
 {
     enum LightTypes type;
-    LightObjects object;
+    LightObjects    object;
 } LightArray;
 
 typedef struct Lights
 {
-    size_t count;
+    size_t      count;
     LightArray *lights;
 } Lights;
 

@@ -15,12 +15,14 @@ struct Light_s
 
 typedef struct Light_s Light_t;
 
-bool Light_Compute_Illumination(const Light_t *light,
-                                const size_t   current_object_index,
-                                const Objects  objects,
-                                const vec3     intPoint,
-                                const vec3     localNormal,
-                                vec3 *const    colour,
-                                double *const  intensity);
+#include "Lights.h"
+
+bool Light_Compute_Illumination(const Light_t light,
+                                const Objects objects,
+                                const size_t  current_object_index,
+                                const vec3    intPoint,
+                                const vec3    localNormal,
+                                vec3 *const   colour,
+                                double *const intensity);
 
 #endif // __LIGHT_H__
