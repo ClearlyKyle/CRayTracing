@@ -16,7 +16,7 @@ enum Shapes
     SHAPE_COUNT,
 };
 
-typedef union ShapeObjects
+typedef union
 {
     Sphere sphere;
     Plane  plane;
