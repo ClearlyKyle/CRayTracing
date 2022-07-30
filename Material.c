@@ -15,13 +15,13 @@ vec3 Material_Compute_Colour(const Objects objects,
     return mat_colour;
 }
 
-vec3 Material_Compute_Diffuse_Colour(const Material mat,
-                                     const Objects  objects,
-                                     const Lights   lights,
-                                     const size_t   current_object_index,
-                                     vec3 *const    int_point,
-                                     vec3 *const    local_normal,
-                                     const Ray_t   *camera_ray)
+vec3 Material_Compute_Diffuse_Colour(const Objects objects,
+                                     const Lights  lights,
+                                     const size_t  current_object_index,
+                                     vec3 *const   int_point,
+                                     vec3 *const   local_normal,
+                                     const Ray_t  *camera_ray,
+                                     const vec3    base_colour)
 {
     // Compute the color due to diffuse illumination.
     vec3 diffuse_colour = VEC3_INIT_ZERO;
@@ -65,9 +65,9 @@ vec3 Material_Compute_Diffuse_Colour(const Material mat,
 
     if (illumFound)
     {
-        diffuse_colour.x = red * mat.base_colour.x;
-        diffuse_colour.y = green * mat.base_colour.y;
-        diffuse_colour.z = blue * mat.base_colour.z;
+        diffuse_colour.x = red * base_colour.x;
+        diffuse_colour.y = green * base_colour.y;
+        diffuse_colour.z = blue * base_colour.z;
     }
 
     // Return the material color.
