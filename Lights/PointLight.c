@@ -1,12 +1,12 @@
-#include "Light.h"
+#include "PointLight.h"
 
-bool Light_Compute_Illumination(const Light_t light,
-                                const Objects objects,
-                                const size_t  current_object_index,
-                                const vec3    intPoint,
-                                const vec3    localNormal,
-                                vec3 *const   colour,
-                                double *const intensity)
+bool Light_Compute_Illumination(const PointLight light,
+                                const Objects    objects,
+                                const size_t     current_object_index,
+                                const vec3       intPoint,
+                                const vec3       localNormal,
+                                vec3 *const      colour,
+                                double *const    intensity)
 {
     // Construct a vector pointing from the intersection point to the light.
     const vec3 light_direction = vec3_normalise(vec3_sub(light.location, intPoint));

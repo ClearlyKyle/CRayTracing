@@ -1,14 +1,37 @@
 #ifndef __OBJECTS_H__
 #define __OBJECTS_H__
 
-#include "Sphere.h"
-#include "Plane.h"
-
 #include <stdlib.h>
+#include "../Transform.h"
+
+typedef struct Material
+{
+    double reflectivity;
+    double shininess;
+
+    vec3 base_colour;
+} Material;
 
 // -------------------------------------------------
 // SHAPES
 
+typedef struct
+{
+    vec3      colour;
+    Transform transform;
+
+    Material *material;
+} Plane;
+
+typedef struct
+{
+    vec3      colour;
+    Transform transform;
+
+    Material *mat;
+} Sphere;
+
+// -------------------------------------------------
 enum Shapes
 {
     SHAPE_SPHERE,

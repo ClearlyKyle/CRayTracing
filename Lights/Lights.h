@@ -1,9 +1,20 @@
 #ifndef __LIGHTS_H__
 #define __LIGHTS_H__
 
+#include <stdlib.h>
+#include <stdbool.h>
+
+#include "../vec3.h"
+
 // -------------------------------------------------
 // LIGHTS
-#include "Light.h"
+
+typedef struct
+{
+    vec3   location;
+    vec3   colour;
+    double intensity;
+} PointLight;
 
 enum LightTypes
 {
@@ -13,7 +24,7 @@ enum LightTypes
 
 typedef union
 {
-    Light_t pointLight;
+    PointLight pointLight;
 } LightObjects;
 
 typedef struct LightArray

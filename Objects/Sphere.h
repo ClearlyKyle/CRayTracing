@@ -5,14 +5,10 @@
 #include "vec3.h"
 #include "Ray.h"
 #include "Transform.h"
+#include "Material.h"
 
-struct Sphere
-{
-    vec3      colour;
-    Transform transform;
-};
 
-typedef struct Sphere Sphere;
+
 
 bool Sphere_Test_Intersection(const Sphere sphere,
                               const Ray_t *ray,
