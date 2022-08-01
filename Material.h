@@ -1,18 +1,11 @@
 #ifndef __MATERIAL_H__
 #define __MATERIAL_H__
 
-#include "vec3.h"
 #include "Ray.h"
-#include "Objects.h"
-#include "Lights.h"
+#include "Lights/Lights.h"
+#include "Objects/Objects.h"
 
-typedef struct Material
-{
-    double reflectivity;
-    double shininess;
-
-    vec3 base_colour;
-} Material;
+void inline Material_Set_Reflection_Ray_Count(const int value);
 
 // Function to return the color of the material.
 vec3 Material_Compute_Colour(const Objects objects,
@@ -38,7 +31,8 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
                                         const size_t   current_object_index,
                                         vec3 *const    int_point,
                                         vec3 *const    local_normal,
-                                        const Ray_t   *incident_ray);
+                                        const Ray_t   *incident_ray,
+                                        const vec3     base_colour);
 
 // Function to cast a ray into the scene.
 bool Material_Cast_Ray(Ray_t *const  cast_ray,

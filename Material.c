@@ -1,7 +1,16 @@
 #include "Material.h"
 
+#include "Lights/PointLight.h"
+#include "Objects/Plane.h"
+#include "Objects/Sphere.h"
+
 static int Max_Reflection_Rays;
 static int Reflection_Ray_Count;
+
+void inline Material_Set_Reflection_Ray_Count(const int value)
+{
+    Reflection_Ray_Count = value;
+}
 
 vec3 Material_Compute_Colour(const Objects objects,
                              const Lights  lights,
@@ -80,9 +89,10 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
                                         const size_t   current_object_index,
                                         vec3 *const    int_point,
                                         vec3 *const    local_normal,
-                                        const Ray_t   *incident_ray)
+                                        const Ray_t   *incident_ray,
+                                        const vec3     base_colour)
 {
-    vec3 reflection_colour = VEC3_INIT_ZERO;
+    // vec3 reflection_colour = VEC3_INIT_ZERO;
 
     // Compute the reflection vector.
     const vec3 reflection_vector = vec3_reflection(incident_ray->lab, *local_normal);
@@ -99,7 +109,7 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
     const bool intersectionFound = Material_Cast_Ray(&reflection_ray,
                                                      objects,
                                                      current_object_index,
-                                                     closest_object_index,
+                                                     &closest_object_index,
                                                      &closest_int_point,
                                                      &closest_local_normal,
                                                      &closest_local_colour);
@@ -122,18 +132,18 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
                 current_object_index,
                 &closest_int_point,
                 &closest_local_normal,
-                &closest_local_colour);
+                &reflection_ray);
         }
         else
         {
             mat_colour = Material_Compute_Diffuse_Colour(
-                mat,
                 objects,
                 lights,
-                closest_object_index,
+                current_object_index,
                 &closest_int_point,
                 &closest_local_normal,
-                incident_ray);
+                incident_ray,
+                base_colour);
         }
     }
     else
