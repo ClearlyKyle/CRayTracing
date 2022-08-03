@@ -7,10 +7,14 @@ set(CMAKE_C_STANDARD_REQUIRED TRUE)
 
 find_package(SDL2 CONFIG REQUIRED)
 
-file(GLOB SOURCE_FILES
-    "**.h"
-    "**.c"
+file(GLOB_RECURSE SOURCE_FILES
+    "src/*.h"
+    "src/*.c"
 )
+
+foreach(name ${SOURCE_FILES})
+    message(STATUS "${name}")
+endforeach()
 
 add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
 
