@@ -1,12 +1,12 @@
 #include "SimpleMaterial.h"
 
-vec3 SimpleMaterial_Compute_Colour(const Material mat,
-                                   const Objects  objects,
-                                   const Lights   lights,
-                                   const size_t   current_object_index,
-                                   vec3 *const    int_point,
-                                   vec3 *const    local_normal,
-                                   const Ray_t   *camera_ray)
+vec3 Simple_Material_Compute_Colour(const Material mat,
+                                    const Objects  objects,
+                                    const Lights   lights,
+                                    const size_t   current_object_index,
+                                    vec3 *const    int_point,
+                                    vec3 *const    local_normal,
+                                    const Ray_t   *camera_ray)
 {
     // Define the initial material colors.
     vec3 mat_colour = VEC3_INIT_ZERO;

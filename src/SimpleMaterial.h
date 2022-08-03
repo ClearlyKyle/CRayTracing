@@ -6,14 +6,12 @@
 
 #include "Material.h"
 
-struct SimpleMaterial
+typedef struct SimpleMaterial
 {
     vec3   base_colour; // 1.0, 0.0, 1.0
     double reflectivity;
     double shininess;
-};
-
-typedef struct SimpleMaterial SimpleMaterial;
+} SimpleMaterial;
 
 inline SimpleMaterial SimpleMaterial_Init()
 {
@@ -25,13 +23,13 @@ inline SimpleMaterial SimpleMaterial_Init()
 }
 
 // Function to return the color.
-vec3 SimpleMaterial_Compute_Colour(const Material mat,
-                                   const Objects  objects,
-                                   const Lights   lights,
-                                   const size_t   current_object_index,
-                                   vec3 *const    int_point,
-                                   vec3 *const    local_normal,
-                                   const Ray_t   *camera_ray);
+vec3 Simple_Material_Compute_Colour(const Material mat,
+                                    const Objects  objects,
+                                    const Lights   lights,
+                                    const size_t   current_object_index,
+                                    vec3 *const    int_point,
+                                    vec3 *const    local_normal,
+                                    const Ray_t   *camera_ray);
 
 // Function to compute specular highlights.
 vec3 SimpleMaterial_Compute_Specular(const Material mat,
