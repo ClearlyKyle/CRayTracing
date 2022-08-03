@@ -1,7 +1,7 @@
 #include "Material.h"
 
-static int Max_Reflection_Rays;
-static int Reflection_Ray_Count;
+static int Max_Reflection_Rays  = 3;
+static int Reflection_Ray_Count = 0;
 
 void Material_Set_Reflection_Ray_Count(const int value)
 {
