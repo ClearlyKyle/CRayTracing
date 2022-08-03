@@ -20,7 +20,7 @@ typedef struct
     vec3      colour;
     Transform transform;
 
-    Material *material;
+    Material *mat;
 } Plane;
 
 typedef struct
