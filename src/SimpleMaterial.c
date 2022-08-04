@@ -1,4 +1,4 @@
-#include "SimpleMaterial.h"
+#include "Material.h"
 
 vec3 Simple_Material_Compute_Colour(const Material mat,
                                     const Objects  objects,

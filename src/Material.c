@@ -111,23 +111,32 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
 
     /* Compute illumination for closest object assuming that there was a valid intersection. */
     vec3 mat_colour = VEC3_INIT_ZERO;
+
     if ((intersectionFound) && (Reflection_Ray_Count < Max_Reflection_Rays))
     {
         // Increment the reflectionRayCount.
         Reflection_Ray_Count++;
 
         // Check if a material has been assigned.
-        // TODO : Check this has a material
-        if (current_object_index)
+        if (objects.shapes[current_object_index].object.plane.mat || objects.shapes[current_object_index].object.sphere.mat)
         {
+            // Need to call material function here...
             // Use the material to compute the color.
-            mat_colour = Material_Compute_Colour(
-                objects,
-                lights,
-                current_object_index,
-                &closest_int_point,
-                &closest_local_normal,
-                &reflection_ray);
+            // mat_colour = Material_Compute_Colour(
+            //     objects,
+            //     lights,
+            //     current_object_index,
+            //     &closest_int_point,
+            //     &closest_local_normal,
+            //     &reflection_ray);
+
+            mat_colour = Simple_Material_Compute_Colour(mat,
+                                                        objects,
+                                                        lights,
+                                                        current_object_index,
+                                                        &closest_int_point,
+                                                        &closest_local_normal,
+                                                        &reflection_ray);
         }
         else
         {
