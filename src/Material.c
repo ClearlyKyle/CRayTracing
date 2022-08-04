@@ -39,13 +39,12 @@ vec3 Material_Compute_Diffuse_Colour(const Objects objects,
     bool   validIllum = false;
     bool   illumFound = false;
 
-    for (int current_object_index = 0; current_object_index < lights.count; current_object_index++)
+    for (int current_light = 0; current_light < lights.count; current_light++)
     {
-        switch (lights.lights[current_object_index].type)
+        switch (lights.lights[current_light].type)
         {
-
         case LIGHT_POINT:
-            validIllum = Light_Compute_Illumination(lights.lights[current_object_index].object.pointLight,
+            validIllum = Light_Compute_Illumination(lights.lights[current_light].object.pointLight,
                                                     objects,
                                                     current_object_index,
                                                     *int_point,
@@ -55,7 +54,7 @@ vec3 Material_Compute_Diffuse_Colour(const Objects objects,
             break;
 
         default:
-            fprintf(stderr, "THIS LIGHT IS NOT SUPPORTED : %d\n", lights.lights[current_object_index].type);
+            fprintf(stderr, "THIS LIGHT IS NOT SUPPORTED : %d\n", lights.lights[current_light].type);
             // app.running = false;
             break;
         }
