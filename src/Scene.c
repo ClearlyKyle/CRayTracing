@@ -5,7 +5,7 @@
 #include "Camera.h"
 #include "Image.h"
 
-#include "SimpleMaterial.h"
+#include "Material.h"
 
 static struct Scene_s
 {
