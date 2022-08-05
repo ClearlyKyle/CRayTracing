@@ -23,12 +23,12 @@ void Scene_Init()
     SDL_Texture *texture = SDL_CreateTexture(app.renderer, SDL_PIXELFORMAT_RGBX8888, SDL_TEXTUREACCESS_STREAMING, app.width, app.height);
 
     // Initialise image
-    Image_t image      = Image_Initialize(800, 800, app.renderer);
+    Image_t image      = Image_Initialize(app.width, app.height, app.renderer);
     Scene.output_image = image;
 
     // Setup Camera
     Scene.cam = (Camera_t){
-        .position        = {0.0, -10.0, 0.0},
+        .position        = {0.0, -10.0, -2.0},
         .lookat          = {0.0, 0.0, 0.0},
         .up              = {0.0, 0.0, 1.0},
         .length          = 1.0,
@@ -47,9 +47,9 @@ void Scene_Init()
     Scene.objects.count  = 4;
     Scene.objects.shapes = (ShapeArray *)malloc(sizeof(ShapeArray) * Scene.objects.count);
 
-    Scene.objects.shapes[0] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.mat = &Scene.mats[0], .colour = {0.25, 0.5, 0.8}, .transform = Transform_Set((vec3){-2.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.75})}};
-    Scene.objects.shapes[1] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.mat = &Scene.mats[1], .colour = {1.0, 0.5, 0.0}, .transform = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.5, 0.5})}};
-    Scene.objects.shapes[2] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.mat = &Scene.mats[2], .colour = {1.0, 0.8, 0.0}, .transform = Transform_Set((vec3){2.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75})}};
+    Scene.objects.shapes[0] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.mat = &Scene.mats[0], .colour = {0.25, 0.5, 0.8}, .transform = Transform_Set((vec3){-2.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5})}};
+    Scene.objects.shapes[1] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.mat = &Scene.mats[1], .colour = {1.0, 0.5, 0.0}, .transform = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5})}};
+    Scene.objects.shapes[2] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.mat = &Scene.mats[2], .colour = {1.0, 0.8, 0.0}, .transform = Transform_Set((vec3){2.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5})}};
     Scene.objects.shapes[3] = (ShapeArray){.type = SHAPE_PLANE, .object.plane = {.mat = &Scene.mats[3], .colour = {0.5, 0.5, 0.5}, .transform = Transform_Set((vec3){0.0, 0.0, 0.75}, (vec3){0.0, 0.0, 0.0}, (vec3){4.0, 4.0, 1.0})}};
 
     // Setup Lights
