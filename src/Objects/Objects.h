@@ -12,6 +12,8 @@ typedef struct Material
     vec3 base_colour;
 } Material;
 
+// void (*material_function_pointer)(int) = &fun;
+
 // -------------------------------------------------
 // SHAPES
 
@@ -19,16 +21,12 @@ typedef struct
 {
     vec3      colour;
     Transform transform;
-
-    Material *mat;
 } Plane;
 
 typedef struct
 {
     vec3      colour;
     Transform transform;
-
-    Material *mat;
 } Sphere;
 
 // -------------------------------------------------
@@ -48,6 +46,7 @@ typedef union
 typedef struct ShapesArray
 {
     enum Shape_Types type;
+    Material        *mat;
     ShapeObjects     object;
 } ShapeArray;
 
