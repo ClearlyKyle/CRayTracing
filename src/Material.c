@@ -25,7 +25,6 @@ vec3 Material_Compute_Diffuse_Colour(const Objects objects,
                                      const size_t  current_object_index,
                                      vec3 *const   int_point,
                                      vec3 *const   local_normal,
-                                     const Ray_t  *camera_ray,
                                      const vec3    base_colour)
 {
     // Compute the color due to diffuse illumination.
@@ -118,22 +117,12 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
         Reflection_Ray_Count++;
 
         // Check if a material has been assigned.
-        if (objects.shapes[current_object_index].object.plane.mat || objects.shapes[current_object_index].object.sphere.mat)
+        if (objects.shapes[closest_object_index].mat)
         {
-            // Need to call material function here...
-            // Use the material to compute the color.
-            // mat_colour = Material_Compute_Colour(
-            //     objects,
-            //     lights,
-            //     current_object_index,
-            //     &closest_int_point,
-            //     &closest_local_normal,
-            //     &reflection_ray);
-
             mat_colour = Simple_Material_Compute_Colour(mat,
                                                         objects,
                                                         lights,
-                                                        current_object_index,
+                                                        closest_object_index,
                                                         &closest_int_point,
                                                         &closest_local_normal,
                                                         &reflection_ray);
@@ -143,11 +132,10 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
             mat_colour = Material_Compute_Diffuse_Colour(
                 objects,
                 lights,
-                current_object_index,
+                closest_object_index,
                 &closest_int_point,
                 &closest_local_normal,
-                incident_ray,
-                base_colour);
+                closest_local_colour);
         }
     }
     else
@@ -176,37 +164,39 @@ bool Material_Cast_Ray(Ray_t *const  cast_ray,
 
     for (size_t i = 0; i < objects.count; i++)
     {
-        bool validInt = false;
-
-        switch (objects.shapes[i].type)
+        if (i != current_object_index)
         {
-        case SHAPE_SPHERE:
-            validInt = Sphere_Test_Intersection(objects.shapes[i].object.sphere, cast_ray, &int_point, &local_normal, &local_colour);
-            break;
+            bool validInt = false;
 
-        case SHAPE_PLANE:
-            validInt = Plane_Test_Intersection(objects.shapes[i].object.plane, cast_ray, &int_point, &local_normal, &local_colour);
-            break;
-
-        default:
-            fprintf(stderr, "THIS SHAPE IS NOT SUPPORTED : %d\n", objects.shapes[i].type);
-            break;
-        }
-
-        if (validInt)
-        {
-            intersection_found = true;
-
-            // Compute the distance between the camera and the point of intersection.
-            const double dist = vec3_length(vec3_sub(int_point, cast_ray->point1));
-
-            if (dist < minDist)
+            switch (objects.shapes[i].type)
             {
-                *closests_object_index = i;
-                minDist                = dist;
-                *closests_int_point    = int_point;
-                *closests_local_normal = local_normal;
-                *closests_local_colour = local_colour;
+            case SHAPE_SPHERE:
+                validInt = Sphere_Test_Intersection(objects.shapes[i].object.sphere, cast_ray, &int_point, &local_normal, &local_colour);
+                break;
+
+            case SHAPE_PLANE:
+                validInt = Plane_Test_Intersection(objects.shapes[i].object.plane, cast_ray, &int_point, &local_normal, &local_colour);
+                break;
+
+            default:
+                fprintf(stderr, "THIS SHAPE IS NOT SUPPORTED : %d\n", objects.shapes[i].type);
+                break;
+            }
+            if (validInt)
+            {
+                intersection_found = true;
+
+                // Compute the distance between the camera and the point of intersection.
+                const double dist = vec3_length(vec3_sub(int_point, cast_ray->point1));
+
+                if (dist < minDist)
+                {
+                    *closests_object_index = i;
+                    minDist                = dist;
+                    *closests_int_point    = int_point;
+                    *closests_local_normal = local_normal;
+                    *closests_local_colour = local_colour;
+                }
             }
         }
     }

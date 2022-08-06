@@ -20,7 +20,6 @@ vec3 Material_Compute_Diffuse_Colour(const Objects objects,
                                      const size_t  current_object_index,
                                      vec3 *const   int_point,
                                      vec3 *const   local_normal,
-                                     const Ray_t  *camera_ray,
                                      const vec3    base_colour);
 
 // Function to compute the reflection color.
