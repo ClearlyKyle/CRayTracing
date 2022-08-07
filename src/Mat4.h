@@ -206,9 +206,9 @@ inline Mat4 Mat4_Make_Transform(const vec3 v)
 {
     Mat4 dest = {0};
 
-    dest.elements[0][3] = v.x;
-    dest.elements[1][3] = v.y;
-    dest.elements[2][3] = v.z;
+    dest.elements[3][0] = v.x;
+    dest.elements[3][1] = v.y;
+    dest.elements[3][2] = v.z;
 
     dest.elements[0][0] = 1.0;
     dest.elements[1][1] = 1.0;
@@ -222,10 +222,10 @@ inline vec4 Mat4_mul_vec4(const Mat4 m, const vec4 v)
 {
     vec4 dest = {0};
 
-    dest.x = m.elements[0][0] * v.x + m.elements[0][1] * v.y + m.elements[0][2] * v.z + m.elements[0][3] * v.w;
-    dest.y = m.elements[1][0] * v.x + m.elements[1][1] * v.y + m.elements[1][2] * v.z + m.elements[1][3] * v.w;
-    dest.z = m.elements[2][0] * v.x + m.elements[2][1] * v.y + m.elements[2][2] * v.z + m.elements[2][3] * v.w;
-    dest.w = m.elements[3][0] * v.x + m.elements[3][1] * v.y + m.elements[3][2] * v.z + m.elements[3][3] * v.w;
+    dest.x = m.elements[0][0] * v.x + m.elements[1][0] * v.y + m.elements[2][0] * v.z + m.elements[3][0] * v.w;
+    dest.y = m.elements[0][1] * v.x + m.elements[1][1] * v.y + m.elements[2][1] * v.z + m.elements[3][1] * v.w;
+    dest.z = m.elements[0][2] * v.x + m.elements[1][2] * v.y + m.elements[2][2] * v.z + m.elements[3][2] * v.w;
+    dest.w = m.elements[0][3] * v.x + m.elements[1][3] * v.y + m.elements[2][3] * v.z + m.elements[3][3] * v.w;
 
     return dest;
 }
