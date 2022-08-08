@@ -86,9 +86,9 @@ inline double vec3_dot(const vec3 a, const vec3 b)
 inline vec3 vec3_reflection(const vec3 ray, const vec3 normal)
 {
     // ray - (2 * dot(ray, normal) * normal)
-    const vec3 rhs = vec3_mul_scal(normal, vec3_dot(ray, normal));
+    const vec3 rhs = vec3_mul_scal(normal, 2.0 * vec3_dot(ray, normal));
 
-    return vec3_sub(ray, vec3_mul_scal(rhs, 2.0));
+    return vec3_sub(ray, rhs);
 }
 
 #endif // __VEC3_H__
