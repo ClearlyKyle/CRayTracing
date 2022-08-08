@@ -48,13 +48,13 @@ vec3 SimpleMaterial_Compute_Specular(const Material mat,
     double blue  = 0.0;
 
     // Loop through all of the lights in the scene.
-    for (int i = 0; i < lights.count; i++)
+    for (size_t current_light = 0; current_light < lights.count; current_light++)
     {
         /* Check for intersections with all objects in the scene. */
         double intensity = 0.0;
 
         // Construct a vector pointing from the intersection point to the light.
-        const vec3 light_direction = vec3_normalise(vec3_sub(lights.lights[i].object.pointLight.location, *int_point));
+        const vec3 light_direction = vec3_normalise(vec3_sub(lights.lights[current_light].object.pointLight.location, *int_point));
 
         // Compute a start point.
         const vec3 start_point = vec3_add(vec3_mul_scal(light_direction, 0.001), *int_point);
@@ -68,22 +68,22 @@ vec3 SimpleMaterial_Compute_Specular(const Material mat,
         vec3 poi_colour = VEC3_INIT_ZERO;
         bool validInt   = false;
 
-        for (size_t i = 0; i < objects.count; i++)
+        for (size_t current_object = 0; current_object < objects.count; current_object++)
         {
             bool validInt = false;
 
-            switch (objects.shapes[i].type)
+            switch (objects.shapes[current_object].type)
             {
             case SHAPE_SPHERE:
-                validInt = Sphere_Test_Intersection(objects.shapes[i].object.sphere, &light_ray, &poi, &poi_normal, &poi_colour);
+                validInt = Sphere_Test_Intersection(objects.shapes[current_object].object.sphere, &light_ray, &poi, &poi_normal, &poi_colour);
                 break;
 
             case SHAPE_PLANE:
-                validInt = Plane_Test_Intersection(objects.shapes[i].object.plane, &light_ray, &poi, &poi_normal, &poi_colour);
+                validInt = Plane_Test_Intersection(objects.shapes[current_object].object.plane, &light_ray, &poi, &poi_normal, &poi_colour);
                 break;
 
             default:
-                fprintf(stderr, "THIS SHAPE IS NOT SUPPORTED : %d\n", objects.shapes[i].type);
+                fprintf(stderr, "THIS SHAPE IS NOT SUPPORTED : %d\n", objects.shapes[current_object].type);
                 break;
             }
 
@@ -111,9 +111,9 @@ vec3 SimpleMaterial_Compute_Specular(const Material mat,
             }
         }
 
-        red += lights.lights[i].object.pointLight.colour.x * intensity;
-        green += lights.lights[i].object.pointLight.colour.y * intensity;
-        blue += lights.lights[i].object.pointLight.colour.z * intensity;
+        red += lights.lights[current_light].object.pointLight.colour.x * intensity;
+        green += lights.lights[current_light].object.pointLight.colour.y * intensity;
+        blue += lights.lights[current_light].object.pointLight.colour.z * intensity;
     }
 
     return (vec3){red, green, blue};
