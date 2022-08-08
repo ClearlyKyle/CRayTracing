@@ -47,10 +47,10 @@ void Scene_Init()
     Scene.objects.count  = 4;
     Scene.objects.shapes = (ShapeArray *)malloc(sizeof(ShapeArray) * Scene.objects.count);
 
-    Scene.objects.shapes[0] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.mat = &Scene.mats[0], .colour = {0.25, 0.5, 0.8}, .transform = Transform_Set((vec3){-2.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5})}};
-    Scene.objects.shapes[1] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.mat = &Scene.mats[1], .colour = {1.0, 0.5, 0.0}, .transform = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5})}};
-    Scene.objects.shapes[2] = (ShapeArray){.type = SHAPE_SPHERE, .object.sphere = {.mat = &Scene.mats[2], .colour = {1.0, 0.8, 0.0}, .transform = Transform_Set((vec3){2.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5})}};
-    Scene.objects.shapes[3] = (ShapeArray){.type = SHAPE_PLANE, .object.plane = {.mat = &Scene.mats[3], .colour = {0.5, 0.5, 0.5}, .transform = Transform_Set((vec3){0.0, 0.0, 0.75}, (vec3){0.0, 0.0, 0.0}, (vec3){4.0, 4.0, 1.0})}};
+    Scene.objects.shapes[0] = (ShapeArray){.type = SHAPE_SPHERE, .mat = &Scene.mats[2], .object.sphere = {.colour = {0.25, 0.5, 0.8}, .transform = Transform_Set((vec3){-1.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5})}};
+    Scene.objects.shapes[1] = (ShapeArray){.type = SHAPE_SPHERE, .mat = &Scene.mats[0], .object.sphere = {.colour = {1.0, 0.5, 0.0}, .transform = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5})}};
+    Scene.objects.shapes[2] = (ShapeArray){.type = SHAPE_SPHERE, .mat = &Scene.mats[1], .object.sphere = {.colour = {1.0, 0.8, 0.0}, .transform = Transform_Set((vec3){1.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5})}};
+    Scene.objects.shapes[3] = (ShapeArray){.type = SHAPE_PLANE, .mat = &Scene.mats[3], .object.plane = {.colour = {0.5, 0.5, 0.5}, .transform = Transform_Set((vec3){0.0, 0.0, 0.75}, (vec3){0.0, 0.0, 0.0}, (vec3){4.0, 4.0, 1.0})}};
 
     // Setup Lights
     Scene.lights.count  = 3;
@@ -71,31 +71,31 @@ void Scene_Update()
     double       minDist = 1e6;
     double       maxDist = 0.0;
 
+    vec3 intPoint    = VEC3_INIT_ZERO;
+    vec3 localNormal = VEC3_INIT_ZERO;
+    vec3 localColor  = VEC3_INIT_ZERO;
+    vec3 base_colour = VEC3_INIT_ZERO;
+
+    vec3 closestIntPoint    = VEC3_INIT_ZERO;
+    vec3 closestLocalNormal = VEC3_INIT_ZERO;
+    vec3 closestLocalColor  = VEC3_INIT_ZERO;
+
     for (unsigned int x = 0; x < x_size; x++)
     {
         for (unsigned int y = 0; y < y_size; y++)
         {
             // Normalize the x and y coordinates.
-            double normX = ((double)x * xFact) - 1.0;
-            double normY = ((double)y * yFact) - 1.0;
+            const double normX = ((double)x * xFact) - 1.0;
+            const double normY = ((double)y * yFact) - 1.0;
 
             // Generate the ray for this pixel.
             const Ray_t cameraRay = Camera_Generate_Ray(&Scene.cam, normX, normY);
 
             // Test for intersections with all objects in the scene.
-            vec3 closestIntPoint    = VEC3_INIT_ZERO;
-            vec3 closestLocalNormal = VEC3_INIT_ZERO;
-            vec3 closestLocalColor  = VEC3_INIT_ZERO;
-
             size_t closest_object_index = 0;
 
             // CAST RAY
             // Loop over each pixel in our image.
-            vec3 intPoint    = VEC3_INIT_ZERO;
-            vec3 localNormal = VEC3_INIT_ZERO;
-            vec3 localColor  = VEC3_INIT_ZERO;
-            vec3 base_colour = VEC3_INIT_ZERO;
-
             double    minDist            = 1e6;
             bool      intersection_found = false;
             Material *material           = NULL;
@@ -110,13 +110,11 @@ void Scene_Update()
                 case SHAPE_SPHERE:
                     validInt    = Sphere_Test_Intersection(Scene.objects.shapes[object_index].object.sphere, &cameraRay, &intPoint, &localNormal, &localColor);
                     base_colour = Scene.objects.shapes[object_index].object.sphere.colour;
-                    material    = Scene.objects.shapes[object_index].object.sphere.mat;
                     break;
 
                 case SHAPE_PLANE:
                     validInt    = Plane_Test_Intersection(Scene.objects.shapes[object_index].object.plane, &cameraRay, &intPoint, &localNormal, &localColor);
                     base_colour = Scene.objects.shapes[object_index].object.plane.colour;
-                    material    = Scene.objects.shapes[object_index].object.plane.mat;
                     break;
 
                 default:
@@ -147,22 +145,22 @@ void Scene_Update()
             if (intersection_found)
             {
                 // Check if the object has a material.
-                if (material)
+                if (Scene.objects.shapes[closest_object_index].mat)
                 {
                     // Use the material to compute the color.
                     Material_Set_Reflection_Ray_Count(0);
 
                     // Call the matrials Compute_Colour - eg, basic material
-                    const vec3 colour = Simple_Material_Compute_Colour(*material, Scene.objects, Scene.lights, closest_object_index, &closestIntPoint, &closestLocalNormal, &cameraRay);
+                    const vec3 colour = Simple_Material_Compute_Colour(*Scene.objects.shapes[closest_object_index].mat, Scene.objects, Scene.lights, closest_object_index, &closestIntPoint, &closestLocalNormal, &cameraRay);
 
-                    Image_SetPixel(&Scene.output_image, x, y, colour.x, colour.y, colour.x);
+                    Image_SetPixel(&Scene.output_image, x, y, colour.x, colour.y, colour.z);
                 }
                 else
                 {
                     // Use the basic method to compute the color.
-                    const vec3 colour = Material_Compute_Diffuse_Colour(Scene.objects, Scene.lights, closest_object_index, &closestIntPoint, &closestLocalNormal, &cameraRay, base_colour);
+                    const vec3 colour = Material_Compute_Diffuse_Colour(Scene.objects, Scene.lights, closest_object_index, &closestIntPoint, &closestLocalNormal, base_colour);
 
-                    Image_SetPixel(&Scene.output_image, x, y, colour.x, colour.y, colour.x);
+                    Image_SetPixel(&Scene.output_image, x, y, colour.x, colour.y, colour.z);
                 }
             }
         }
