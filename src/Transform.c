@@ -3,7 +3,7 @@
 vec3 Transform_Apply_Forward(const Transform trans, const vec3 in_vec)
 {
     // convert vec3 to vec4
-    const vec4 tmp = {in_vec.x, in_vec.y, in_vec.z, 1.0f};
+    const vec4 tmp = {in_vec.x, in_vec.y, in_vec.z, 1.0};
 
     // Apply forward transform
     const vec4 res = Mat4_mul_vec4(trans.forward, tmp);
@@ -14,7 +14,7 @@ vec3 Transform_Apply_Forward(const Transform trans, const vec3 in_vec)
 vec3 Transform_Apply_Backwards(const Transform trans, const vec3 in_vec)
 {
     // convert vec3 to vec4
-    const vec4 tmp = {in_vec.x, in_vec.y, in_vec.z, 1.0f};
+    const vec4 tmp = {in_vec.x, in_vec.y, in_vec.z, 1.0};
 
     // Apply forward transform
     const vec4 res = Mat4_mul_vec4(trans.backwards, tmp);
