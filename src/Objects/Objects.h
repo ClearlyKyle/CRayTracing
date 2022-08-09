@@ -13,6 +13,16 @@ typedef struct Material
 } Material;
 
 // void (*material_function_pointer)(int) = &fun;
+// void (*shape_test_intersection)(int) = &fun;
+
+// TODO : Switch shapes to this
+// typedef struct Shape
+//{
+//     vec3      base_colour;
+//     Transform transform;
+//     Material  material;
+//     bool      has_material;
+// } Shape
 
 // -------------------------------------------------
 // SHAPES
@@ -29,11 +39,18 @@ typedef struct
     Transform transform;
 } Sphere;
 
+typedef struct
+{
+    vec3      colour;
+    Transform transform;
+} Cone;
+
 // -------------------------------------------------
 enum Shapes
 {
     SHAPE_SPHERE,
     SHAPE_PLANE,
+    SHAPE_CONE,
     SHAPE_COUNT,
 };
 
