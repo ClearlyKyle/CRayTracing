@@ -164,7 +164,7 @@ bool Cone_Test_Intersection(
                 vec3 new_normal = vec3_sub(Transform_Apply_Forward(transform, normal_vector), globalOrigin);
                 new_normal      = vec3_normalise(new_normal);
 
-                // Return the base color.
+                *local_normal = new_normal;
                 *local_colour = base_colour;
 
                 return true;
