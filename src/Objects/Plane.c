@@ -1,11 +1,14 @@
 #include "Objects.h"
 
-#define CLOSE_ENOUGH(D1, D2) fabs((D1) - (D2)) < 1e-21f
-
-bool Plane_Test_Intersection(const Plane plane, const Ray_t *ray, vec3 *int_point, vec3 *local_normal, vec3 *local_colour)
+bool Plane_Test_Intersection(const Transform transform,
+                             const vec3      base_colour,
+                             const Ray_t     ray,
+                             vec3 *const     int_point,
+                             vec3 *const     local_normal,
+                             vec3 *const     local_colour)
 {
     // Copy the ray and apply the backwards transform.
-    const Ray_t back_ray = Transform_Apply_Ray(plane.transform, *ray, false);
+    const Ray_t back_ray = Transform_Apply_Ray(transform, ray, false);
 
     // Copy the m_lab vector from bckRay and normalize it.
     const vec3 k = vec3_normalise(back_ray.lab);
@@ -31,18 +34,18 @@ bool Plane_Test_Intersection(const Plane plane, const Ray_t *ray, vec3 *int_poin
                 const vec3 poi = vec3_add(back_ray.point1, vec3_mul_scal(k, t));
 
                 // Transform the intersection point back into world coordinates.
-                *int_point = Transform_Apply_Forward(plane.transform, poi);
+                *int_point = Transform_Apply_Forward(transform, poi);
 
                 // Compute the local normal.
                 const vec3 localOrigin  = {0.0, 0.0, 0.0};
                 const vec3 normalVector = {0.0, 0.0, -1.0};
 
-                const vec3 globalOrigin = Transform_Apply_Forward(plane.transform, localOrigin);
-                *local_normal           = vec3_sub(Transform_Apply_Forward(plane.transform, normalVector), globalOrigin);
+                const vec3 globalOrigin = Transform_Apply_Forward(transform, localOrigin);
+                *local_normal           = vec3_sub(Transform_Apply_Forward(transform, normalVector), globalOrigin);
                 *local_normal           = NORMALISE_VEC3(*local_normal);
 
                 // Return the base color.
-                *local_colour = plane.colour;
+                *local_colour = base_colour;
 
                 return true;
             }

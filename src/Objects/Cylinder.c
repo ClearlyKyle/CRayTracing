@@ -1,14 +1,12 @@
 #include "Objects.h"
 
-bool Cylinder_Test_Intersection(
-    const Ray_t ray,
-    vec3 *const int_point,
-    vec3 *const local_normal,
-    vec3 *const local_colour)
+bool Cylinder_Test_Intersection(const Transform transform,
+                                const vec3      base_colour,
+                                const Ray_t     ray,
+                                vec3 *const     int_point,
+                                vec3 *const     local_normal,
+                                vec3 *const     local_colour)
 {
-    Transform transform   = {0};
-    vec3      base_colour = {0};
-
     // Copy the ray and apply the backwards transform.
     const Ray_t bck_ray = Transform_Apply_Ray(transform, ray, false);
 
@@ -24,7 +22,7 @@ bool Cylinder_Test_Intersection(
     const double c = pow(p.x, 2.0) + pow(p.y, 2.0) - 1.0;
 
     // Compute b^2 - 4ac.
-    const double numSQRT = sqrtf(pow(b, 2.0) - 4 * a * c);
+    const double numSQRT = sqrt(pow(b, 2.0) - 4.0 * a * c);
 
     // Test for intersections.
     // First with the cylinder itself.
@@ -73,7 +71,7 @@ bool Cylinder_Test_Intersection(
     }
 
     // And test the end caps.
-    if (CloseEnough(v.z, 0.0))
+    if (CLOSE_ENOUGH(v.z, 0.0))
     {
         t3Valid = false;
         t4Valid = false;
@@ -91,7 +89,7 @@ bool Cylinder_Test_Intersection(
         poi[3] = vec3_add(bck_ray.point1, vec3_mul_scal(v, t[3]));
 
         // Check if these are valid.
-        if ((t[2] > 0.0) && (sqrtf(pow(poi[2].x, 2.0) + pow(poi[2].y, 2.0)) < 1.0))
+        if ((t[2] > 0.0) && (sqrt(pow(poi[2].x, 2.0) + pow(poi[2].y, 2.0)) < 1.0))
         {
             t3Valid = true;
         }
@@ -101,7 +99,7 @@ bool Cylinder_Test_Intersection(
             t[2]    = 100e6;
         }
 
-        if ((t[3] > 0.0) && (sqrtf(pow(poi[3].x, 2.0) + pow(poi[3].y, 2.0)) < 1.0))
+        if ((t[3] > 0.0) && (sqrt(pow(poi[3].x, 2.0) + pow(poi[3].y, 2.0)) < 1.0))
         {
             t4Valid = true;
         }
@@ -152,10 +150,10 @@ bool Cylinder_Test_Intersection(
     else
     {
         // Otherwise check the end caps.
-        if (!CloseEnough(v.z, 0.0))
+        if (!CLOSE_ENOUGH(v.z, 0.0))
         {
             // Check if we are inside the disk.
-            if (sqrtf(pow(valid_POI.x, 2.0) + pow(valid_POI.y, 2.0)) < 1.0)
+            if (sqrt(pow(valid_POI.x, 2.0) + pow(valid_POI.y, 2.0)) < 1.0)
             {
                 // Transform the intersection point back into world coordinates.
                 *int_point = Transform_Apply_Forward(transform, valid_POI);

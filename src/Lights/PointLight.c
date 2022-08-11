@@ -18,30 +18,21 @@ bool Light_Compute_Illumination(const PointLight light,
     const Ray_t lightRay = Ray_Init(start_point, vec3_add(start_point, light_direction));
 
     /* Check for intersections with all of the objects in the scene, except for the current one. */
-    vec3 poi       = VEC3_INIT_ZERO;
-    vec3 poiNormal = VEC3_INIT_ZERO;
-    vec3 poiColor  = VEC3_INIT_ZERO;
-    bool validInt  = false;
+    vec3 poi        = VEC3_INIT_ZERO;
+    vec3 poi_normal = VEC3_INIT_ZERO;
+    vec3 poi_colour = VEC3_INIT_ZERO;
+    bool validInt   = false;
 
     for (size_t i = 0; i < objects.count; i++)
     {
         if (i != current_object_index)
         {
-            switch (objects.shapes[i].type)
-            {
-            case SHAPE_SPHERE:
-                validInt = Sphere_Test_Intersection(objects.shapes[i].object.sphere, &lightRay, &poi, &poiNormal, &poiColor);
-                break;
-
-            case SHAPE_PLANE:
-                validInt = Plane_Test_Intersection(objects.shapes[i].object.plane, &lightRay, &poi, &poiNormal, &poiColor);
-                break;
-
-            default:
-                fprintf(stderr, "THIS SHAPE IS NOT SUPPORTED : %d\n", objects.shapes[i].type);
-                // app.running = false;
-                break;
-            }
+            validInt = objects.shapes[i].Test_Intersection(objects.shapes[i].transform,
+                                                           objects.shapes[i].base_colour,
+                                                           lightRay,
+                                                           &poi,
+                                                           &poi_normal,
+                                                           &poi_colour);
         }
 
         // If we have an intersection, then there is no point checking further so we can break out of the loop. In other words, this object is

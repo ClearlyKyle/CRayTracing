@@ -70,22 +70,12 @@ vec3 SimpleMaterial_Compute_Specular(const Material mat,
 
         for (size_t current_object = 0; current_object < objects.count; current_object++)
         {
-            bool validInt = false;
-
-            switch (objects.shapes[current_object].type)
-            {
-            case SHAPE_SPHERE:
-                validInt = Sphere_Test_Intersection(objects.shapes[current_object].object.sphere, &light_ray, &poi, &poi_normal, &poi_colour);
-                break;
-
-            case SHAPE_PLANE:
-                validInt = Plane_Test_Intersection(objects.shapes[current_object].object.plane, &light_ray, &poi, &poi_normal, &poi_colour);
-                break;
-
-            default:
-                fprintf(stderr, "THIS SHAPE IS NOT SUPPORTED : %d\n", objects.shapes[current_object].type);
-                break;
-            }
+            const bool validInt = objects.shapes[current_object].Test_Intersection(objects.shapes[current_object].transform,
+                                                                                   objects.shapes[current_object].base_colour,
+                                                                                   *camera_ray,
+                                                                                   &poi,
+                                                                                   &poi_normal,
+                                                                                   &poi_colour);
 
             if (validInt)
             {

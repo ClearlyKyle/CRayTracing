@@ -12,40 +12,16 @@ typedef struct Material
     vec3 base_colour;
 } Material;
 
-// void (*material_function_pointer)(int) = &fun;
-// void (*shape_test_intersection)(int) = &fun;
-
-// TODO : Switch shapes to this
-// typedef struct Shape
-//{
-//     vec3      base_colour;
-//     Transform transform;
-//     Material  material;
-//     bool      has_material;
-// } Shape
+typedef bool (*shape_test_intersection)(const Transform transform,
+                                        const vec3      base_colour,
+                                        const Ray_t     ray,
+                                        vec3 *const     int_point,
+                                        vec3 *const     local_normal,
+                                        vec3 *const     local_colour);
 
 // -------------------------------------------------
 // SHAPES
 
-typedef struct
-{
-    vec3      colour;
-    Transform transform;
-} Plane;
-
-typedef struct
-{
-    vec3      colour;
-    Transform transform;
-} Sphere;
-
-typedef struct
-{
-    vec3      colour;
-    Transform transform;
-} Cone;
-
-// -------------------------------------------------
 enum Shapes
 {
     SHAPE_SPHERE,
@@ -54,24 +30,34 @@ enum Shapes
     SHAPE_COUNT,
 };
 
-typedef union
+typedef struct Shape
 {
-    Sphere sphere;
-    Plane  plane;
-} ShapeObjects;
+    enum Shape_Types        type;
+    vec3                    base_colour;
+    Transform               transform;
+    Material               *mat;
+    shape_test_intersection Test_Intersection;
+} Shape;
 
-typedef struct ShapesArray
-{
-    enum Shape_Types type;
-    Material        *mat;
-    ShapeObjects     object;
-} ShapeArray;
+// -------------------------------------------------
 
 typedef struct Objects
 {
-    size_t      count;
-    ShapeArray *shapes;
+    size_t count;
+    Shape *shapes;
 } Objects;
+
+inline Objects Objects_Init(const size_t number_of_objects)
+{
+    Objects objs = {0};
+
+    objs.count  = number_of_objects;
+    objs.shapes = (Shape *)malloc(sizeof(Shape) * number_of_objects);
+    if (!objs.shapes)
+        fprintf(stderr, "Error! (Shape *)malloc(sizeof(Shape) * number_of_objects);\n");
+
+    return objs;
+}
 
 inline void Objects_Free(Objects *objects)
 {
@@ -79,16 +65,34 @@ inline void Objects_Free(Objects *objects)
     objects->shapes = NULL;
 };
 
-bool Plane_Test_Intersection(const Plane  plane,
-                             const Ray_t *ray,
-                             vec3        *int_point,
-                             vec3        *local_normal,
-                             vec3        *local_colour);
+#define CLOSE_ENOUGH(D1, D2) fabs((D1) - (D2)) < 1e-21f
 
-bool Sphere_Test_Intersection(const Sphere sphere,
-                              const Ray_t *ray,
-                              vec3        *int_point,
-                              vec3        *local_normal,
-                              vec3        *local_colour);
+bool Plane_Test_Intersection(const Transform transform,
+                             const vec3      base_colour,
+                             const Ray_t     ray,
+                             vec3 *const     int_point,
+                             vec3 *const     local_normal,
+                             vec3 *const     local_colour);
+
+bool Sphere_Test_Intersection(const Transform transform,
+                              const vec3      base_colour,
+                              const Ray_t     ray,
+                              vec3 *const     int_point,
+                              vec3 *const     local_normal,
+                              vec3 *const     local_colour);
+
+bool Cylinder_Test_Intersection(const Transform transform,
+                                const vec3      base_colour,
+                                const Ray_t     ray,
+                                vec3 *const     int_point,
+                                vec3 *const     local_normal,
+                                vec3 *const     local_colour);
+
+bool Cone_Test_Intersection(const Transform transform,
+                            const vec3      base_colour,
+                            const Ray_t     ray,
+                            vec3 *const     int_point,
+                            vec3 *const     local_normal,
+                            vec3 *const     local_colour);
 
 #endif // __OBJECTS_H__

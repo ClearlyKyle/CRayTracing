@@ -100,7 +100,7 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
     vec3   closest_local_normal = VEC3_INIT_ZERO;
     vec3   closest_local_colour = VEC3_INIT_ZERO;
 
-    const bool intersectionFound = Material_Cast_Ray(&reflection_ray,
+    const bool intersectionFound = Material_Cast_Ray(reflection_ray,
                                                      objects,
                                                      current_object_index,
                                                      &closest_object_index,
@@ -146,7 +146,7 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
     return mat_colour;
 }
 
-bool Material_Cast_Ray(Ray_t *const  cast_ray,
+bool Material_Cast_Ray(const Ray_t   cast_ray,
                        const Objects objects,
                        const size_t  current_object_index,
                        size_t *const closests_object_index,
@@ -166,28 +166,19 @@ bool Material_Cast_Ray(Ray_t *const  cast_ray,
     {
         if (i != current_object_index)
         {
-            bool validInt = false;
+            const bool validInt = objects.shapes[i].Test_Intersection(objects.shapes[i].transform,
+                                                                      objects.shapes[i].base_colour,
+                                                                      cast_ray,
+                                                                      &int_point,
+                                                                      &local_normal,
+                                                                      &local_colour);
 
-            switch (objects.shapes[i].type)
-            {
-            case SHAPE_SPHERE:
-                validInt = Sphere_Test_Intersection(objects.shapes[i].object.sphere, cast_ray, &int_point, &local_normal, &local_colour);
-                break;
-
-            case SHAPE_PLANE:
-                validInt = Plane_Test_Intersection(objects.shapes[i].object.plane, cast_ray, &int_point, &local_normal, &local_colour);
-                break;
-
-            default:
-                fprintf(stderr, "THIS SHAPE IS NOT SUPPORTED : %d\n", objects.shapes[i].type);
-                break;
-            }
             if (validInt)
             {
                 intersection_found = true;
 
                 // Compute the distance between the camera and the point of intersection.
-                const double dist = vec3_length(vec3_sub(int_point, cast_ray->point1));
+                const double dist = vec3_length(vec3_sub(int_point, cast_ray.point1));
 
                 if (dist < minDist)
                 {

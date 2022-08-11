@@ -33,7 +33,7 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
                                         const vec3     base_colour);
 
 // Function to cast a ray into the scene.
-bool Material_Cast_Ray(Ray_t *const  cast_ray,
+bool Material_Cast_Ray(const Ray_t   cast_ray,
                        const Objects objects,
                        const size_t  current_object_index,
                        size_t *const closests_object_index,

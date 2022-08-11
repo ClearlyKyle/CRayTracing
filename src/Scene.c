@@ -44,13 +44,28 @@ void Scene_Init()
     Scene.mats[3] = (Material){.base_colour = {1.0, 1.0, 1.0}, .reflectivity = 0.5, .shininess = 0.0};
 
     // Setup Objects (Spheres, Planes)
-    Scene.objects.count  = 4;
-    Scene.objects.shapes = (ShapeArray *)malloc(sizeof(ShapeArray) * Scene.objects.count);
+    Scene.objects = Objects_Init(4);
 
-    Scene.objects.shapes[0] = (ShapeArray){.type = SHAPE_SPHERE, .mat = &Scene.mats[2], .object.sphere = {.colour = {0.25, 0.5, 0.8}, .transform = Transform_Set((vec3){-1.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5})}};
-    Scene.objects.shapes[1] = (ShapeArray){.type = SHAPE_SPHERE, .mat = &Scene.mats[0], .object.sphere = {.colour = {1.0, 0.5, 0.0}, .transform = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5})}};
-    Scene.objects.shapes[2] = (ShapeArray){.type = SHAPE_SPHERE, .mat = &Scene.mats[1], .object.sphere = {.colour = {1.0, 0.8, 0.0}, .transform = Transform_Set((vec3){1.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5})}};
-    Scene.objects.shapes[3] = (ShapeArray){.type = SHAPE_PLANE, .mat = &Scene.mats[3], .object.plane = {.colour = {0.5, 0.5, 0.5}, .transform = Transform_Set((vec3){0.0, 0.0, 0.75}, (vec3){0.0, 0.0, 0.0}, (vec3){4.0, 4.0, 1.0})}};
+    Scene.objects.shapes[0] = (Shape){.type              = SHAPE_SPHERE,
+                                      .mat               = &Scene.mats[2],
+                                      .base_colour       = {0.25, 0.5, 0.8},
+                                      .transform         = Transform_Set((vec3){-1.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5}),
+                                      .Test_Intersection = &Sphere_Test_Intersection};
+    Scene.objects.shapes[1] = (Shape){.type              = SHAPE_SPHERE,
+                                      .mat               = &Scene.mats[0],
+                                      .base_colour       = {1.0, 0.5, 0.0},
+                                      .transform         = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5}),
+                                      .Test_Intersection = &Sphere_Test_Intersection};
+    Scene.objects.shapes[2] = (Shape){.type              = SHAPE_SPHERE,
+                                      .mat               = &Scene.mats[1],
+                                      .base_colour       = {1.0, 0.8, 0.0},
+                                      .transform         = Transform_Set((vec3){1.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5}),
+                                      .Test_Intersection = &Sphere_Test_Intersection};
+    Scene.objects.shapes[3] = (Shape){.type              = SHAPE_PLANE,
+                                      .mat               = &Scene.mats[3],
+                                      .base_colour       = {0.5, 0.5, 0.5},
+                                      .transform         = Transform_Set((vec3){0.0, 0.0, 0.75}, (vec3){0.0, 0.0, 0.0}, (vec3){4.0, 4.0, 1.0}),
+                                      .Test_Intersection = &Plane_Test_Intersection};
 
     // Setup Lights
     Scene.lights.count  = 3;
@@ -103,25 +118,12 @@ void Scene_Update()
             // Loop over each object in the sceene
             for (size_t object_index = 0; object_index < Scene.objects.count; object_index++)
             {
-                bool validInt = false;
-
-                switch (Scene.objects.shapes[object_index].type)
-                {
-                case SHAPE_SPHERE:
-                    validInt    = Sphere_Test_Intersection(Scene.objects.shapes[object_index].object.sphere, &cameraRay, &intPoint, &localNormal, &localColor);
-                    base_colour = Scene.objects.shapes[object_index].object.sphere.colour;
-                    break;
-
-                case SHAPE_PLANE:
-                    validInt    = Plane_Test_Intersection(Scene.objects.shapes[object_index].object.plane, &cameraRay, &intPoint, &localNormal, &localColor);
-                    base_colour = Scene.objects.shapes[object_index].object.plane.colour;
-                    break;
-
-                default:
-                    fprintf(stderr, "THIS SHAPE IS NOT SUPPORTED : %d\n", Scene.objects.shapes[object_index].type);
-                    app.running = false;
-                    break;
-                }
+                const bool validInt = Scene.objects.shapes[object_index].Test_Intersection(Scene.objects.shapes[object_index].transform,
+                                                                                           Scene.objects.shapes[object_index].base_colour,
+                                                                                           cameraRay,
+                                                                                           &intPoint,
+                                                                                           &localNormal,
+                                                                                           &localColor);
 
                 if (validInt)
                 {

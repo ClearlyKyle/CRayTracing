@@ -95,6 +95,7 @@ void App_Start()
 
     app.running = true;
 
+    int fame_counter = 0;
     while (app.running)
     {
         Uint64 start        = SDL_GetPerformanceCounter();
@@ -120,10 +121,11 @@ void App_Start()
 
         fprintf(stdout, "%8.02f ms/f \t%8.02f f/s\n", MSPerFrame, FPS);
 
-        LastCounter = EndCounter;
+        if (fame_counter == 3)
+            app.running = false;
 
-        SDL_Delay(5000);
-        app.running = false;
+        LastCounter = EndCounter;
+        fame_counter++;
     }
 
     _OnExit();

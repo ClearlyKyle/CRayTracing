@@ -1,14 +1,12 @@
 #include "Objects.h"
 
-bool Cone_Test_Intersection(
-    const Ray_t ray,
-    vec3 *const int_point,
-    vec3 *const local_normal,
-    vec3 *const local_colour)
+bool Cone_Test_Intersection(const Transform transform,
+                            const vec3      base_colour,
+                            const Ray_t     ray,
+                            vec3 *const     int_point,
+                            vec3 *const     local_normal,
+                            vec3 *const     local_colour)
 {
-    Transform transform   = {0};
-    vec3      base_colour = {0};
-
     // Copy the ray and apply the backwards transform.
     const Ray_t bck_ray = Transform_Apply_Ray(transform, ray, false);
 
@@ -24,7 +22,7 @@ bool Cone_Test_Intersection(
     const double c = pow(p.x, 2.0) + pow(p.y, 2.0) - pow(p.x, 2.0);
 
     // Compute b^2 - 4ac.
-    const double numSQRT = sqrtf(pow(b, 2.0) - 4 * a * c);
+    const double numSQRT = sqrt(pow(b, 2.0) - 4.0 * a * c);
 
     vec3 poi[3];
     vec3 t = VEC3_INIT_ZERO;
@@ -71,7 +69,7 @@ bool Cone_Test_Intersection(
     }
 
     // And test the end cap.
-    if (CloseEnough(v.z, 0.0))
+    if (CLOSE_ENOUGH(v.z, 0.0))
     {
         t3Valid = false;
         t.z     = 100e6;
@@ -85,7 +83,7 @@ bool Cone_Test_Intersection(
         poi[2] = vec3_add(bck_ray.point1, vec3_mul_scal(v, t.z));
 
         // Check if these are valid.
-        if ((t.z > 0.0) && (sqrtf(pow(poi[2].x, 2.0) + pow(poi[2].y, 2.0)) < 1.0))
+        if ((t.z > 0.0) && (sqrt(pow(poi[2].x, 2.0) + pow(poi[2].y, 2.0)) < 1.0))
         {
             t3Valid = true;
         }
@@ -134,7 +132,7 @@ bool Cone_Test_Intersection(
         vec3 org_normal;
         org_normal.x = valid_POI.x;
         org_normal.y = valid_POI.y;
-        org_normal.z = -sqrtf(pow(org_normal.x, 2.0) + pow(org_normal.y, 2.0));
+        org_normal.z = -sqrt(pow(org_normal.x, 2.0) + pow(org_normal.y, 2.0));
 
         vec3 new_normal = vec3_sub(Transform_Apply_Forward(transform, org_normal), globalOrigin);
         new_normal      = vec3_normalise(new_normal);
@@ -147,10 +145,10 @@ bool Cone_Test_Intersection(
     else
     {
         // Check the end cap.
-        if (!CloseEnough(v.z, 0.0))
+        if (!CLOSE_ENOUGH(v.z, 0.0))
         {
             // Check if we are inside the disk.
-            if (sqrtf(pow(valid_POI.x, 2.0) + pow(valid_POI.y, 2.0)) < 1.0)
+            if (sqrt(pow(valid_POI.x, 2.0) + pow(valid_POI.y, 2.0)) < 1.0)
             {
                 // Transform the intersection point back into world coordinates.
                 *int_point = Transform_Apply_Forward(transform, valid_POI);

@@ -2,13 +2,14 @@
 
 #include <math.h>
 
-bool Sphere_Test_Intersection(const Sphere sphere,
-                              const Ray_t *ray,
-                              vec3        *int_point,
-                              vec3        *local_normal,
-                              vec3        *local_colour)
+bool Sphere_Test_Intersection(const Transform transform,
+                              const vec3      base_colour,
+                              const Ray_t     ray,
+                              vec3 *const     int_point,
+                              vec3 *const     local_normal,
+                              vec3 *const     local_colour)
 {
-    const Ray_t back_ray = Transform_Apply_Ray(sphere.transform, *ray, false);
+    const Ray_t back_ray = Transform_Apply_Ray(transform, ray, false);
 
     // Compute the values of a, b and c.
     const vec3 vhat = vec3_normalise(back_ray.lab);
@@ -54,16 +55,16 @@ bool Sphere_Test_Intersection(const Sphere sphere,
             }
 
             // Transform the intersection point back into world coordinates.
-            *int_point = Transform_Apply_Forward(sphere.transform, poi);
+            *int_point = Transform_Apply_Forward(transform, poi);
 
             // Compute the local normal (easy for a sphere at the origin!).
             const vec3 origin     = {0.0, 0.0, 0.0};
-            const vec3 new_origin = Transform_Apply_Forward(sphere.transform, origin);
+            const vec3 new_origin = Transform_Apply_Forward(transform, origin);
 
             *local_normal = vec3_normalise(vec3_sub(*int_point, new_origin));
 
             // Return the base color.
-            *local_colour = sphere.colour;
+            *local_colour = base_colour;
         }
         return true;
     }
