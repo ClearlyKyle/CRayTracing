@@ -26,6 +26,7 @@ enum Shapes
 {
     SHAPE_SPHERE,
     SHAPE_PLANE,
+    SHAPE_CYLINDER,
     SHAPE_CONE,
     SHAPE_COUNT,
 };

@@ -51,16 +51,19 @@ void Scene_Init()
                                       .base_colour       = {0.25, 0.5, 0.8},
                                       .transform         = Transform_Set((vec3){-1.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5}),
                                       .Test_Intersection = &Sphere_Test_Intersection};
-    Scene.objects.shapes[1] = (Shape){.type              = SHAPE_SPHERE,
+
+    Scene.objects.shapes[1] = (Shape){.type              = SHAPE_CONE,
                                       .mat               = &Scene.mats[0],
                                       .base_colour       = {1.0, 0.5, 0.0},
                                       .transform         = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5}),
-                                      .Test_Intersection = &Sphere_Test_Intersection};
-    Scene.objects.shapes[2] = (Shape){.type              = SHAPE_SPHERE,
+                                      .Test_Intersection = &Cone_Test_Intersection};
+
+    Scene.objects.shapes[2] = (Shape){.type              = SHAPE_CYLINDER,
                                       .mat               = &Scene.mats[1],
                                       .base_colour       = {1.0, 0.8, 0.0},
                                       .transform         = Transform_Set((vec3){1.5, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5}),
-                                      .Test_Intersection = &Sphere_Test_Intersection};
+                                      .Test_Intersection = &Cylinder_Test_Intersection};
+
     Scene.objects.shapes[3] = (Shape){.type              = SHAPE_PLANE,
                                       .mat               = &Scene.mats[3],
                                       .base_colour       = {0.5, 0.5, 0.5},

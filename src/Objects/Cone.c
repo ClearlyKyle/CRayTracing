@@ -17,80 +17,80 @@ bool Cone_Test_Intersection(const Transform transform,
     const vec3 p = bck_ray.point1;
 
     // Compute a, b and c.
-    const double a = pow(v.x, 2.0) + pow(v.y, 2.0) - pow(v.x, 2.0);
-    const double b = 2 * (p.x * v.x + p.y * v.y - p.x * v.x);
-    const double c = pow(p.x, 2.0) + pow(p.y, 2.0) - pow(p.x, 2.0);
+    const double a = pow(v.x, 2.0) + pow(v.y, 2.0) - pow(v.z, 2.0);
+    const double b = 2 * (p.x * v.x + p.y * v.y - p.z * v.z);
+    const double c = pow(p.x, 2.0) + pow(p.y, 2.0) - pow(p.z, 2.0);
 
     // Compute b^2 - 4ac.
-    const double numSQRT = sqrt(pow(b, 2.0) - 4.0 * a * c);
+    const double numSQRT = sqrt(pow(b, 2.0) - (4.0 * a * c));
 
-    vec3 poi[3];
-    vec3 t = VEC3_INIT_ZERO;
+    vec3   poi[3];
+    double t[3];
 
     bool t1Valid = false, t2Valid = false, t3Valid = false;
 
     if (numSQRT > 0.0)
     {
         // Compute the values of t.
-        t.x = (-b + numSQRT) / (2 * a);
-        t.y = (-b - numSQRT) / (2 * a);
+        t[0] = (-b + numSQRT) / (2 * a);
+        t[1] = (-b - numSQRT) / (2 * a);
 
         // Compute the points of intersection.
 
-        poi[0] = vec3_add(bck_ray.point1, vec3_mul_scal(v, t.x));
-        poi[1] = vec3_add(bck_ray.point1, vec3_mul_scal(v, t.y));
+        poi[0] = vec3_add(bck_ray.point1, vec3_mul_scal(v, t[0]));
+        poi[1] = vec3_add(bck_ray.point1, vec3_mul_scal(v, t[1]));
 
-        if ((t.x > 0.0) && (poi[0].z > 0.0) && (poi[0].z < 1.0))
+        if ((t[0] > 0.0) && (poi[0].z > 0.0) && (poi[0].z < 1.0))
         {
             t1Valid = true;
         }
         else
         {
             t1Valid = false;
-            t.x     = 100e6;
+            t[0]    = 100e6;
         }
 
-        if ((t.y > 0.0) && (poi[1].z > 0.0) && (poi[1].z < 1.0))
+        if ((t[1] > 0.0) && (poi[1].z > 0.0) && (poi[1].z < 1.0))
         {
             t2Valid = true;
         }
         else
         {
             t2Valid = false;
-            t.y     = 100e6;
+            t[1]    = 100e6;
         }
     }
     else
     {
         t1Valid = false;
         t2Valid = false;
-        t.x     = 100e6;
-        t.y     = 100e6;
+        t[0]    = 100e6;
+        t[1]    = 100e6;
     }
 
     // And test the end cap.
     if (CLOSE_ENOUGH(v.z, 0.0))
     {
         t3Valid = false;
-        t.z     = 100e6;
+        t[2]    = 100e6;
     }
     else
     {
         // Compute values for t.
-        t.z = (bck_ray.point1.z - 1.0) / -v.z;
+        t[2] = (bck_ray.point1.z - 1.0) / -v.z;
 
         // Compute points of intersection.
-        poi[2] = vec3_add(bck_ray.point1, vec3_mul_scal(v, t.z));
+        poi[2] = vec3_add(bck_ray.point1, vec3_mul_scal(v, t[2]));
 
         // Check if these are valid.
-        if ((t.z > 0.0) && (sqrt(pow(poi[2].x, 2.0) + pow(poi[2].y, 2.0)) < 1.0))
+        if ((t[2] > 0.0) && (sqrt(pow(poi[2].x, 2.0) + pow(poi[2].y, 2.0)) < 1.0))
         {
             t3Valid = true;
         }
         else
         {
             t3Valid = false;
-            t.z     = 100e6;
+            t[2]    = 100e6;
         }
     }
 
@@ -102,20 +102,13 @@ bool Cone_Test_Intersection(const Transform transform,
     int    minIndex = 0;
     double minValue = 10e6;
 
-    if (t.x < minValue)
+    for (int i = 0; i < 3; i++)
     {
-        minValue = t.x;
-        minIndex = 0;
-    }
-    if (t.y < minValue)
-    {
-        minValue = t.y;
-        minIndex = 1;
-    }
-    if (t.z < minValue)
-    {
-        minValue = t.z;
-        minIndex = 2;
+        if (t[i] < minValue)
+        {
+            minValue = t[i];
+            minIndex = i;
+        }
     }
 
     /* If minIndex is either 0 or 1, then we have a valid intersection with the cone itself. */
