@@ -69,10 +69,13 @@ inline Mat4 Mat4_ZRot_Make(const double angle)
 {
     Mat4 dest = {0};
 
-    dest.elements[0][0] = cos(angle);
-    dest.elements[0][1] = -sin(angle);
-    dest.elements[1][0] = sin(angle);
-    dest.elements[1][1] = cos(angle);
+    const double c = cos(angle);
+    const double s = sin(angle);
+
+    dest.elements[0][0] = c;
+    dest.elements[0][1] = s;
+    dest.elements[1][0] = -s;
+    dest.elements[1][1] = c;
 
     dest.elements[2][2] = 1.0;
     dest.elements[3][3] = 1.0;
@@ -84,10 +87,13 @@ inline Mat4 Mat4_YRot_Make(const double angle)
 {
     Mat4 dest = {0};
 
-    dest.elements[0][0] = cos(angle);
-    dest.elements[0][2] = sin(angle);
-    dest.elements[2][0] = -sin(angle);
-    dest.elements[2][2] = cos(angle);
+    const double c = cos(angle);
+    const double s = sin(angle);
+
+    dest.elements[0][0] = c;
+    dest.elements[0][2] = -s;
+    dest.elements[2][0] = s;
+    dest.elements[2][2] = c;
 
     dest.elements[1][1] = 1.0;
     dest.elements[3][3] = 1.0;
@@ -99,10 +105,13 @@ inline Mat4 Mat4_XRot_Make(const double angle)
 {
     Mat4 dest = {0};
 
-    dest.elements[1][1] = cos(angle);
-    dest.elements[1][2] = -sin(angle);
-    dest.elements[2][1] = sin(angle);
-    dest.elements[2][2] = cos(angle);
+    const double c = cos(angle);
+    const double s = sin(angle);
+
+    dest.elements[1][1] = c;
+    dest.elements[1][2] = s;
+    dest.elements[2][1] = -s;
+    dest.elements[2][2] = c;
 
     dest.elements[0][0] = 1.0;
     dest.elements[3][3] = 1.0;
