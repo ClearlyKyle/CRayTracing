@@ -61,14 +61,7 @@ void Image_Display(const Image_t *const image)
     tmp_pixels = NULL;
 
     // Copy the texture to the renderer.
-    SDL_Rect srcRect;
-    // SDL_Rect bounds;
-    srcRect.x = 0;
-    srcRect.y = 0;
-    srcRect.w = 800;
-    srcRect.h = 800;
-    // bounds    = srcRect;
-    SDL_RenderCopy(image->renderer, image->texture, &srcRect, &srcRect);
+    SDL_RenderCopy(image->renderer, image->texture, NULL, NULL);
 }
 
 Uint32 ConvertColor(const double red, const double green, const double blue)
