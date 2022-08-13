@@ -63,7 +63,7 @@ Transform Transform_Set(const vec3 translation, const vec3 rotation, const vec3 
     // SCALE
     const Mat4 scale_matrix = Mat4_Scale_Make(scale);
 
-    res.forward   = Mat4_Mul_Mat4(Mat4_Mul_Mat4(translation_matrix, scale_matrix), rotation_matrix);
+    res.forward   = Mat4_Mul_Mat4(Mat4_Mul_Mat4(translation_matrix, rotation_matrix), scale_matrix);
     res.backwards = Mat4_Inverse(res.forward);
 
     return res;
