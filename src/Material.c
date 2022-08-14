@@ -13,7 +13,7 @@ vec3 Material_Compute_Colour(const Objects objects,
                              const size_t  current_object_index,
                              vec3 *const   int_point,
                              vec3 *const   local_normal,
-                             const Ray_t  *camera_ray)
+                             const Ray  *camera_ray)
 {
     // Define an initial material color.
     vec3 mat_colour = VEC3_INIT_ZERO;
@@ -83,7 +83,7 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
                                         const size_t   current_object_index,
                                         vec3 *const    int_point,
                                         vec3 *const    local_normal,
-                                        const Ray_t   *incident_ray,
+                                        const Ray   *incident_ray,
                                         const vec3     base_colour)
 {
     // vec3 reflection_colour = VEC3_INIT_ZERO;
@@ -92,7 +92,7 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
     const vec3 reflection_vector = vec3_reflection(incident_ray->lab, *local_normal);
 
     // Construct the reflection ray.
-    Ray_t reflection_ray = Ray_Init(*int_point, vec3_add(*int_point, reflection_vector));
+    Ray reflection_ray = Ray_Init(*int_point, vec3_add(*int_point, reflection_vector));
 
     /* Cast this ray into the scene and find the closest object that it intersects with. */
     size_t closest_object_index;
@@ -146,7 +146,7 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
     return mat_colour;
 }
 
-bool Material_Cast_Ray(const Ray_t   cast_ray,
+bool Material_Cast_Ray(const Ray   cast_ray,
                        const Objects objects,
                        const size_t  current_object_index,
                        size_t *const closests_object_index,
@@ -167,7 +167,7 @@ bool Material_Cast_Ray(const Ray_t   cast_ray,
         if (i != current_object_index)
         {
             const bool validInt = objects.shapes[i].Test_Intersection(objects.shapes[i].transform,
-                                                                      objects.shapes[i].base_colour,
+                                                                      objects.shapes[i].mat->base_colour,
                                                                       cast_ray,
                                                                       &int_point,
                                                                       &local_normal,

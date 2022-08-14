@@ -23,9 +23,9 @@ vec3 Transform_Apply_Backwards(const Transform trans, const vec3 in_vec)
 }
 
 // direction = true = Forward
-Ray_t Transform_Apply_Ray(Transform trans, Ray_t ray, bool direction)
+Ray Transform_Apply_Ray(Transform trans, Ray ray, bool direction)
 {
-    Ray_t ret;
+    Ray ret;
 
     if (direction) // ENUM?
     {

@@ -147,7 +147,7 @@ void Scene_Update()
             const double normY = ((double)y * yFact) - 1.0;
 
             // Generate the ray for this pixel.
-            const Ray_t cameraRay = Camera_Generate_Ray(&Scene.cam, normX, normY);
+            const Ray cameraRay = Camera_Generate_Ray(&Scene.cam, normX, normY);
 
             // Test for intersections with all objects in the scene.
             size_t closest_object_index = 0;

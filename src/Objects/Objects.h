@@ -14,7 +14,7 @@ typedef struct Material
 
 typedef bool (*shape_test_intersection)(const Transform transform,
                                         const vec3      base_colour,
-                                        const Ray_t     ray,
+                                        const Ray     ray,
                                         vec3 *const     int_point,
                                         vec3 *const     local_normal,
                                         vec3 *const     local_colour);
@@ -70,28 +70,28 @@ inline void Objects_Free(Objects *objects)
 
 bool Plane_Test_Intersection(const Transform transform,
                              const vec3      base_colour,
-                             const Ray_t     ray,
+                             const Ray     ray,
                              vec3 *const     int_point,
                              vec3 *const     local_normal,
                              vec3 *const     local_colour);
 
 bool Sphere_Test_Intersection(const Transform transform,
                               const vec3      base_colour,
-                              const Ray_t     ray,
+                              const Ray     ray,
                               vec3 *const     int_point,
                               vec3 *const     local_normal,
                               vec3 *const     local_colour);
 
 bool Cylinder_Test_Intersection(const Transform transform,
                                 const vec3      base_colour,
-                                const Ray_t     ray,
+                                const Ray     ray,
                                 vec3 *const     int_point,
                                 vec3 *const     local_normal,
                                 vec3 *const     local_colour);
 
 bool Cone_Test_Intersection(const Transform transform,
                             const vec3      base_colour,
-                            const Ray_t     ray,
+                            const Ray     ray,
                             vec3 *const     int_point,
                             vec3 *const     local_normal,
                             vec3 *const     local_colour);

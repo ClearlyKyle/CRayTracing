@@ -14,7 +14,7 @@ typedef struct Tranform
 
 vec3      Transform_Apply_Forward(const Transform trans, const vec3 in_vec);
 vec3      Transform_Apply_Backwards(const Transform trans, const vec3 in_vec);
-Ray_t     Transform_Apply_Ray(Transform trans, Ray_t ray, bool direction);
+Ray     Transform_Apply_Ray(Transform trans, Ray ray, bool direction);
 Transform Transform_Set(const vec3 translation, const vec3 rotation, const vec3 scale);
 
 #endif // __TRANSFORM_H__

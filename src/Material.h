@@ -12,7 +12,7 @@ vec3 Material_Compute_Colour(const Objects objects,
                              const size_t  current_object_index,
                              vec3 *const   int_point,
                              vec3 *const   local_normal,
-                             const Ray_t  *camera_ray);
+                             const Ray  *camera_ray);
 
 // Function to compute diffuse color.
 vec3 Material_Compute_Diffuse_Colour(const Objects objects,
@@ -29,11 +29,11 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
                                         const size_t   current_object_index,
                                         vec3 *const    int_point,
                                         vec3 *const    local_normal,
-                                        const Ray_t   *incident_ray,
+                                        const Ray   *incident_ray,
                                         const vec3     base_colour);
 
 // Function to cast a ray into the scene.
-bool Material_Cast_Ray(const Ray_t   cast_ray,
+bool Material_Cast_Ray(const Ray   cast_ray,
                        const Objects objects,
                        const size_t  current_object_index,
                        size_t *const closests_object_index,
@@ -64,7 +64,7 @@ vec3 Simple_Material_Compute_Colour(const Material mat,
                                     const size_t   current_object_index,
                                     vec3 *const    int_point,
                                     vec3 *const    local_normal,
-                                    const Ray_t   *camera_ray);
+                                    const Ray   *camera_ray);
 
 // Function to compute specular highlights.
 vec3 SimpleMaterial_Compute_Specular(const Material mat,
@@ -72,6 +72,6 @@ vec3 SimpleMaterial_Compute_Specular(const Material mat,
                                      const Lights   lights,
                                      vec3 *const    int_point,
                                      vec3 *const    local_normal,
-                                     const Ray_t   *camera_ray);
+                                     const Ray   *camera_ray);
 
 #endif // __MATERIAL_H__

@@ -23,6 +23,6 @@ typedef struct Camera
 
 Camera_t Camera_Init();
 void     Camera_Update_Geometry(Camera_t *cam);
-Ray_t    Camera_Generate_Ray(const Camera_t *cam, const double screen_x, const double screen_y);
+Ray    Camera_Generate_Ray(const Camera_t *cam, const double screen_x, const double screen_y);
 
 #endif // __CAMERA_H__

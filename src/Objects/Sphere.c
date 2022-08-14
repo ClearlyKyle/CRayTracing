@@ -4,12 +4,12 @@
 
 bool Sphere_Test_Intersection(const Transform transform,
                               const vec3      base_colour,
-                              const Ray_t     ray,
+                              const Ray     ray,
                               vec3 *const     int_point,
                               vec3 *const     local_normal,
                               vec3 *const     local_colour)
 {
-    const Ray_t back_ray = Transform_Apply_Ray(transform, ray, false);
+    const Ray back_ray = Transform_Apply_Ray(transform, ray, false);
 
     // Compute the values of a, b and c.
     const vec3 vhat = vec3_normalise(back_ray.lab);

@@ -2,13 +2,13 @@
 
 bool Cylinder_Test_Intersection(const Transform transform,
                                 const vec3      base_colour,
-                                const Ray_t     ray,
+                                const Ray     ray,
                                 vec3 *const     int_point,
                                 vec3 *const     local_normal,
                                 vec3 *const     local_colour)
 {
     // Copy the ray and apply the backwards transform.
-    const Ray_t bck_ray = Transform_Apply_Ray(transform, ray, false);
+    const Ray bck_ray = Transform_Apply_Ray(transform, ray, false);
 
     // Copy the m_lab vector from bckRay and normalize it.
     const vec3 v = vec3_normalise(bck_ray.lab);
@@ -22,7 +22,7 @@ bool Cylinder_Test_Intersection(const Transform transform,
     const double c = pow(p.x, 2.0) + pow(p.y, 2.0) - 1.0;
 
     // Compute b^2 - 4ac.
-    const double numSQRT = sqrt(pow(b, 2.0) - 4.0 * a * c);
+    const double numSQRT = sqrt(pow(b, 2.0) - (4.0 * a * c));
 
     // Test for intersections.
     // First with the cylinder itself.

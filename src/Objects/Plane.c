@@ -2,13 +2,13 @@
 
 bool Plane_Test_Intersection(const Transform transform,
                              const vec3      base_colour,
-                             const Ray_t     ray,
+                             const Ray     ray,
                              vec3 *const     int_point,
                              vec3 *const     local_normal,
                              vec3 *const     local_colour)
 {
     // Copy the ray and apply the backwards transform.
-    const Ray_t back_ray = Transform_Apply_Ray(transform, ray, false);
+    const Ray back_ray = Transform_Apply_Ray(transform, ray, false);
 
     // Copy the m_lab vector from bckRay and normalize it.
     const vec3 k = vec3_normalise(back_ray.lab);
@@ -42,7 +42,7 @@ bool Plane_Test_Intersection(const Transform transform,
 
                 const vec3 globalOrigin = Transform_Apply_Forward(transform, localOrigin);
                 *local_normal           = vec3_sub(Transform_Apply_Forward(transform, normalVector), globalOrigin);
-                *local_normal           = NORMALISE_VEC3(*local_normal);
+                *local_normal           = vec3_normalise(*local_normal);
 
                 // Return the base color.
                 *local_colour = base_colour;

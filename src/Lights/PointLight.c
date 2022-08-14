@@ -15,7 +15,7 @@ bool Light_Compute_Illumination(const PointLight light,
     const vec3 start_point = intPoint;
 
     // Construct a ray from the point of intersection to the light.
-    const Ray_t lightRay = Ray_Init(start_point, vec3_add(start_point, light_direction));
+    const Ray lightRay = Ray_Init(start_point, vec3_add(start_point, light_direction));
 
     /* Check for intersections with all of the objects in the scene, except for the current one. */
     vec3 poi        = VEC3_INIT_ZERO;

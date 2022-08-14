@@ -6,7 +6,7 @@ vec3 Simple_Material_Compute_Colour(const Material mat,
                                     const size_t   current_object_index,
                                     vec3 *const    int_point,
                                     vec3 *const    local_normal,
-                                    const Ray_t   *camera_ray)
+                                    const Ray   *camera_ray)
 {
     // Define the initial material colors.
     vec3 mat_colour = VEC3_INIT_ZERO;
@@ -41,7 +41,7 @@ vec3 SimpleMaterial_Compute_Specular(const Material mat,
                                      const Lights   lights,
                                      vec3 *const    int_point,
                                      vec3 *const    local_normal,
-                                     const Ray_t   *camera_ray)
+                                     const Ray   *camera_ray)
 {
     double red   = 0.0;
     double green = 0.0;
@@ -60,7 +60,7 @@ vec3 SimpleMaterial_Compute_Specular(const Material mat,
         const vec3 start_point = vec3_add(vec3_mul_scal(light_direction, 0.001), *int_point);
 
         // Construct a ray from the point of intersection to the light.
-        const Ray_t light_ray = Ray_Init(start_point, vec3_add(start_point, light_direction));
+        const Ray light_ray = Ray_Init(start_point, vec3_add(start_point, light_direction));
 
         /* Loop through all objects in the scene to check if any obstruct light from this source. */
         vec3 poi        = VEC3_INIT_ZERO;
@@ -71,7 +71,7 @@ vec3 SimpleMaterial_Compute_Specular(const Material mat,
         for (size_t current_object = 0; current_object < objects.count; current_object++)
         {
             const bool validInt = objects.shapes[current_object].Test_Intersection(objects.shapes[current_object].transform,
-                                                                                   objects.shapes[current_object].base_colour,
+                                                                                   objects.shapes[current_object].mat->base_colour,
                                                                                    *camera_ray,
                                                                                    &poi,
                                                                                    &poi_normal,
