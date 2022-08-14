@@ -2,7 +2,7 @@
 
 bool Plane_Test_Intersection(const Transform transform,
                              const vec3      base_colour,
-                             const Ray     ray,
+                             const Ray       ray,
                              vec3 *const     int_point,
                              vec3 *const     local_normal,
                              vec3 *const     local_colour)
@@ -14,7 +14,6 @@ bool Plane_Test_Intersection(const Transform transform,
     const vec3 k = vec3_normalise(back_ray.lab);
 
     // Check if there is an intersection, ie. if the castRay is not parallel to the plane
-    // if (!CloseEnough(k.GetElement(2), 0.0))
     if (!CLOSE_ENOUGH(k.z, 0.0))
     {
         // There is an intersection.
