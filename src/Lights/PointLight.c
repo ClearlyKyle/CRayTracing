@@ -9,7 +9,8 @@ bool Light_Compute_Illumination(const PointLight light,
                                 double *const    intensity)
 {
     // Construct a vector pointing from the intersection point to the light.
-    const vec3 light_direction = vec3_normalise(vec3_sub(light.location, intPoint));
+    const vec3   light_direction = vec3_normalise(vec3_sub(light.location, intPoint));
+    const double light_dist      = vec3_length(vec3_sub(light.location, intPoint));
 
     // Compute a starting point.
     const vec3 start_point = intPoint;
@@ -33,6 +34,13 @@ bool Light_Compute_Illumination(const PointLight light,
                                                            &poi,
                                                            &poi_normal,
                                                            &poi_colour);
+
+            if (validInt)
+            {
+                const double dist = vec3_length(vec3_sub(poi, start_point));
+                if (dist > light_dist)
+                    validInt = false;
+            }
         }
 
         // If we have an intersection, then there is no point checking further so we can break out of the loop. In other words, this object is
@@ -64,7 +72,6 @@ bool Light_Compute_Illumination(const PointLight light,
             //        // We do have illumination.
             *colour    = light.colour;
             *intensity = light.intensity * (1.0 - (angle / 1.5708));
-            // intensity = 1.0;
             return true;
         }
     }
