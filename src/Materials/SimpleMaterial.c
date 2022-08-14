@@ -6,7 +6,7 @@ vec3 Simple_Material_Compute_Colour(const Material mat,
                                     const size_t   current_object_index,
                                     vec3 *const    int_point,
                                     vec3 *const    local_normal,
-                                    const Ray   *camera_ray)
+                                    const Ray     *camera_ray)
 {
     // Define the initial material colors.
     vec3 mat_colour = VEC3_INIT_ZERO;
@@ -41,7 +41,7 @@ vec3 SimpleMaterial_Compute_Specular(const Material mat,
                                      const Lights   lights,
                                      vec3 *const    int_point,
                                      vec3 *const    local_normal,
-                                     const Ray   *camera_ray)
+                                     const Ray     *camera_ray)
 {
     double red   = 0.0;
     double green = 0.0;
