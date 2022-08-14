@@ -12,8 +12,8 @@ inline Scene Single_Cylinder(void)
     scene.lights.lights = (LightArray *)malloc(sizeof(LightArray) * scene.lights.count);
 
     scene.lights.lights[0] = (LightArray){.type = LIGHT_POINT, .object.pointLight = {.location = {5.0, -10.0, -5.0}, .colour = {0.0, 0.0, 1.0}, .intensity = 1.0}};
-    scene.lights.lights[1] = (LightArray){.type = LIGHT_POINT, .object.pointLight = {.location = {-5.0, -10.0, -5.0}, .colour = {1.0, 0.0, 1.0}, .intensity = 1.0}};
-    scene.lights.lights[2] = (LightArray){.type = LIGHT_POINT, .object.pointLight = {.location = {0.0, -10.0, -5.0}, .colour = {0.0, 1.0, 1.0}, .intensity = 1.0}};
+    scene.lights.lights[1] = (LightArray){.type = LIGHT_POINT, .object.pointLight = {.location = {-5.0, -10.0, -5.0}, .colour = {1.0, 0.0, 0.0}, .intensity = 1.0}};
+    scene.lights.lights[2] = (LightArray){.type = LIGHT_POINT, .object.pointLight = {.location = {0.0, -10.0, -5.0}, .colour = {0.0, 1.0, 0.0}, .intensity = 1.0}};
 
     // Setup Camera
     scene.cam = (Camera_t){
@@ -36,13 +36,13 @@ inline Scene Single_Cylinder(void)
     scene.objects = Objects_Init(2);
 
     scene.objects.shapes[0] = (Shape){.type              = SHAPE_PLANE,
-                                      .mat               = &scene.mats[0],
+                                      .mat               = &scene.mats[1],
                                       .base_colour       = {1.0, 1.0, 1.0},
                                       .transform         = Transform_Set((vec3){0.0, 0.0, 1.0}, (vec3){0.0, 0.0, 0.0}, (vec3){16.0, 16.0, 1.0}),
                                       .Test_Intersection = &Plane_Test_Intersection};
 
     scene.objects.shapes[1] = (Shape){.type              = SHAPE_CYLINDER,
-                                      .mat               = &scene.mats[1],
+                                      .mat               = &scene.mats[0],
                                       .base_colour       = {1.0, 1.0, 1.0},
                                       .transform         = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){1.0, 1.0, 1.0}),
                                       .Test_Intersection = &Cylinder_Test_Intersection};
