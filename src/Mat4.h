@@ -143,13 +143,13 @@ inline Mat4 Mat4_Make_Rotation(const vec3 angles)
     dest.elements[2][0] = sy;
     dest.elements[2][1] = -cy * sx;
     dest.elements[2][2] = cx * cy;
-    dest.elements[0][3] = 0.0f;
-    dest.elements[1][3] = 0.0f;
-    dest.elements[2][3] = 0.0f;
-    dest.elements[3][0] = 0.0f;
-    dest.elements[3][1] = 0.0f;
-    dest.elements[3][2] = 0.0f;
-    dest.elements[3][3] = 1.0f;
+    dest.elements[0][3] = 0.0;
+    dest.elements[1][3] = 0.0;
+    dest.elements[2][3] = 0.0;
+    dest.elements[3][0] = 0.0;
+    dest.elements[3][1] = 0.0;
+    dest.elements[3][2] = 0.0;
+    dest.elements[3][3] = 1.0;
 
     return dest;
 }

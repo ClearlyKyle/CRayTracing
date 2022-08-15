@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <math.h>
 
+#define M_PI 3.14159265358979323846
+
 //-----------------------------------------------------------
 typedef struct vector
 {
@@ -13,7 +15,7 @@ typedef struct vector
 // MACROS
 //-----------------------------------------------------------
 #define VEC3_INIT_ZERO \
-    (vec3) { 0.0f, 0.0f, 0.0f }
+    (vec3) { 0.0, 0.0, 0.0 }
 #define VEC3_INIT_VALUE(VAL) \
     (vec3) { (VAL), (VAL), (VAL) }
 
