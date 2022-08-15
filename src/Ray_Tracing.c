@@ -18,14 +18,12 @@ static struct Raycaster
 
 void Ray_Tracing_Init()
 {
-    SDL_Texture *texture = SDL_CreateTexture(app.renderer, SDL_PIXELFORMAT_RGBX8888, SDL_TEXTUREACCESS_STREAMING, app.width, app.height);
-
     // Initialise image
     Image_t image          = Image_Initialize(app.width, app.height, app.renderer);
     Raycaster.output_image = image;
 
-    Raycaster.scene = Single_Cylinder();
-    // Raycaster.scene = Multiple_Shapes();
+    // Raycaster.scene = Single_Cylinder();
+    Raycaster.scene = Multiple_Shapes();
 }
 
 void Ray_Tracing_Update()
@@ -33,15 +31,8 @@ void Ray_Tracing_Update()
     const unsigned int x_size = Raycaster.output_image.x_size;
     const unsigned int y_size = Raycaster.output_image.y_size;
 
-    const double xFact   = 1.0 / ((double)(x_size) / 2.0);
-    const double yFact   = 1.0 / ((double)(y_size) / 2.0);
-    double       minDist = 1e6;
-    double       maxDist = 0.0;
-
-    vec3 intPoint    = VEC3_INIT_ZERO;
-    vec3 localNormal = VEC3_INIT_ZERO;
-    vec3 localColor  = VEC3_INIT_ZERO;
-    vec3 base_colour = VEC3_INIT_ZERO;
+    const double xFact = 1.0 / ((double)(x_size) / 2.0);
+    const double yFact = 1.0 / ((double)(y_size) / 2.0);
 
     vec3 closestIntPoint    = VEC3_INIT_ZERO;
     vec3 closestLocalNormal = VEC3_INIT_ZERO;
@@ -62,16 +53,17 @@ void Ray_Tracing_Update()
             size_t closest_object_index = 0;
 
             // CAST RAY
-            // Loop over each pixel in our image.
-            double    minDist            = 1e6;
-            bool      intersection_found = false;
-            Material *material           = NULL;
+            vec3   intPoint           = VEC3_INIT_ZERO;
+            vec3   localNormal        = VEC3_INIT_ZERO;
+            vec3   localColor         = VEC3_INIT_ZERO;
+            double minDist            = 1e6;
+            bool   intersection_found = false;
 
             // Loop over each object in the sceene
             for (size_t object_index = 0; object_index < Raycaster.scene.objects.count; object_index++)
             {
                 const bool validInt = Raycaster.scene.objects.shapes[object_index].Test_Intersection(Raycaster.scene.objects.shapes[object_index].transform,
-                                                                                                     Raycaster.scene.objects.shapes[object_index].base_colour,
+                                                                                                     Raycaster.scene.objects.shapes[object_index].mat->base_colour,
                                                                                                      cameraRay,
                                                                                                      &intPoint,
                                                                                                      &localNormal,
@@ -123,17 +115,13 @@ void Ray_Tracing_Update()
                                                                         closest_object_index,
                                                                         &closestIntPoint,
                                                                         &closestLocalNormal,
-                                                                        base_colour);
+                                                                        Raycaster.scene.objects.shapes[closest_object_index].mat->base_colour);
 
                     Image_SetPixel(&Raycaster.output_image, x, y, colour.x, colour.y, colour.z);
                 }
             }
         }
     }
-
-    printf("Minimum distance: %f\n", minDist);
-    printf("Maximum distance: %f\n", maxDist);
-
     Image_Display(&Raycaster.output_image);
 }
 

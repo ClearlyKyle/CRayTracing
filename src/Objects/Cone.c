@@ -2,7 +2,7 @@
 
 bool Cone_Test_Intersection(const Transform transform,
                             const vec3      base_colour,
-                            const Ray     ray,
+                            const Ray       ray,
                             vec3 *const     int_point,
                             vec3 *const     local_normal,
                             vec3 *const     local_colour)
@@ -170,6 +170,4 @@ bool Cone_Test_Intersection(const Transform transform,
             return false;
         }
     }
-
-    return false;
 }

@@ -182,6 +182,4 @@ bool Cylinder_Test_Intersection(const Transform transform,
             return false;
         }
     }
-
-    return false;
 }

@@ -70,12 +70,12 @@ vec3 SimpleMaterial_Compute_Specular(const Material mat,
 
         for (size_t current_object = 0; current_object < objects.count; current_object++)
         {
-            const bool validInt = objects.shapes[current_object].Test_Intersection(objects.shapes[current_object].transform,
-                                                                                   objects.shapes[current_object].mat->base_colour,
-                                                                                   *camera_ray,
-                                                                                   &poi,
-                                                                                   &poi_normal,
-                                                                                   &poi_colour);
+            validInt = objects.shapes[current_object].Test_Intersection(objects.shapes[current_object].transform,
+                                                                        objects.shapes[current_object].mat->base_colour,
+                                                                        light_ray,
+                                                                        &poi,
+                                                                        &poi_normal,
+                                                                        &poi_colour);
 
             if (validInt)
             {

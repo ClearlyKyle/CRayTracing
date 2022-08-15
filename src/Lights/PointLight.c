@@ -29,7 +29,7 @@ bool Light_Compute_Illumination(const PointLight light,
         if (i != current_object_index)
         {
             validInt = objects.shapes[i].Test_Intersection(objects.shapes[i].transform,
-                                                           objects.shapes[i].base_colour,
+                                                           objects.shapes[i].mat->base_colour,
                                                            lightRay,
                                                            &poi,
                                                            &poi_normal,
