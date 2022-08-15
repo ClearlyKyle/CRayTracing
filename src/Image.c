@@ -26,13 +26,19 @@ Image_t Image_Initialize(const int x_size, const int y_size, SDL_Renderer *rende
     return image;
 }
 
+static double CLAMP(double d, double min, double max)
+{
+    const double t = d < min ? min : d;
+    return t > max ? max : t;
+}
+
 void Image_SetPixel(Image_t *image, const int x, const int y, const double red, const double green, const double blue)
 {
     const int index = y * image->x_size + x;
 
-    image->r[index] = red;
-    image->g[index] = green;
-    image->b[index] = blue;
+    image->r[index] = CLAMP(red, 0.0, 1.0);
+    image->g[index] = CLAMP(green, 0.0, 1.0);
+    image->b[index] = CLAMP(blue, 0.0, 1.0);
 }
 
 void Image_Display(const Image_t *const image)
