@@ -98,7 +98,6 @@ void App_Start()
     int fame_counter = 0;
     while (app.running)
     {
-        Uint64 start        = SDL_GetPerformanceCounter();
         app.last_frame_time = app.frame_time;
         app.frame_time      = elapsed;
 

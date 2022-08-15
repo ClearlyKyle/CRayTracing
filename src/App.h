@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 #include "SDL2/SDL.h"
-#include "Scene.h"
+#include "Ray_Tracing.h"
 
 typedef void (*Appfunction_ptr)();
 
