@@ -33,38 +33,14 @@ enum Shapes
 
 typedef struct Shape
 {
-    enum Shape_Types        type;
-    vec3                    base_colour;
-    Transform               transform;
-    Material               *mat;
-    shape_test_intersection Test_Intersection;
+    enum Shape_Types type;
+    vec3             base_colour;
+    Transform        transform;
+    Material        *mat;
 } Shape;
 
 // -------------------------------------------------
-
-typedef struct Objects
-{
-    size_t count;
-    Shape *shapes;
-} Objects;
-
-inline Objects Objects_Init(const size_t number_of_objects)
-{
-    Objects objs = {0};
-
-    objs.count  = number_of_objects;
-    objs.shapes = (Shape *)malloc(sizeof(Shape) * number_of_objects);
-    if (!objs.shapes)
-        fprintf(stderr, "Error! (Shape *)malloc(sizeof(Shape) * number_of_objects);\n");
-
-    return objs;
-}
-
-inline void Objects_Free(Objects *objects)
-{
-    free(objects->shapes);
-    objects->shapes = NULL;
-};
+// Intersection Testing
 
 #define CLOSE_ENOUGH(D1, D2) fabs((D1) - (D2)) < 1e-21f
 
@@ -95,5 +71,48 @@ bool Cone_Test_Intersection(const Transform transform,
                             vec3 *const     int_point,
                             vec3 *const     local_normal,
                             vec3 *const     local_colour);
+
+const static shape_test_intersection _intersection_functions[] = {
+    Sphere_Test_Intersection,
+    Plane_Test_Intersection,
+    Cylinder_Test_Intersection,
+    Cone_Test_Intersection,
+};
+
+// -------------------------------------------------
+// Objects
+
+typedef struct Objects
+{
+    size_t count;
+    Shape *shapes;
+} Objects;
+
+inline Objects Objects_Init(const size_t number_of_objects)
+{
+    Objects objs = {0};
+
+    objs.count  = number_of_objects;
+    objs.shapes = (Shape *)malloc(sizeof(Shape) * number_of_objects);
+    if (!objs.shapes)
+        fprintf(stderr, "Error! (Shape *)malloc(sizeof(Shape) * number_of_objects);\n");
+
+    return objs;
+}
+
+inline bool Object_Test_Intersection(const Shape shape,
+                                     const Ray   ray,
+                                     vec3 *const int_point,
+                                     vec3 *const local_normal,
+                                     vec3 *const local_colour)
+{
+    return _intersection_functions[shape.type](shape.transform, shape.base_colour, ray, int_point, local_normal, local_colour);
+}
+
+inline void Objects_Free(Objects *objects)
+{
+    free(objects->shapes);
+    objects->shapes = NULL;
+};
 
 #endif // __OBJECTS_H__

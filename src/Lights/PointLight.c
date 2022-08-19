@@ -19,33 +19,32 @@ bool Light_Compute_Illumination(const PointLight light,
     const Ray lightRay = Ray_Init(start_point, vec3_add(start_point, light_direction));
 
     /* Check for intersections with all of the objects in the scene, except for the current one. */
-    vec3 poi        = VEC3_INIT_ZERO;
-    vec3 poi_normal = VEC3_INIT_ZERO;
-    vec3 poi_colour = VEC3_INIT_ZERO;
-    bool validInt   = false;
+    vec3 poi                = VEC3_INIT_ZERO;
+    vec3 poi_normal         = VEC3_INIT_ZERO;
+    vec3 poi_colour         = VEC3_INIT_ZERO;
+    bool valid_intersection = false;
 
     for (size_t i = 0; i < objects.count; i++)
     {
         if (i != current_object_index)
         {
-            validInt = objects.shapes[i].Test_Intersection(objects.shapes[i].transform,
-                                                           objects.shapes[i].mat->base_colour,
-                                                           lightRay,
-                                                           &poi,
-                                                           &poi_normal,
-                                                           &poi_colour);
+            valid_intersection = Object_Test_Intersection(objects.shapes[i],
+                                                          lightRay,
+                                                          &poi,
+                                                          &poi_normal,
+                                                          &poi_colour);
 
-            if (validInt)
+            if (valid_intersection)
             {
                 const double dist = vec3_length(vec3_sub(poi, start_point));
                 if (dist > light_dist)
-                    validInt = false;
+                    valid_intersection = false;
             }
         }
 
         // If we have an intersection, then there is no point checking further so we can break out of the loop. In other words, this object is
         // blocking light from this light source
-        if (validInt)
+        if (valid_intersection)
         {
             break;
         }
@@ -53,7 +52,7 @@ bool Light_Compute_Illumination(const PointLight light,
 
     // Only continue to compute illumination if the light ray didn't intersect with any objects in the scene. Ie. no objects are
     // casting a shadow from this light source
-    if (!validInt)
+    if (!valid_intersection)
     {
         // Compute the angle between the local normal and the light ray.
         // Note that we assume that localNormal is a unit vector.

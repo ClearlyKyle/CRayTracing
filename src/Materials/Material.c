@@ -166,14 +166,13 @@ bool Material_Cast_Ray(const Ray     cast_ray,
     {
         if (i != current_object_index)
         {
-            const bool validInt = objects.shapes[i].Test_Intersection(objects.shapes[i].transform,
-                                                                      objects.shapes[i].mat->base_colour,
-                                                                      cast_ray,
-                                                                      &int_point,
-                                                                      &local_normal,
-                                                                      &local_colour);
+            const bool valid_intersection = Object_Test_Intersection(objects.shapes[i],
+                                                                     cast_ray,
+                                                                     &int_point,
+                                                                     &local_normal,
+                                                                     &local_colour);
 
-            if (validInt)
+            if (valid_intersection)
             {
                 intersection_found = true;
 

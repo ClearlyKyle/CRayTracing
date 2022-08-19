@@ -63,28 +63,27 @@ vec3 SimpleMaterial_Compute_Specular(const Material mat,
         const Ray light_ray = Ray_Init(start_point, vec3_add(start_point, light_direction));
 
         /* Loop through all objects in the scene to check if any obstruct light from this source. */
-        vec3 poi        = VEC3_INIT_ZERO;
-        vec3 poi_normal = VEC3_INIT_ZERO;
-        vec3 poi_colour = VEC3_INIT_ZERO;
-        bool validInt   = false;
+        vec3 poi                = VEC3_INIT_ZERO;
+        vec3 poi_normal         = VEC3_INIT_ZERO;
+        vec3 poi_colour         = VEC3_INIT_ZERO;
+        bool valid_intersection = false;
 
         for (size_t current_object = 0; current_object < objects.count; current_object++)
         {
-            validInt = objects.shapes[current_object].Test_Intersection(objects.shapes[current_object].transform,
-                                                                        objects.shapes[current_object].mat->base_colour,
-                                                                        light_ray,
-                                                                        &poi,
-                                                                        &poi_normal,
-                                                                        &poi_colour);
+            valid_intersection = Object_Test_Intersection(objects.shapes[current_object],
+                                                          light_ray,
+                                                          &poi,
+                                                          &poi_normal,
+                                                          &poi_colour);
 
-            if (validInt)
+            if (valid_intersection)
             {
                 break;
             }
         }
 
         /* If no intersections were found, then proceed with computing the specular component. */
-        if (!validInt)
+        if (!valid_intersection)
         {
             // Compute the reflection vector.
             const vec3 d = light_ray.lab;

@@ -38,14 +38,12 @@ inline Scene Single_Cylinder(void)
     scene.objects.shapes[0] = (Shape){.type              = SHAPE_PLANE,
                                       .mat               = &scene.mats[1],
                                       .base_colour       = {1.0, 1.0, 1.0},
-                                      .transform         = Transform_Set((vec3){0.0, 0.0, 1.0}, (vec3){0.0, 0.0, 0.0}, (vec3){16.0, 16.0, 1.0}),
-                                      .Test_Intersection = &Plane_Test_Intersection};
+                                      .transform         = Transform_Set((vec3){0.0, 0.0, 1.0}, (vec3){0.0, 0.0, 0.0}, (vec3){16.0, 16.0, 1.0})};
 
     scene.objects.shapes[1] = (Shape){.type              = SHAPE_CYLINDER,
                                       .mat               = &scene.mats[0],
                                       .base_colour       = {1.0, 1.0, 1.0},
-                                      .transform         = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){1.0, 1.0, 1.0}),
-                                      .Test_Intersection = &Cylinder_Test_Intersection};
+                                      .transform         = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){1.0, 1.0, 1.0})};
 
     return scene;
 }
