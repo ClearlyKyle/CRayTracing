@@ -36,6 +36,30 @@ typedef struct Texture
 
 // ------------------------------------------------------------------------------------------------
 
+#include "Checker.h"
+#include "Flat.h"
+
+static inline mat3 _Texture_Create_Transform_Matrix(const vec2 translation, const double rotation, const vec2 scale)
+{
+    // NOTE: Might need to change as the multiplication could cause issues
+    const double c = cos(rotation);
+    const double s = sin(rotation);
+
+    const mat3 rotation_matrix = {c, -s, 0.0,
+                                  s, c, 0.0,
+                                  0.0, 0.0, 1.0};
+
+    const mat3 scale_matrix = {scale.x, 0.0, 0.0,
+                               0.0, scale.y, 0.0,
+                               0.0, 0.0, 1.0};
+
+    const mat3 translation_matrix = {1.0, 0.0, translation.x,
+                                     0.0, 1.0, translation.y,
+                                     0.0, 0.0, 1.0};
+
+    return mat3_mul_mat3(mat3_mul_mat3(translation_matrix, rotation_matrix), scale_matrix);
+}
+
 inline vec3 Texture_Blend_Colours(const vec3 colour_list[])
 {
     return (vec3){0.0, 0.0, 0.0};

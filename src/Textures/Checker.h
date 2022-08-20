@@ -3,14 +3,18 @@
 
 #include "Textures.h"
 
-inline Texture Texture_Init_Flat(const mat3 transfor_matrix, const vec4 colour1, const vec4 colour2)
+inline Texture Texture_Init_Checker(const vec2   translation,
+                                    const double rotation,
+                                    const vec2   scale,
+                                    const vec4   colour1,
+                                    const vec4   colour2)
 {
     Texture t                   = {0};
     t.type                      = TEXTURE_FLAT;
     t.checker                   = malloc(sizeof(struct Checker));
     t.checker->colour1          = colour1;
     t.checker->colour1          = colour2;
-    t.checker->transform_matrix = transfor_matrix;
+    t.checker->transform_matrix = _Texture_Create_Transform_Matrix(translation, rotation, scale);
 
     return t;
 }
