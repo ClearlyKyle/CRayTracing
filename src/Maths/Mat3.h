@@ -40,6 +40,8 @@ inline mat3 mat3_mul_mat3(const mat3 mat1, const mat3 mat2)
     dest.elements[2][0] = a00 * b20 + a10 * b21 + a20 * b22;
     dest.elements[2][1] = a01 * b20 + a11 * b21 + a21 * b22;
     dest.elements[2][2] = a02 * b20 + a12 * b21 + a22 * b22;
+
+    return dest;
 }
 
 #endif // __MAT3_H__
