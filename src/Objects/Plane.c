@@ -1,12 +1,14 @@
 #include "Objects.h"
 
-bool Plane_Test_Intersection(const Transform transform,
-                             const vec3      base_colour,
-                             const Ray       ray,
-                             vec3 *const     int_point,
-                             vec3 *const     local_normal,
-                             vec3 *const     local_colour)
+bool Plane_Test_Intersection(Shape *const shape,
+                             const Ray    ray,
+                             vec3 *const  int_point,
+                             vec3 *const  local_normal,
+                             vec3 *const  local_colour)
 {
+    const Transform transform   = shape->transform;
+    const vec3      base_colour = shape->base_colour;
+
     // Copy the ray and apply the backwards transform.
     const Ray back_ray = Transform_Apply_Ray(transform, ray, false);
 
@@ -45,6 +47,9 @@ bool Plane_Test_Intersection(const Transform transform,
 
                 // Return the base color.
                 *local_colour = base_colour;
+
+                // UV Coordinates
+                shape->uv_coordinates = (vec2){u, v};
 
                 return true;
             }

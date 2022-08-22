@@ -1,12 +1,14 @@
 #include "Objects.h"
 
-bool Cylinder_Test_Intersection(const Transform transform,
-                                const vec3      base_colour,
-                                const Ray     ray,
-                                vec3 *const     int_point,
-                                vec3 *const     local_normal,
-                                vec3 *const     local_colour)
+bool Cylinder_Test_Intersection(Shape *const shape,
+                                const Ray    ray,
+                                vec3 *const  int_point,
+                                vec3 *const  local_normal,
+                                vec3 *const  local_colour)
 {
+    const Transform transform   = shape->transform;
+    const vec3      base_colour = shape->base_colour;
+
     // Copy the ray and apply the backwards transform.
     const Ray bck_ray = Transform_Apply_Ray(transform, ray, false);
 
@@ -145,6 +147,16 @@ bool Cylinder_Test_Intersection(const Transform transform,
         *local_normal = new_normal;
         *local_colour = base_colour;
 
+        // UV Coordinates
+        const double x = poi->x;
+        const double y = poi->y;
+        const double z = poi->z;
+
+        const double u = atan2(y, x) / M_PI;
+        // const double v = z;
+
+        shape->uv_coordinates = (vec2){u, z};
+
         return true;
     }
     else
@@ -169,6 +181,12 @@ bool Cylinder_Test_Intersection(const Transform transform,
 
                 *local_normal = new_normal;
                 *local_colour = base_colour;
+
+                // UV Coordinates
+                const double x = valid_POI.x;
+                const double y = valid_POI.y;
+
+                shape->uv_coordinates = (vec2){x, y};
 
                 return true;
             }

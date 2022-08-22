@@ -1,12 +1,14 @@
 #include "Objects.h"
 
-bool Cone_Test_Intersection(const Transform transform,
-                            const vec3      base_colour,
-                            const Ray       ray,
-                            vec3 *const     int_point,
-                            vec3 *const     local_normal,
-                            vec3 *const     local_colour)
+bool Cone_Test_Intersection(Shape *const shape,
+                            const Ray    ray,
+                            vec3 *const  int_point,
+                            vec3 *const  local_normal,
+                            vec3 *const  local_colour)
 {
+    const Transform transform   = shape->transform;
+    const vec3      base_colour = shape->base_colour;
+
     // Copy the ray and apply the backwards transform.
     const Ray bck_ray = Transform_Apply_Ray(transform, ray, false);
 
@@ -131,7 +133,17 @@ bool Cone_Test_Intersection(const Transform transform,
         new_normal      = vec3_normalise(new_normal);
 
         *local_normal = new_normal;
-        *local_colour = base_colour;
+        *local_colour = shape->base_colour;
+
+        // UV Coordinates
+        const double x = valid_POI.x;
+        const double y = valid_POI.y;
+        const double z = valid_POI.z;
+
+        const double u_coor = atan2(y, x) / M_PI;
+        const double v_coor = (z * 2.0) + 1.0;
+
+        shape->uv_coordinates = (vec2){u_coor, v_coor};
 
         return true;
     }
@@ -157,6 +169,13 @@ bool Cone_Test_Intersection(const Transform transform,
 
                 *local_normal = new_normal;
                 *local_colour = base_colour;
+
+                // UV Coordinates
+                const double x = valid_POI.x;
+                const double y = valid_POI.y;
+                // const double z = valid_POI.z;
+
+                shape->uv_coordinates = (vec2){x, y};
 
                 return true;
             }

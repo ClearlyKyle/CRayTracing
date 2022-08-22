@@ -2,13 +2,15 @@
 
 #include <math.h>
 
-bool Sphere_Test_Intersection(const Transform transform,
-                              const vec3      base_colour,
-                              const Ray     ray,
-                              vec3 *const     int_point,
-                              vec3 *const     local_normal,
-                              vec3 *const     local_colour)
+bool Sphere_Test_Intersection(Shape *const shape,
+                              const Ray    ray,
+                              vec3 *const  int_point,
+                              vec3 *const  local_normal,
+                              vec3 *const  local_colour)
 {
+    const Transform transform   = shape->transform;
+    const vec3      base_colour = shape->base_colour;
+
     const Ray back_ray = Transform_Apply_Ray(transform, ray, false);
 
     // Compute the values of a, b and c.
@@ -65,6 +67,23 @@ bool Sphere_Test_Intersection(const Transform transform,
 
             // Return the base color.
             *local_colour = base_colour;
+
+            // UV Coordinates
+            const double x = poi.x;
+            const double y = poi.y;
+            const double z = poi.z;
+
+            double u = atan(sqrt(pow(x, 2.0) + pow(y, 2.0)) / z);
+            double v = atan(y / x);
+            if (x < 0.0)
+            {
+                v += M_PI;
+            }
+
+            u /= M_PI;
+            v /= M_PI;
+
+            shape->uv_coordinates = (vec2){u, v};
         }
         return true;
     }

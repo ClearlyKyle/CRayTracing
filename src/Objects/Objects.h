@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include "../Maths/MathsHeader.h"
+#include "../Textures/Textures.h"
 
 typedef struct Material
 {
@@ -10,14 +11,10 @@ typedef struct Material
     double shininess;
 
     vec3 base_colour;
-} Material;
 
-typedef bool (*shape_test_intersection)(const Transform transform,
-                                        const vec3      base_colour,
-                                        const Ray       ray,
-                                        vec3 *const     int_point,
-                                        vec3 *const     local_normal,
-                                        vec3 *const     local_colour);
+    Texture texture;
+    bool    has_texture;
+} Material;
 
 // -------------------------------------------------
 // SHAPES
@@ -35,42 +32,45 @@ typedef struct Shape
 {
     enum Shape_Types type;
     vec3             base_colour;
+    vec2             uv_coordinates; // Do they really need to hold this?
     Transform        transform;
     Material        *mat;
 } Shape;
+
+typedef bool (*shape_test_intersection)(Shape *const shape,
+                                        const Ray    ray,
+                                        vec3 *const  int_point,
+                                        vec3 *const  local_normal,
+                                        vec3 *const  local_colour);
 
 // -------------------------------------------------
 // Intersection Testing
 
 #define CLOSE_ENOUGH(D1, D2) fabs((D1) - (D2)) < 1e-21f
 
-bool Plane_Test_Intersection(const Transform transform,
-                             const vec3      base_colour,
-                             const Ray       ray,
-                             vec3 *const     int_point,
-                             vec3 *const     local_normal,
-                             vec3 *const     local_colour);
+bool Plane_Test_Intersection(Shape *const shape,
+                             const Ray    ray,
+                             vec3 *const  int_point,
+                             vec3 *const  local_normal,
+                             vec3 *const  local_colour);
 
-bool Sphere_Test_Intersection(const Transform transform,
-                              const vec3      base_colour,
-                              const Ray       ray,
-                              vec3 *const     int_point,
-                              vec3 *const     local_normal,
-                              vec3 *const     local_colour);
+bool Sphere_Test_Intersection(Shape *const shape,
+                              const Ray    ray,
+                              vec3 *const  int_point,
+                              vec3 *const  local_normal,
+                              vec3 *const  local_colour);
 
-bool Cylinder_Test_Intersection(const Transform transform,
-                                const vec3      base_colour,
-                                const Ray       ray,
-                                vec3 *const     int_point,
-                                vec3 *const     local_normal,
-                                vec3 *const     local_colour);
+bool Cylinder_Test_Intersection(Shape *const shape,
+                                const Ray    ray,
+                                vec3 *const  int_point,
+                                vec3 *const  local_normal,
+                                vec3 *const  local_colour);
 
-bool Cone_Test_Intersection(const Transform transform,
-                            const vec3      base_colour,
-                            const Ray       ray,
-                            vec3 *const     int_point,
-                            vec3 *const     local_normal,
-                            vec3 *const     local_colour);
+bool Cone_Test_Intersection(Shape *const shape,
+                            const Ray    ray,
+                            vec3 *const  int_point,
+                            vec3 *const  local_normal,
+                            vec3 *const  local_colour);
 
 const static shape_test_intersection _intersection_functions[] = {
     Sphere_Test_Intersection,
@@ -106,7 +106,7 @@ inline bool Object_Test_Intersection(const Shape shape,
                                      vec3 *const local_normal,
                                      vec3 *const local_colour)
 {
-    return _intersection_functions[shape.type](shape.transform, shape.base_colour, ray, int_point, local_normal, local_colour);
+    return _intersection_functions[shape.type]((Shape *const)&shape, ray, int_point, local_normal, local_colour);
 }
 
 inline void Objects_Free(Objects *objects)
