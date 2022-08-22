@@ -15,7 +15,13 @@ vec3 Simple_Material_Compute_Colour(const Material mat,
     vec3 spc_colour = VEC3_INIT_ZERO;
 
     // Compute the diffuse component.
-    dif_colour = Material_Compute_Diffuse_Colour(objects, lights, current_object_index, int_point, local_normal, mat.base_colour);
+    if (mat.has_texture)
+        dif_colour = Material_Compute_Diffuse_Colour(objects, lights, current_object_index, int_point, local_normal, mat.base_colour);
+    else
+    {
+        const vec4 texture_colour = Texture_Get_Colour(mat.texture, objects.shapes[current_object_index].uv_coordinates);
+        dif_colour                = Material_Compute_Diffuse_Colour(objects, lights, current_object_index, int_point, local_normal, (vec3){texture_colour.x, texture_colour.y, texture_colour.z});
+    }
 
     // Compute the reflection component.
     if (mat.reflectivity > 0.0)
