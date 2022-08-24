@@ -64,7 +64,7 @@ void Ray_Tracing_Update()
             // Loop over each object in the sceene
             for (size_t object_index = 0; object_index < Raycaster.scene.objects.count; object_index++)
             {
-                const bool valid_intersection = Object_Test_Intersection(Raycaster.scene.objects.shapes[object_index],
+                const bool valid_intersection = Object_Test_Intersection(&Raycaster.scene.objects.shapes[object_index],
                                                                          cameraRay,
                                                                          &intPoint,
                                                                          &localNormal,

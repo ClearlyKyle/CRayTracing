@@ -100,13 +100,13 @@ inline Objects Objects_Init(const size_t number_of_objects)
     return objs;
 }
 
-inline bool Object_Test_Intersection(const Shape shape,
-                                     const Ray   ray,
-                                     vec3 *const int_point,
-                                     vec3 *const local_normal,
-                                     vec3 *const local_colour)
+inline bool Object_Test_Intersection(Shape *const shape,
+                                     const Ray    ray,
+                                     vec3 *const  int_point,
+                                     vec3 *const  local_normal,
+                                     vec3 *const  local_colour)
 {
-    return _intersection_functions[shape.type]((Shape *const)&shape, ray, int_point, local_normal, local_colour);
+    return _intersection_functions[shape->type]((Shape *const)shape, ray, int_point, local_normal, local_colour);
 }
 
 inline void Objects_Free(Objects *objects)
