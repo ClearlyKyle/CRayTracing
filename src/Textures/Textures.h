@@ -1,6 +1,9 @@
 #ifndef __TEXTURES_H__
 #define __TEXTURES_H__
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "../Maths/MathsHeader.h"
 
 struct Flat
@@ -36,9 +39,6 @@ typedef struct Texture
 
 // ------------------------------------------------------------------------------------------------
 
-#include "Checker.h"
-#include "Flat.h"
-
 static inline mat3 _Texture_Create_Transform_Matrix(const vec2 translation, const double rotation, const vec2 scale)
 {
     // NOTE: Might need to change as the multiplication could cause issues
@@ -72,20 +72,6 @@ inline vec2 Texture_Apply_Transform(const mat3 transform_matrix, const vec2 inpu
     return (vec2){result.x, result.y};
 }
 
-inline vec4 Texture_Get_Colour(const Texture texture, const vec2 uv_coords)
-{
-    switch (texture.type)
-    {
-    case TEXTURE_CHECKER:
-        return Texture_Checker_Get_Colour((const struct Checker *)(texture.checker), uv_coords);
-    case TEXTURE_FLAT:
-        return texture.flat->colour;
-
-    default:
-        break;
-    }
-}
-
 inline void Texture_Free(Texture *const texture)
 {
     switch (texture->type)
@@ -104,4 +90,26 @@ inline void Texture_Free(Texture *const texture)
     }
 }
 
+// ------------------------------------------------------------------------------------------------
+// Texture Get Colour
+
+// CHECKER
+vec4    Texture_Checker_Get_Colour(const struct Checker *checker, const vec2 uv_coords);
+Texture Texture_Checker_Init(const vec2 translation, const double rotation, const vec2 scale, const vec4 colour1, const vec4 colour2);
+
+inline vec4 Texture_Get_Colour(const Texture texture, const vec2 uv_coords)
+{
+    switch (texture.type)
+    {
+    case TEXTURE_CHECKER:
+        return Texture_Checker_Get_Colour((const struct Checker *)(texture.checker), uv_coords);
+    case TEXTURE_FLAT:
+        return texture.flat->colour;
+
+    default:
+        fprintf(stderr, "Not supported Texture Type: %d\n", texture.type);
+        break;
+    }
+    return (vec4){0.0, 0.0, 0.0, 1.0};
+}
 #endif // __TEXTURES_H__

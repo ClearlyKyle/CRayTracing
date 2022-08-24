@@ -1,6 +1,6 @@
 #include "Textures.h"
 
-inline Texture Texture_Init_Flat(const vec4 colour)
+Texture Texture_Flat_Init(const vec4 colour)
 {
     Texture t      = {0};
     t.type         = TEXTURE_FLAT;
