@@ -10,7 +10,7 @@ Texture Texture_Checker_Init(const vec2   translation,
     t.type                      = TEXTURE_CHECKER;
     t.checker                   = malloc(sizeof(struct Checker));
     t.checker->colour1          = colour1;
-    t.checker->colour1          = colour2;
+    t.checker->colour2          = colour2;
     t.checker->transform_matrix = _Texture_Create_Transform_Matrix(translation, rotation, scale);
 
     return t;
