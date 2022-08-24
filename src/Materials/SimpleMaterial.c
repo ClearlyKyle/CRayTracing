@@ -1,7 +1,7 @@
 #include "Material.h"
 
 vec3 Simple_Material_Compute_Colour(const Material mat,
-                                    const Objects  objects,
+                                    Objects        objects,
                                     const Lights   lights,
                                     const size_t   current_object_index,
                                     vec3 *const    int_point,
@@ -45,7 +45,7 @@ vec3 Simple_Material_Compute_Colour(const Material mat,
 }
 
 vec3 SimpleMaterial_Compute_Specular(const Material mat,
-                                     const Objects  objects,
+                                     Objects        objects,
                                      const Lights   lights,
                                      vec3 *const    int_point,
                                      vec3 *const    local_normal,
@@ -78,7 +78,7 @@ vec3 SimpleMaterial_Compute_Specular(const Material mat,
 
         for (size_t current_object = 0; current_object < objects.count; current_object++)
         {
-            valid_intersection = Object_Test_Intersection(objects.shapes[current_object],
+            valid_intersection = Object_Test_Intersection(&objects.shapes[current_object],
                                                           light_ray,
                                                           &poi,
                                                           &poi_normal,

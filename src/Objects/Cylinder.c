@@ -148,9 +148,9 @@ bool Cylinder_Test_Intersection(Shape *const shape,
         *local_colour = base_colour;
 
         // UV Coordinates
-        const double x = poi->x;
-        const double y = poi->y;
-        const double z = poi->z;
+        const double x = valid_POI.x;
+        const double y = valid_POI.y;
+        const double z = valid_POI.z;
 
         const double u = atan2(y, x) / M_PI;
         // const double v = z;

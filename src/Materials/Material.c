@@ -8,24 +8,24 @@ void Material_Set_Reflection_Ray_Count(const int value)
     Reflection_Ray_Count = value;
 }
 
-vec3 Material_Compute_Colour(const Objects objects,
-                             const Lights  lights,
-                             const size_t  current_object_index,
-                             vec3 *const   int_point,
-                             vec3 *const   local_normal,
-                             const Ray    *camera_ray)
+vec3 Material_Compute_Colour(Objects      objects,
+                             const Lights lights,
+                             const size_t current_object_index,
+                             vec3 *const  int_point,
+                             vec3 *const  local_normal,
+                             const Ray   *camera_ray)
 {
     // Define an initial material color.
     vec3 mat_colour = VEC3_INIT_ZERO;
     return mat_colour;
 }
 
-vec3 Material_Compute_Diffuse_Colour(const Objects objects,
-                                     const Lights  lights,
-                                     const size_t  current_object_index,
-                                     vec3 *const   int_point,
-                                     vec3 *const   local_normal,
-                                     const vec3    base_colour)
+vec3 Material_Compute_Diffuse_Colour(Objects      objects,
+                                     const Lights lights,
+                                     const size_t current_object_index,
+                                     vec3 *const  int_point,
+                                     vec3 *const  local_normal,
+                                     const vec3   base_colour)
 {
     // Compute the color due to diffuse illumination.
     vec3 diffuse_colour = VEC3_INIT_ZERO;
@@ -78,7 +78,7 @@ vec3 Material_Compute_Diffuse_Colour(const Objects objects,
 }
 
 vec3 Material_Compute_Reflection_Colour(const Material mat,
-                                        const Objects  objects,
+                                        Objects        objects,
                                         const Lights   lights,
                                         const size_t   current_object_index,
                                         vec3 *const    int_point,
@@ -147,7 +147,7 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
 }
 
 bool Material_Cast_Ray(const Ray     cast_ray,
-                       const Objects objects,
+                       Objects       objects,
                        const size_t  current_object_index,
                        size_t *const closests_object_index,
                        vec3 *const   closests_int_point,
@@ -166,7 +166,7 @@ bool Material_Cast_Ray(const Ray     cast_ray,
     {
         if (i != current_object_index)
         {
-            const bool valid_intersection = Object_Test_Intersection(objects.shapes[i],
+            const bool valid_intersection = Object_Test_Intersection(&objects.shapes[i],
                                                                      cast_ray,
                                                                      &int_point,
                                                                      &local_normal,

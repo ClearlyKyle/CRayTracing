@@ -46,7 +46,7 @@ inline void Lights_Free(Lights *lights)
 };
 
 bool Light_Compute_Illumination(const PointLight light,
-                                const Objects    objects,
+                                Objects          objects,
                                 const size_t     current_object_index,
                                 const vec3       intPoint,
                                 const vec3       localNormal,

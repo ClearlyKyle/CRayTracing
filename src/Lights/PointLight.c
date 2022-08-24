@@ -1,7 +1,7 @@
 #include "Lights.h"
 
 bool Light_Compute_Illumination(const PointLight light,
-                                const Objects    objects,
+                                Objects          objects,
                                 const size_t     current_object_index,
                                 const vec3       intPoint,
                                 const vec3       localNormal,
@@ -28,7 +28,7 @@ bool Light_Compute_Illumination(const PointLight light,
     {
         if (i != current_object_index)
         {
-            valid_intersection = Object_Test_Intersection(objects.shapes[i],
+            valid_intersection = Object_Test_Intersection(&objects.shapes[i],
                                                           lightRay,
                                                           &poi,
                                                           &poi_normal,
