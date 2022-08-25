@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "SDL2/SDL.h"
+
 #include "../Maths/MathsHeader.h"
 
 struct Flat
@@ -18,12 +20,24 @@ struct Checker
     vec4 colour2;
 };
 
+struct Image
+{
+    // char        *file_name; // Do I need to store this?
+    mat3         transform_matrix;
+    SDL_Surface *image_surface;
+    // SDL_PixelFormat *pixel_format;
+    // int              x_size, y_size, pitch;
+    // uint8_t          bpp; // bytes per pixel
+    // uint32_t         r_mask, g_mask, b_mask, a_mask;
+};
+
 // ------------------------------------------------------------------------------------------------
 
 enum Texture_types
 {
     TEXTURE_CHECKER,
     TEXTURE_FLAT,
+    TEXTURE_IMAGE,
     TEXTURE_COUNT
 };
 
@@ -34,6 +48,7 @@ typedef struct Texture
     {
         struct Flat    *flat;
         struct Checker *checker;
+        struct Image   *image;
     };
 } Texture;
 
@@ -79,6 +94,10 @@ inline void Texture_Free(Texture *const texture)
         free(texture->checker);
         texture->checker = NULL;
         return;
+    case TEXTURE_IMAGE:
+        free(texture->image);
+        texture->image = NULL;
+        return;
     case TEXTURE_FLAT:
         free(texture->flat);
         texture->flat = NULL;
@@ -93,8 +112,12 @@ inline void Texture_Free(Texture *const texture)
 // Texture Get Colour
 
 // CHECKER
-vec4    Texture_Checker_Get_Colour(const struct Checker *checker, const vec2 uv_coords);
 Texture Texture_Checker_Init(const vec2 translation, const double rotation, const vec2 scale, const vec4 colour1, const vec4 colour2);
+vec4    Texture_Checker_Get_Colour(const struct Checker *checker, const vec2 uv_coords);
+
+// IMAGE
+Texture Texture_Image_Init(const char *file, const vec2 translation, const double rotation, const vec2 scale);
+vec4    Texture_Image_Get_Colour(const struct Image *image, const vec2 uv_coords);
 
 inline vec4 Texture_Get_Colour(const Texture texture, const vec2 uv_coords)
 {
@@ -104,6 +127,8 @@ inline vec4 Texture_Get_Colour(const Texture texture, const vec2 uv_coords)
         return Texture_Checker_Get_Colour((const struct Checker *)(texture.checker), uv_coords);
     case TEXTURE_FLAT:
         return texture.flat->colour;
+    case TEXTURE_IMAGE:
+        return Texture_Image_Get_Colour((const struct Image *)(texture.image), uv_coords);
 
     default:
         fprintf(stderr, "Not supported Texture Type: %d\n", texture.type);
