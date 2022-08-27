@@ -31,8 +31,9 @@ enum Shapes
 typedef struct Shape
 {
     enum Shape_Types type;
+    bool             visible;
     vec3             base_colour;
-    vec2             uv_coordinates; // Do they really need to hold this?
+    vec2             uv_coordinates;
     Transform        transform;
     Material        *mat;
 } Shape;

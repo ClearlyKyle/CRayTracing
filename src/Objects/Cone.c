@@ -6,6 +6,9 @@ bool Cone_Test_Intersection(Shape *const shape,
                             vec3 *const  local_normal,
                             vec3 *const  local_colour)
 {
+    if (!shape->visible)
+        return false;
+
     const Transform transform   = shape->transform;
     const vec3      base_colour = shape->base_colour;
 
