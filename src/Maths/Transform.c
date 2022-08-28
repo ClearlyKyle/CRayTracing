@@ -22,6 +22,12 @@ vec3 Transform_Apply_Backwards(const Transform trans, const vec3 in_vec)
     return (vec3){res.x, res.y, res.z};
 }
 
+vec3 Transform_Apply_Normal(const Transform trans, const vec3 normal)
+{
+    // Apply the transform and return the result.
+    return vec3_mul(trans.linear_transform, normal);
+}
+
 // direction = true = Forward
 Ray Transform_Apply_Ray(Transform trans, Ray ray, bool direction)
 {
