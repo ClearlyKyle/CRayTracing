@@ -44,4 +44,81 @@ inline mat3 mat3_mul_mat3(const mat3 mat1, const mat3 mat2)
     return dest;
 }
 
+inline mat3 mat3_scale(const mat3 mat, const double s)
+{
+    mat3 dest = {0};
+
+    dest.elements[0][0] *= s;
+    dest.elements[0][1] *= s;
+    dest.elements[0][2] *= s;
+    dest.elements[1][0] *= s;
+    dest.elements[1][1] *= s;
+    dest.elements[1][2] *= s;
+    dest.elements[2][0] *= s;
+    dest.elements[2][1] *= s;
+    dest.elements[2][2] *= s;
+
+    return dest;
+}
+
+inline mat3 mat3_inverse(const mat3 mat)
+{
+    mat3 dest = {0};
+
+    double det;
+    double a = mat.elements[0][0], b = mat.elements[0][1], c = mat.elements[0][2],
+           d = mat.elements[1][0], e = mat.elements[1][1], f = mat.elements[1][2],
+           g = mat.elements[2][0], h = mat.elements[2][1], i = mat.elements[2][2];
+
+    dest.elements[0][0] = e * i - f * h;
+    dest.elements[0][1] = -(b * i - h * c);
+    dest.elements[0][2] = b * f - e * c;
+    dest.elements[1][0] = -(d * i - g * f);
+    dest.elements[1][1] = a * i - c * g;
+    dest.elements[1][2] = -(a * f - d * c);
+    dest.elements[2][0] = d * h - g * e;
+    dest.elements[2][1] = -(a * h - g * b);
+    dest.elements[2][2] = a * e - b * d;
+
+    det = 1.0f / (a * dest.elements[0][0] + b * dest.elements[1][0] + c * dest.elements[2][0]);
+
+    return mat3_scale(dest, det);
+}
+
+inline void mat3_transpose(mat3 *mat)
+{
+    mat3 tmp = {0};
+
+    tmp.elements[0][1] = mat->elements[1][0];
+    tmp.elements[0][2] = mat->elements[2][0];
+    tmp.elements[1][0] = mat->elements[0][1];
+    tmp.elements[1][2] = mat->elements[2][1];
+    tmp.elements[2][0] = mat->elements[0][2];
+    tmp.elements[2][1] = mat->elements[1][2];
+
+    mat->elements[0][1] = tmp.elements[0][1];
+    mat->elements[0][2] = tmp.elements[0][2];
+    mat->elements[1][0] = tmp.elements[1][0];
+    mat->elements[1][2] = tmp.elements[1][2];
+    mat->elements[2][0] = tmp.elements[2][0];
+    mat->elements[2][1] = tmp.elements[2][1];
+}
+
+inline mat3 mat3_transpose_to(const mat3 mat)
+{
+    mat3 dest = {0};
+
+    dest.elements[0][0] = mat.elements[0][0];
+    dest.elements[0][1] = mat.elements[1][0];
+    dest.elements[0][2] = mat.elements[2][0];
+    dest.elements[1][0] = mat.elements[0][1];
+    dest.elements[1][1] = mat.elements[1][1];
+    dest.elements[1][2] = mat.elements[2][1];
+    dest.elements[2][0] = mat.elements[0][2];
+    dest.elements[2][1] = mat.elements[1][2];
+    dest.elements[2][2] = mat.elements[2][2];
+
+    return dest;
+}
+
 #endif // __MAT3_H__
