@@ -119,7 +119,7 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
         // Check if a material has been assigned.
         if (objects.shapes[closest_object_index].mat)
         {
-            mat_colour = Simple_Material_Compute_Colour(mat,
+            mat_colour = Simple_Material_Compute_Colour(*objects.shapes[closest_object_index].mat,
                                                         objects,
                                                         lights,
                                                         closest_object_index,
@@ -135,12 +135,12 @@ vec3 Material_Compute_Reflection_Colour(const Material mat,
                 closest_object_index,
                 &closest_int_point,
                 &closest_local_normal,
-                closest_local_colour);
+                objects.shapes[closest_object_index].base_colour);
         }
     }
     else
     {
-        // Leave matColor as it is.
+        // Leave mat_colour as it is.
     }
 
     return mat_colour;
