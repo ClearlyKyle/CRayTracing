@@ -3,7 +3,7 @@
 
 #include "Scenes.h"
 
-inline Scene Single_Cylinder(void)
+inline Scene Scene_Single_Cylinder(void)
 {
     Scene scene;
 

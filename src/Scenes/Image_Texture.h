@@ -5,7 +5,7 @@
 
 #include "../Textures/Textures.h"
 
-inline Scene Image_Texture(void)
+inline Scene Scene_Image_Texture(void)
 {
     Scene scene;
 
@@ -29,39 +29,45 @@ inline Scene Image_Texture(void)
 
     // Textures
     Texture floor_texture = Texture_Checker_Init((vec2){0.0, 0.0}, 0.0, (vec2){16.0, 16.0}, (vec4){0.0, 0.0, 0.0, 1.0}, (vec4){0.2, 0.2, 0.2, 1.0});
-    Texture image_texture = Texture_Image_Init("../../res/images/crate.png", (vec2){0.0, 0.0}, 0.0, (vec2){1.0, 1.0});
+    Texture image_texture = Texture_Image_Init("../../res/images/crate_texture.bmp", (vec2){0.0, 0.0}, 0.0, (vec2){1.0, 1.0});
 
     // Materials
     scene.mats_count      = 6;
     scene.mats            = (Material *)malloc(sizeof(Material) * scene.mats_count);
-    scene.mats[0]         = (Material){.base_colour = {0.0, 1.0, 0.0}, .reflectivity = 0.25, .shininess = 0.0, .has_texture = false}; // Floor
-    scene.mats[1]         = (Material){.base_colour = {0.0, 0.0, 1.0}, .reflectivity = 0.0, .shininess = 0.0, .has_texture = true};   // Image Material
+    scene.mats[0]         = (Material){.base_colour = {0.0, 1.0, 0.0}, .reflectivity = 0.25, .shininess = 0.0, .has_texture = true}; // Floor
+    scene.mats[0].texture = floor_texture;
+    scene.mats[1]         = (Material){.base_colour = {0.0, 0.0, 1.0}, .reflectivity = 0.0, .shininess = 0.0, .has_texture = true}; // Image Material
     scene.mats[1].texture = image_texture;
     scene.mats[2]         = (Material){.base_colour = {1.0, 0.2, 0.2}, .reflectivity = 0.8, .shininess = 32.0, .has_texture = false}; // Sphere Material 1
     scene.mats[3]         = (Material){.base_colour = {0.2, 1.0, 0.2}, .reflectivity = 0.8, .shininess = 32.0, .has_texture = false}; // Sphere Material 2
     scene.mats[4]         = (Material){.base_colour = {0.2, 0.2, 1.0}, .reflectivity = 0.8, .shininess = 32.0, .has_texture = false}; // Sphere Material 3
 
     // Setup Objects (Spheres, Planes)
-    scene.objects = Objects_Init(7);
+    scene.objects = Objects_Init(5);
 
     scene.objects.shapes[0] = (Shape){.type      = SHAPE_PLANE,    // Floor
                                       .mat       = &scene.mats[0], // Floor
+                                      .visible   = true,
                                       .transform = Transform_Set((vec3){0.0, 0.0, 1.0}, (vec3){0.0, 0.0, 0.0}, (vec3){16.0, 16.0, 16.0})};
 
     scene.objects.shapes[1] = (Shape){.type      = SHAPE_PLANE,    // Image Plane
                                       .mat       = &scene.mats[1], // Image Material
-                                      .transform = Transform_Set((vec3){1.0, -1.0, 0.5}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5})};
+                                      .visible   = true,
+                                      .transform = Transform_Set((vec3){0.0, 0.0, -0.75}, (vec3){-M_PI / 2.0, 0.0, 0.0}, (vec3){1.75, 1.75, 1.0})};
 
     scene.objects.shapes[2] = (Shape){.type      = SHAPE_SPHERE,   // Sphere
                                       .mat       = &scene.mats[2], // Sphere Material 1
+                                      .visible   = true,
                                       .transform = Transform_Set((vec3){-2.0, -2.0, 0.25}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75})};
 
-    scene.objects.shapes[3] = (Shape){.type      = SHAPE_PLANE,    // Sphere
+    scene.objects.shapes[3] = (Shape){.type      = SHAPE_SPHERE,   // Sphere
                                       .mat       = &scene.mats[3], // Sphere Material 2
+                                      .visible   = true,
                                       .transform = Transform_Set((vec3){-2.0, -0.5, 0.25}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75})};
 
-    scene.objects.shapes[4] = (Shape){.type      = SHAPE_PLANE,    // Sphere
+    scene.objects.shapes[4] = (Shape){.type      = SHAPE_SPHERE,   // Sphere
                                       .mat       = &scene.mats[4], // Sphere Material 3
+                                      .visible   = true,
                                       .transform = Transform_Set((vec3){-2.0, -1.25, -1.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75})};
 
     return scene;
