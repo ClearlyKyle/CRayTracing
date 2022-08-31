@@ -98,7 +98,7 @@ bool Box_Test_Intersection(Shape *const shape,
     bool   valid_intersection = false;
     for (int i = 0; i < 6; ++i)
     {
-        if ((t[i] < final_t) && (t[i] > 0.0) && (abs(u[i]) <= 1.0) && (abs(v[i]) <= 1.0))
+        if ((t[i] < final_t) && (t[i] > 0.0) && (fabs(u[i]) <= 1.0) && (fabs(v[i]) <= 1.0))
         {
             final_t            = t[i];
             final_index        = i;
@@ -150,7 +150,7 @@ bool Box_Test_Intersection(Shape *const shape,
         *local_normal = vec3_normalise(*local_normal);
 
         // Return the base color.
-        *local_colour = shape->base_colour;
+        *local_colour = base_colour;
 
         // Store the (u,v) coordinates for possible later use.
         shape->uv_coordinates = (vec2){final_u, final_v};
