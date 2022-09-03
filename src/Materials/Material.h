@@ -74,4 +74,45 @@ vec3 SimpleMaterial_Compute_Specular(const Material mat,
                                      vec3 *const    local_normal,
                                      const Ray     *camera_ray);
 
+typedef struct Refractive
+{
+    vec3   base_colour;
+    double reflectivity;
+    double shininess;
+    double translucency;
+    double ior;
+} Refractive;
+
+inline Refractive refrective_Material_Init()
+{
+    return (Refractive){
+        .base_colour  = {1.0, 0.0, 1.0},
+        .reflectivity = 0.0,
+        .shininess    = 0.0,
+        .translucency = 0.0,
+        .ior          = 1.0,
+    };
+}
+
+vec3 Refrective_Compute_Colour(const Material mat,
+                               Objects        objects,
+                               const Lights   lights,
+                               const size_t   current_object_index,
+                               vec3 *const    int_point,
+                               vec3 *const    local_normal,
+                               const Ray     *camera_ray);
+
+vec3 Refractive_Material_Compute_Translucency(Objects      objects,
+                                              const Lights lights,
+                                              const size_t current_object_index,
+                                              vec3 *const  int_point,
+                                              vec3 *const  local_normal,
+                                              const Ray   *camera_ray);
+
+vec3 Refractive_Material_Compute_Specular(Objects      objects,
+                                          const Lights lights,
+                                          vec3 *const  int_point,
+                                          vec3 *const  local_normal,
+                                          const Ray   *camera_ray);
+
 #endif // __MATERIAL_H__
