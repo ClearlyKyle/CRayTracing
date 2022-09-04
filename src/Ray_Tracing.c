@@ -8,6 +8,7 @@
 #include "Scenes/Single_Cylinder.h"
 #include "Scenes/Multiple_Shapes.h"
 #include "Scenes/Texture_Mapping.h"
+#include "Scenes/Image_Texture.h"
 
 static struct Raycaster
 {
@@ -23,9 +24,10 @@ void Ray_Tracing_Init()
     Image_t image          = Image_Initialize(app.width, app.height, app.renderer);
     Raycaster.output_image = image;
 
-    // Raycaster.scene = Single_Cylinder();
-    // Raycaster.scene = Multiple_Shapes();
-    Raycaster.scene = Texture_Mapping();
+    // Raycaster.scene = Scene_Single_Cylinder();
+    // Raycaster.scene = Scene_Multiple_Shapes();
+    // Raycaster.scene = Scene_Texture_Mapping();
+    Raycaster.scene = Scene_Image_Texture();
 }
 
 void Ray_Tracing_Update()
