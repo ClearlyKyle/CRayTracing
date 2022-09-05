@@ -8,6 +8,10 @@ vec3 Simple_Material_Compute_Colour(const Material mat,
                                     vec3 *const    local_normal,
                                     const Ray     *camera_ray)
 {
+    // TODO : Pass less parameters and unpack them here :)
+    // const Material mat = objects.shapes[current_object_index].mat;
+    // const Texture tex = mat.texture;
+
     // Define the initial material colors.
     vec3 mat_colour = VEC3_INIT_ZERO;
     vec3 ref_colour = VEC3_INIT_ZERO;
