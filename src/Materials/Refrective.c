@@ -203,11 +203,76 @@ vec3 Refractive_Material_Compute_Translucency(Objects      objects,
     return mat_colour;
 }
 
-vec3 Refractive_Material_Compute_Specular(Objects      objects,
-                                          const Lights lights,
-                                          vec3 *const  int_point,
-                                          vec3 *const  local_normal,
-                                          const Ray   *camera_ray)
+vec3 Refractive_Material_Compute_Specular(const Material mat,
+                                          Objects        objects,
+                                          const Lights   lights,
+                                          vec3 *const    int_point,
+                                          vec3 *const    local_normal,
+                                          const Ray     *camera_ray)
 {
-    return (vec3){0.0, 0.0, 0.0};
+    double red   = 0.0;
+    double green = 0.0;
+    double blue  = 0.0;
+
+    // Loop through all of the lights in the scene.
+    for (size_t current_light = 0; current_light < lights.count; current_light++)
+    {
+        /* Check for intersections with all objects in the scene. */
+        double intensity = 0.0;
+
+        // Construct a vector pointing from the intersection point to the light.
+        const vec3 light_direction = vec3_normalise(vec3_sub(lights.lights[current_light].object.pointLight.location, *int_point));
+
+        // Compute a start point.
+        const vec3 start_point = vec3_add(*int_point, vec3_add_scal(light_direction, 0.001));
+
+        // Construct a ray from the point of intersection to the light.
+        const Ray light_ray = Ray_Init(start_point, vec3_add(start_point, light_direction));
+
+        /* Loop through all objects in the scene to check if any obstruct light from this source. */
+        vec3 poi                = VEC3_INIT_ZERO;
+        vec3 poi_normal         = VEC3_INIT_ZERO;
+        vec3 poi_colour         = VEC3_INIT_ZERO;
+        bool valid_intersection = false;
+
+        for (size_t current_object = 0; current_object < objects.count; current_object++)
+        {
+            valid_intersection = Object_Test_Intersection(&objects.shapes[current_object],
+                                                          light_ray,
+                                                          &poi,
+                                                          &poi_normal,
+                                                          &poi_colour);
+
+            if (valid_intersection)
+            {
+                break;
+            }
+        }
+
+        /* If no intersections were found, then proceed with
+                computing the specular component. */
+        if (!valid_intersection)
+        {
+            // Compute the reflection vector.
+            const vec3 d = light_ray.lab;
+
+            const vec3 r = vec3_normalise(vec3_reflection(d, *local_normal));
+
+            // Compute the dot product.
+            const vec3   v           = vec3_normalise(camera_ray->lab);
+            const double dot_product = vec3_dot(r, v);
+
+            // Only proceed if the dot product is positive.
+            if (dot_product > 0.0)
+            {
+                intensity = mat.reflectivity * pow(dot_product, mat.shininess);
+            }
+        }
+
+        red += lights.lights[current_light].object.pointLight.colour.x * intensity;
+        green += lights.lights[current_light].object.pointLight.colour.y * intensity;
+        blue += lights.lights[current_light].object.pointLight.colour.z * intensity;
+    }
+
+    return (vec3){red, green, blue};
 }
