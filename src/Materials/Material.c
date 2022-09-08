@@ -1,12 +1,16 @@
 #include "Material.h"
 
+#include "../Lights/Lights.h"
+
 static int Max_Reflection_Rays  = 3;
 static int Reflection_Ray_Count = 0;
 
-void Material_Set_Reflection_Ray_Count(const int value)
-{
-    Reflection_Ray_Count = value;
-}
+// List of Compute Colour Functions
+const static Compute_Colour_fptr Compute_Colour_fptr_array[] = {
+    // Material_Compute_Colour,
+    Simple_Material_Compute_Colour,
+    // Refrective_Compute_Colour,
+};
 
 vec3 Material_Compute_Colour(Objects      objects,
                              const Lights lights,
@@ -15,10 +19,33 @@ vec3 Material_Compute_Colour(Objects      objects,
                              vec3 *const  local_normal,
                              const Ray   *camera_ray)
 {
-    // Define an initial material color.
-    vec3 mat_colour = VEC3_INIT_ZERO;
-    return mat_colour;
+    const Material current_material = *(objects.shapes[current_object_index].mat);
+
+    return Compute_Colour_fptr_array[current_material.type](current_material,
+                                                            objects,
+                                                            lights,
+                                                            current_object_index,
+                                                            int_point,
+                                                            local_normal,
+                                                            camera_ray);
 }
+
+void Material_Set_Reflection_Ray_Count(const int value)
+{
+    Reflection_Ray_Count = value;
+}
+
+// vec3 Material_Compute_Colour(Objects      objects,
+//                              const Lights lights,
+//                              const size_t current_object_index,
+//                              vec3 *const  int_point,
+//                              vec3 *const  local_normal,
+//                              const Ray   *camera_ray)
+//{
+//     // Define an initial material color.
+//     vec3 mat_colour = VEC3_INIT_ZERO;
+//     return mat_colour;
+// }
 
 vec3 Material_Compute_Diffuse_Colour(Objects      objects,
                                      const Lights lights,
