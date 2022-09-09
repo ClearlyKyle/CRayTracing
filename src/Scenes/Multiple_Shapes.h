@@ -28,13 +28,13 @@ inline Scene Scene_Multiple_Shapes(void)
     // Materials
     scene.mats_count = 7;
     scene.mats       = (Material *)malloc(sizeof(Material) * scene.mats_count);
-    scene.mats[0]    = (Material){.base_colour = {0.5, 0.5, 0.8}, .reflectivity = 0.5, .shininess = 20.0};     // Silver Metal
-    scene.mats[1]    = (Material){.base_colour = {0.8, 0.8, 0.3}, .reflectivity = 0.25, .shininess = 20.0};    // Gold Metal
-    scene.mats[2]    = (Material){.base_colour = {0.2, 0.2, 0.8}, .reflectivity = 0.05, .shininess = 5.0};     // Blue Diffuse
-    scene.mats[3]    = (Material){.base_colour = {0.8, 0.8, 0.2}, .reflectivity = 0.05, .shininess = 5.0};     // Yellow Diffuse
-    scene.mats[4]    = (Material){.base_colour = {1.0, 0.5, 0.0}, .reflectivity = 0.05, .shininess = 5.0};     // Orange Diffuse
-    scene.mats[5]    = (Material){.base_colour = {1.0, 1.0, 1.0}, .reflectivity = 0.0, .shininess = 0.0};      // Floor
-    scene.mats[6]    = (Material){.base_colour = {1.0, 0.125, 0.125}, .reflectivity = 0.75, .shininess = 0.0}; // Wall
+    scene.mats[0]    = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.5, 0.5, 0.8}, .reflectivity = 0.5, .shininess = 20.0};     // Silver Metal
+    scene.mats[1]    = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.8, 0.8, 0.3}, .reflectivity = 0.25, .shininess = 20.0};    // Gold Metal
+    scene.mats[2]    = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.2, 0.2, 0.8}, .reflectivity = 0.05, .shininess = 5.0};     // Blue Diffuse
+    scene.mats[3]    = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.8, 0.8, 0.2}, .reflectivity = 0.05, .shininess = 5.0};     // Yellow Diffuse
+    scene.mats[4]    = (Material){.type = MATERIAL_SIMPLE, .base_colour = {1.0, 0.5, 0.0}, .reflectivity = 0.05, .shininess = 5.0};     // Orange Diffuse
+    scene.mats[5]    = (Material){.type = MATERIAL_SIMPLE, .base_colour = {1.0, 1.0, 1.0}, .reflectivity = 0.0, .shininess = 0.0};      // Floor
+    scene.mats[6]    = (Material){.type = MATERIAL_SIMPLE, .base_colour = {1.0, 0.125, 0.125}, .reflectivity = 0.75, .shininess = 0.0}; // Wall
 
     // Setup Objects (Spheres, Planes)
     scene.objects = Objects_Init(10);

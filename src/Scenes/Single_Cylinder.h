@@ -29,21 +29,21 @@ inline Scene Scene_Single_Cylinder(void)
     // Materials
     scene.mats_count = 2;
     scene.mats       = (Material *)malloc(sizeof(Material) * scene.mats_count);
-    scene.mats[0]    = (Material){.base_colour = {0.2, 0.2, 0.8}, .reflectivity = 0.05, .shininess = 5.0}; // Blue Diffuse
-    scene.mats[1]    = (Material){.base_colour = {1.0, 1.0, 1.0}, .reflectivity = 0.5, .shininess = 0.0};  // Floor
+    scene.mats[0]    = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.2, 0.2, 0.8}, .reflectivity = 0.05, .shininess = 5.0}; // Blue Diffuse
+    scene.mats[1]    = (Material){.type = MATERIAL_SIMPLE, .base_colour = {1.0, 1.0, 1.0}, .reflectivity = 0.5, .shininess = 0.0};  // Floor
 
     // Setup Objects (Spheres, Planes)
     scene.objects = Objects_Init(2);
 
-    scene.objects.shapes[0] = (Shape){.type              = SHAPE_PLANE,
-                                      .mat               = &scene.mats[1],
-                                      .base_colour       = {1.0, 1.0, 1.0},
-                                      .transform         = Transform_Set((vec3){0.0, 0.0, 1.0}, (vec3){0.0, 0.0, 0.0}, (vec3){16.0, 16.0, 1.0})};
+    scene.objects.shapes[0] = (Shape){.type        = SHAPE_PLANE,
+                                      .mat         = &scene.mats[1],
+                                      .base_colour = {1.0, 1.0, 1.0},
+                                      .transform   = Transform_Set((vec3){0.0, 0.0, 1.0}, (vec3){0.0, 0.0, 0.0}, (vec3){16.0, 16.0, 1.0})};
 
-    scene.objects.shapes[1] = (Shape){.type              = SHAPE_CYLINDER,
-                                      .mat               = &scene.mats[0],
-                                      .base_colour       = {1.0, 1.0, 1.0},
-                                      .transform         = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){1.0, 1.0, 1.0})};
+    scene.objects.shapes[1] = (Shape){.type        = SHAPE_CYLINDER,
+                                      .mat         = &scene.mats[0],
+                                      .base_colour = {1.0, 1.0, 1.0},
+                                      .transform   = Transform_Set((vec3){0.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){1.0, 1.0, 1.0})};
 
     return scene;
 }

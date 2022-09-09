@@ -34,13 +34,13 @@ inline Scene Scene_Image_Texture(void)
     // Materials
     scene.mats_count      = 6;
     scene.mats            = (Material *)malloc(sizeof(Material) * scene.mats_count);
-    scene.mats[0]         = (Material){.base_colour = {0.0, 1.0, 0.0}, .reflectivity = 0.25, .shininess = 0.0, .has_texture = true}; // Floor
+    scene.mats[0]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.0, 1.0, 0.0}, .reflectivity = 0.25, .shininess = 0.0, .has_texture = true}; // Floor
     scene.mats[0].texture = floor_texture;
-    scene.mats[1]         = (Material){.base_colour = {0.0, 0.0, 1.0}, .reflectivity = 0.0, .shininess = 0.0, .has_texture = true}; // Image Material
+    scene.mats[1]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.0, 0.0, 1.0}, .reflectivity = 0.0, .shininess = 0.0, .has_texture = true}; // Image Material
     scene.mats[1].texture = image_texture;
-    scene.mats[2]         = (Material){.base_colour = {1.0, 0.2, 0.2}, .reflectivity = 0.8, .shininess = 32.0, .has_texture = false}; // Sphere Material 1
-    scene.mats[3]         = (Material){.base_colour = {0.2, 1.0, 0.2}, .reflectivity = 0.8, .shininess = 32.0, .has_texture = false}; // Sphere Material 2
-    scene.mats[4]         = (Material){.base_colour = {0.2, 0.2, 1.0}, .reflectivity = 0.8, .shininess = 32.0, .has_texture = false}; // Sphere Material 3
+    scene.mats[2]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {1.0, 0.2, 0.2}, .reflectivity = 0.8, .shininess = 32.0, .has_texture = false}; // Sphere Material 1
+    scene.mats[3]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.2, 1.0, 0.2}, .reflectivity = 0.8, .shininess = 32.0, .has_texture = false}; // Sphere Material 2
+    scene.mats[4]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.2, 0.2, 1.0}, .reflectivity = 0.8, .shininess = 32.0, .has_texture = false}; // Sphere Material 3
 
     // Setup Objects (Spheres, Planes)
     scene.objects = Objects_Init(5);

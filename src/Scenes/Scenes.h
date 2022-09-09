@@ -4,6 +4,7 @@
 #include "../Camera.h"
 
 #include "../Materials/Material.h"
+#include "../Lights/Lights.h"
 
 typedef struct Scene
 {

@@ -36,17 +36,17 @@ inline Scene Scene_Texture_Mapping(void)
     // Materials
     scene.mats_count      = 7;
     scene.mats            = (Material *)malloc(sizeof(Material) * scene.mats_count);
-    scene.mats[0]         = (Material){.base_colour = {0.5, 0.5, 0.8}, .reflectivity = 0.5, .shininess = 20.0};                      // Silver Metal
-    scene.mats[1]         = (Material){.base_colour = {0.8, 0.8, 0.3}, .reflectivity = 0.25, .shininess = 20.0};                     // Gold Metal
-    scene.mats[2]         = (Material){.base_colour = {0.0, 0.0, 0.0}, .reflectivity = 0.05, .shininess = 5.0, .has_texture = true}; // Blue Diffuse
+    scene.mats[0]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.5, 0.5, 0.8}, .reflectivity = 0.5, .shininess = 20.0};                      // Silver Metal
+    scene.mats[1]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.8, 0.8, 0.3}, .reflectivity = 0.25, .shininess = 20.0};                     // Gold Metal
+    scene.mats[2]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.0, 0.0, 0.0}, .reflectivity = 0.05, .shininess = 5.0, .has_texture = true}; // Blue Diffuse
     scene.mats[2].texture = cone_texture;
-    scene.mats[3]         = (Material){.base_colour = {1.0, 0.0, 0.0}, .reflectivity = 0.05, .shininess = 5.0, .has_texture = true}; // Yellow Diffuse
+    scene.mats[3]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {1.0, 0.0, 0.0}, .reflectivity = 0.05, .shininess = 5.0, .has_texture = true}; // Yellow Diffuse
     scene.mats[3].texture = sphere_texture;
-    scene.mats[4]         = (Material){.base_colour = {1.0, 0.0, 0.0}, .reflectivity = 0.05, .shininess = 5.0, .has_texture = true}; // Orange Diffuse
+    scene.mats[4]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {1.0, 0.0, 0.0}, .reflectivity = 0.05, .shininess = 5.0, .has_texture = true}; // Orange Diffuse
     scene.mats[4].texture = cylinder_texture;
-    scene.mats[5]         = (Material){.base_colour = {0.0, 1.0, 0.0}, .reflectivity = 0.5, .shininess = 0.0, .has_texture = true}; // Floor
+    scene.mats[5]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.0, 1.0, 0.0}, .reflectivity = 0.5, .shininess = 0.0, .has_texture = true}; // Floor
     scene.mats[5].texture = floor_texture;
-    scene.mats[6]         = (Material){.base_colour = {1.0, 0.125, 0.125}, .reflectivity = 0.75, .shininess = 0.0}; // Wall
+    scene.mats[6]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {1.0, 0.125, 0.125}, .reflectivity = 0.75, .shininess = 0.0}; // Wall
 
     // Setup Objects (Spheres, Planes)
     scene.objects = Objects_Init(7);
@@ -63,7 +63,7 @@ inline Scene Scene_Texture_Mapping(void)
 
     scene.objects.shapes[2] = (Shape){.type      = SHAPE_SPHERE,   // Right Sphere
                                       .mat       = &scene.mats[3], // Yellow Diffuse
-                                      .visible    = true,
+                                      .visible   = true,
                                       .transform = Transform_Set((vec3){2.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){1.0, 1.0, 1.0})};
 
     scene.objects.shapes[3] = (Shape){.type      = SHAPE_PLANE,    // Floor
