@@ -96,28 +96,27 @@ void Ray_Tracing_Update()
                 if (Raycaster.scene.objects.shapes[closest_object_index].mat)
                 {
                     // Use the material to compute the color.
-                    Material_Set_Reflection_Ray_Count(0);
+                    // Material_Set_Reflection_Ray_Count(0); // NOTE : can this be moved?
 
                     // Call the matrials Compute_Colour - eg, basic material
-                    const vec3 colour = Simple_Material_Compute_Colour(*Raycaster.scene.objects.shapes[closest_object_index].mat,
-                                                                       Raycaster.scene.objects,
-                                                                       Raycaster.scene.lights,
-                                                                       closest_object_index,
-                                                                       &closestIntPoint,
-                                                                       &closestLocalNormal,
-                                                                       &cameraRay);
+                    const vec3 colour = Material_Compute_Colour(Raycaster.scene.objects,
+                                                                Raycaster.scene.lights,
+                                                                closest_object_index,
+                                                                &closestIntPoint,
+                                                                &closestLocalNormal,
+                                                                &cameraRay);
 
                     Image_SetPixel(&Raycaster.output_image, x, y, colour.x, colour.y, colour.z);
                 }
                 else
                 {
                     // Use the basic method to compute the color.
-                    const vec3 colour = Material_Compute_Diffuse_Colour(Raycaster.scene.objects,
-                                                                        Raycaster.scene.lights,
-                                                                        closest_object_index,
-                                                                        &closestIntPoint,
-                                                                        &closestLocalNormal,
-                                                                        Raycaster.scene.objects.shapes[closest_object_index].mat->base_colour);
+                    const vec3 colour = Material_Base_Compute_Diffuse_Colour(Raycaster.scene.objects,
+                                                                             Raycaster.scene.lights,
+                                                                             closest_object_index,
+                                                                             &closestIntPoint,
+                                                                             &closestLocalNormal,
+                                                                             Raycaster.scene.objects.shapes[closest_object_index].mat->base_colour);
 
                     Image_SetPixel(&Raycaster.output_image, x, y, colour.x, colour.y, colour.z);
                 }
