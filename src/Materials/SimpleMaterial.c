@@ -1,16 +1,19 @@
 #include "Material.h"
 
-vec3 Simple_Material_Compute_Colour(const Material mat,
-                                    Objects        objects,
-                                    const Lights   lights,
-                                    const size_t   current_object_index,
-                                    vec3 *const    int_point,
-                                    vec3 *const    local_normal,
-                                    const Ray     *camera_ray)
+#include "../Lights/Lights.h"
+
+// Forward declarations
+static vec3 Material_Simple_Compute_Specular(const Material mat, Objects objects, const Lights lights, vec3 *const int_point, vec3 *const local_normal, const Ray *camera_ray);
+
+vec3 Material_Simple_Compute_Colour(Objects      objects,
+                                    const Lights lights,
+                                    const size_t current_object_index,
+                                    vec3 *const  int_point,
+                                    vec3 *const  local_normal,
+                                    const Ray   *camera_ray)
 {
-    // TODO : Pass less parameters and unpack them here :)
-    // const Material mat = objects.shapes[current_object_index].mat;
-    // const Texture tex = mat.texture;
+    const Material mat = *objects.shapes[current_object_index].mat;
+    const Texture  tex = mat.texture;
 
     // Define the initial material colors.
     vec3 mat_colour = VEC3_INIT_ZERO;
@@ -21,17 +24,17 @@ vec3 Simple_Material_Compute_Colour(const Material mat,
     // Compute the diffuse component.
     if (mat.has_texture)
     {
-        const vec4 texture_colour = Texture_Get_Colour(mat.texture, objects.shapes[current_object_index].uv_coordinates);
-        dif_colour                = Material_Compute_Diffuse_Colour(objects, lights, current_object_index, int_point, local_normal, (vec3){texture_colour.x, texture_colour.y, texture_colour.z});
+        const vec4 texture_colour = Texture_Get_Colour(tex, objects.shapes[current_object_index].uv_coordinates);
+        dif_colour                = Material_Base_Compute_Diffuse_Colour(objects, lights, current_object_index, int_point, local_normal, (vec3){texture_colour.x, texture_colour.y, texture_colour.z});
     }
     else
     {
-        dif_colour = Material_Compute_Diffuse_Colour(objects, lights, current_object_index, int_point, local_normal, mat.base_colour);
+        dif_colour = Material_Base_Compute_Diffuse_Colour(objects, lights, current_object_index, int_point, local_normal, mat.base_colour);
     }
 
     // Compute the reflection component.
     if (mat.reflectivity > 0.0)
-        ref_colour = Material_Compute_Reflection_Colour(mat, objects, lights, current_object_index, int_point, local_normal, camera_ray, mat.base_colour);
+        ref_colour = Material_Base_Compute_Reflection_Colour(objects, lights, current_object_index, int_point, local_normal, camera_ray, mat.base_colour);
 
     // Combine reflection and diffuse components.
     mat_colour.x = (ref_colour.x * mat.reflectivity) + (dif_colour.x * (1.0 - mat.reflectivity));
@@ -40,7 +43,7 @@ vec3 Simple_Material_Compute_Colour(const Material mat,
 
     // Compute the specular component.
     if (mat.shininess > 0.0)
-        spc_colour = SimpleMaterial_Compute_Specular(mat, objects, lights, int_point, local_normal, camera_ray);
+        spc_colour = Material_Simple_Compute_Specular(mat, objects, lights, int_point, local_normal, camera_ray);
 
     // Add the specular component to the final color.
     mat_colour = vec3_add(mat_colour, spc_colour);
@@ -48,12 +51,12 @@ vec3 Simple_Material_Compute_Colour(const Material mat,
     return mat_colour;
 }
 
-vec3 SimpleMaterial_Compute_Specular(const Material mat,
-                                     Objects        objects,
-                                     const Lights   lights,
-                                     vec3 *const    int_point,
-                                     vec3 *const    local_normal,
-                                     const Ray     *camera_ray)
+static vec3 Material_Simple_Compute_Specular(const Material mat,
+                                             Objects        objects,
+                                             const Lights   lights,
+                                             vec3 *const    int_point,
+                                             vec3 *const    local_normal,
+                                             const Ray     *camera_ray)
 {
     double red   = 0.0;
     double green = 0.0;

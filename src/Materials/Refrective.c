@@ -1,13 +1,21 @@
 #include "Material.h"
 
-vec3 Refrective_Compute_Colour(const Material mat,
-                               Objects        objects,
-                               const Lights   lights,
-                               const size_t   current_object_index,
-                               vec3 *const    int_point,
-                               vec3 *const    local_normal,
-                               const Ray     *camera_ray)
+#include "../Lights/Lights.h"
+
+// Forward declarations
+static vec3 Material_Refractive_Compute_Translucency(Objects objects, const Lights lights, const size_t current_object_index, vec3 *const int_point, vec3 *const local_normal, const Ray *indicent_ray);
+static vec3 Material_Refractive_Compute_Specular(const Material mat, Objects objects, const Lights lights, vec3 *const int_point, vec3 *const local_normal, const Ray *camera_ray);
+
+vec3 Material_Refrective_Compute_Colour(Objects      objects,
+                                        const Lights lights,
+                                        const size_t current_object_index,
+                                        vec3 *const  int_point,
+                                        vec3 *const  local_normal,
+                                        const Ray   *camera_ray)
 {
+    const Material mat = *objects.shapes[current_object_index].mat;
+    const Texture  tex = mat.texture;
+
     // Define the initial material colors.
     vec3 mat_colour = VEC3_INIT_ZERO;
     vec3 ref_colour = VEC3_INIT_ZERO;
@@ -18,16 +26,16 @@ vec3 Refrective_Compute_Colour(const Material mat,
     // Compute the diffuse component.
     if (mat.has_texture)
     {
-        const vec4 texture_colour = Texture_Get_Colour(mat.texture, objects.shapes[current_object_index].uv_coordinates);
-        dif_colour                = Material_Compute_Diffuse_Colour(objects, lights, current_object_index, int_point, local_normal, (vec3){texture_colour.x, texture_colour.y, texture_colour.z});
+        const vec4 texture_colour = Texture_Get_Colour(tex, objects.shapes[current_object_index].uv_coordinates);
+        dif_colour                = Material_Base_Compute_Diffuse_Colour(objects, lights, current_object_index, int_point, local_normal, (vec3){texture_colour.x, texture_colour.y, texture_colour.z});
     }
     else
     {
-        dif_colour = Material_Compute_Diffuse_Colour(objects, lights, current_object_index, int_point, local_normal, mat.base_colour);
+        dif_colour = Material_Base_Compute_Diffuse_Colour(objects, lights, current_object_index, int_point, local_normal, mat.base_colour);
     }
     // Compute the reflection component.
     if (mat.reflectivity > 0.0)
-        ref_colour = Material_Compute_Reflection_Colour(mat, objects, lights, current_object_index, int_point, local_normal, camera_ray, mat.base_colour);
+        ref_colour = Material_Base_Compute_Reflection_Colour(objects, lights, current_object_index, int_point, local_normal, camera_ray, mat.base_colour);
 
     // Combine reflection and diffuse components.
     mat_colour.x = (ref_colour.x * mat.reflectivity) + (dif_colour.x * (1.0 - mat.reflectivity));
@@ -36,7 +44,7 @@ vec3 Refrective_Compute_Colour(const Material mat,
 
     // Compute the refractive component.
     if (mat.translucency > 0.0)
-        trn_colour = Refractive_Material_Compute_Translucency(objects, lights, current_object_index, int_point, local_normal, camera_ray);
+        trn_colour = Material_Refractive_Compute_Translucency(objects, lights, current_object_index, int_point, local_normal, camera_ray);
 
     // And combine with the current color.
     mat_colour.x = (trn_colour.x * mat.translucency) + (mat_colour.x * (1.0 - mat.translucency));
@@ -45,7 +53,7 @@ vec3 Refrective_Compute_Colour(const Material mat,
 
     // And compute the specular component.
     if (mat.shininess > 0.0)
-        spc_colour = Refractive_Material_Compute_Specular(objects, lights, int_point, local_normal, camera_ray);
+        spc_colour = Material_Refractive_Compute_Specular(mat, objects, lights, int_point, local_normal, camera_ray);
 
     // Add the specular component to the final color.
     mat_colour = vec3_add(mat_colour, spc_colour);
@@ -69,7 +77,7 @@ static Ray _Compute_Refracted_Ray(const Ray indicent_ray, vec3 normal, vec3 int_
     }
 
     // vec3 refracted_vector = r * p + (r * c - sqrtf(1.0 - pow(r, 2.0) * (1.0 - pow(c, 2.0)))) * tempNormal;
-    const double brackets         = (r * c - sqrtf(1.0 - pow(r, 2.0) * (1.0 - pow(c, 2.0))));
+    const double brackets         = (r * c - sqrt(1.0 - pow(r, 2.0) * (1.0 - pow(c, 2.0))));
     const vec3   right_of_mul     = vec3_mul_scal(tmp_normal, brackets);
     const vec3   left_of_add      = vec3_mul_scal(p, r);
     const vec3   refracted_vector = vec3_add(left_of_add, right_of_mul);
@@ -82,12 +90,12 @@ static Ray _Compute_Refracted_Ray(const Ray indicent_ray, vec3 normal, vec3 int_
     return refracted_ray;
 }
 
-vec3 Refractive_Material_Compute_Translucency(Objects      objects,
-                                              const Lights lights,
-                                              const size_t current_object_index,
-                                              vec3 *const  int_point,
-                                              vec3 *const  local_normal,
-                                              const Ray   *indicent_ray)
+static vec3 Material_Refractive_Compute_Translucency(Objects      objects,
+                                                     const Lights lights,
+                                                     const size_t current_object_index,
+                                                     vec3 *const  int_point,
+                                                     vec3 *const  local_normal,
+                                                     const Ray   *indicent_ray)
 {
     double ior = 1.0;
 
@@ -182,16 +190,16 @@ vec3 Refractive_Material_Compute_Translucency(Objects      objects,
         // Check if a material has been assigned.
         if (objects.shapes[closest_object].mat)
         {
-            mat_colour = Material_Compute_Colour(objects.shapes[closest_object].mat.type, lights, closest_object, closest_int_point, closest_local_normal, final_ray);
+            mat_colour = Material_Compute_Colour(objects, lights, closest_object, &closest_int_point, &closest_local_normal, &final_ray);
         }
         else
         {
-            mat_colour = Material_Compute_Diffuse_Colour(objects,
-                                                         lights,
-                                                         closest_object,
-                                                         &closest_int_point,
-                                                         &closest_local_normal,
-                                                         objects.shapes[closest_object].base_colour);
+            mat_colour = Material_Base_Compute_Diffuse_Colour(objects,
+                                                              lights,
+                                                              closest_object,
+                                                              &closest_int_point,
+                                                              &closest_local_normal,
+                                                              objects.shapes[closest_object].base_colour);
         }
     }
     else
@@ -203,12 +211,12 @@ vec3 Refractive_Material_Compute_Translucency(Objects      objects,
     return mat_colour;
 }
 
-vec3 Refractive_Material_Compute_Specular(const Material mat,
-                                          Objects        objects,
-                                          const Lights   lights,
-                                          vec3 *const    int_point,
-                                          vec3 *const    local_normal,
-                                          const Ray     *camera_ray)
+static vec3 Material_Refractive_Compute_Specular(const Material mat,
+                                                 Objects        objects,
+                                                 const Lights   lights,
+                                                 vec3 *const    int_point,
+                                                 vec3 *const    local_normal,
+                                                 const Ray     *camera_ray)
 {
     double red   = 0.0;
     double green = 0.0;
