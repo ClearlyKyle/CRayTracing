@@ -5,16 +5,7 @@
 #include "../Maths/MathsHeader.h"
 #include "../Textures/Textures.h"
 
-typedef struct Material
-{
-    double reflectivity;
-    double shininess;
-
-    vec3 base_colour;
-
-    Texture texture;
-    bool    has_texture;
-} Material;
+#include "../Materials/Material.h"
 
 // -------------------------------------------------
 // SHAPES
