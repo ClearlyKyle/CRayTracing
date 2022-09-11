@@ -1,11 +1,9 @@
-#ifndef __IMAGE_TEXTURE_H__
-#define __IMAGE_TEXTURE_H__
+#ifndef __SCENE_REFRACTIVE_SHAPES_H__
+#define __SCENE_REFRACTIVE_SHAPES_H__
 
 #include "Scenes.h"
 
-#include "../Textures/Textures.h"
-
-inline Scene Scene_Image_Texture(void)
+inline Scene Scene_Refractive_Shapes(void)
 {
     Scene scene;
 
@@ -18,7 +16,7 @@ inline Scene Scene_Image_Texture(void)
 
     // Setup Camera
     scene.cam = (Camera_t){
-        .position        = {2.0, -5.0, -2.0},
+        .position        = {2.0, -5.0, 0.0},
         .lookat          = {0.0, 0.0, 0.0},
         .up              = {0.0, 0.0, 1.0},
         .length          = 1.0,
@@ -38,12 +36,13 @@ inline Scene Scene_Image_Texture(void)
     scene.mats[0].texture = floor_texture;
     scene.mats[1]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.0, 0.0, 1.0}, .reflectivity = 0.0, .shininess = 0.0, .has_texture = true}; // Image Material
     scene.mats[1].texture = image_texture;
-    scene.mats[2]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {1.0, 0.2, 0.2}, .reflectivity = 0.8, .shininess = 32.0, .has_texture = false}; // Sphere Material 1
-    scene.mats[3]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.2, 1.0, 0.2}, .reflectivity = 0.8, .shininess = 32.0, .has_texture = false}; // Sphere Material 2
-    scene.mats[4]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.2, 0.2, 1.0}, .reflectivity = 0.8, .shininess = 32.0, .has_texture = false}; // Sphere Material 3
+    scene.mats[2]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {1.0, 0.2, 0.2}, .reflectivity = 0.8, .shininess = 32.0, .has_texture = false};                                        // Sphere Material 1
+    scene.mats[3]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.2, 1.0, 0.2}, .reflectivity = 0.8, .shininess = 32.0, .has_texture = false};                                        // Sphere Material 2
+    scene.mats[4]         = (Material){.type = MATERIAL_SIMPLE, .base_colour = {0.2, 0.2, 1.0}, .reflectivity = 0.8, .shininess = 32.0, .has_texture = false};                                        // Sphere Material 3
+    scene.mats[5]         = (Material){.type = MATERIAL_REFRACTIVE, .base_colour = {0.7, 0.7, 0.2}, .reflectivity = 0.25, .shininess = 32.0, .translucency = 0.75, .ior = 1.0, .has_texture = false}; // Glass
 
     // Setup Objects (Spheres, Planes)
-    scene.objects = Objects_Init(5);
+    scene.objects = Objects_Init(6);
 
     scene.objects.shapes[0] = (Shape){.type      = SHAPE_PLANE,    // Floor
                                       .mat       = &scene.mats[0], // Floor
@@ -53,7 +52,7 @@ inline Scene Scene_Image_Texture(void)
     scene.objects.shapes[1] = (Shape){.type      = SHAPE_PLANE,    // Image Plane
                                       .mat       = &scene.mats[1], // Image Material
                                       .visible   = true,
-                                      .transform = Transform_Set((vec3){0.0, 0.0, -0.75}, (vec3){-M_PI / 2.0, 0.0, 0.0}, (vec3){1.75, 1.75, 1.0})};
+                                      .transform = Transform_Set((vec3){0.0, 5.0, -0.75}, (vec3){-M_PI / 2.0, 0.0, 0.0}, (vec3){1.75, 1.75, 1.0})};
 
     scene.objects.shapes[2] = (Shape){.type      = SHAPE_SPHERE,   // Sphere
                                       .mat       = &scene.mats[2], // Sphere Material 1
@@ -70,6 +69,12 @@ inline Scene Scene_Image_Texture(void)
                                       .visible   = true,
                                       .transform = Transform_Set((vec3){-2.0, -1.25, -1.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75})};
 
+    scene.objects.shapes[4] = (Shape){.type      = SHAPE_SPHERE,   // Sphere
+                                      .mat       = &scene.mats[5], // Glass
+                                      .visible   = true,
+                                      .transform = Transform_Set((vec3){2.0, -1.25, 0.25}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75})};
+
     return scene;
 }
-#endif // __IMAGE_TEXTURE_H__
+
+#endif // __SCENE_REFRACTIVE_SHAPES_H__

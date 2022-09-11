@@ -1,5 +1,5 @@
-#ifndef __TEXTURE_MAPPING_H__
-#define __TEXTURE_MAPPING_H__
+#ifndef __SCENE_TEXTURE_MAPPING_H__
+#define __SCENE_TEXTURE_MAPPING_H__
 
 #include "Scenes.h"
 
@@ -88,4 +88,4 @@ inline Scene Scene_Texture_Mapping(void)
     return scene;
 }
 
-#endif // __TEXTURE_MAPPING_H__
+#endif // __SCENE_TEXTURE_MAPPING_H__

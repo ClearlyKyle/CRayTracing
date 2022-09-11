@@ -1,5 +1,5 @@
-#ifndef __SINGLE_CYLINDER_H__
-#define __SINGLE_CYLINDER_H__
+#ifndef __SCENE_SINGLE_CYLINDER_H__
+#define __SCENE_SINGLE_CYLINDER_H__
 
 #include "Scenes.h"
 
@@ -48,4 +48,4 @@ inline Scene Scene_Single_Cylinder(void)
     return scene;
 }
 
-#endif // __SINGLE_CYLINDER_H__
+#endif // __SCENE_SINGLE_CYLINDER_H__

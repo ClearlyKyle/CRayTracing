@@ -1,5 +1,5 @@
-#ifndef __MULTIPLE_SHAPES_H__
-#define __MULTIPLE_SHAPES_H__
+#ifndef __SCENE_MULTIPLE_SHAPES_H__
+#define __SCENE_MULTIPLE_SHAPES_H__
 
 #include "Scenes.h"
 
@@ -81,4 +81,5 @@ inline Scene Scene_Multiple_Shapes(void)
 
     return scene;
 }
-#endif // __MULTIPLE_SHAPES_H__
+
+#endif // __SCENE_MULTIPLE_SHAPES_H__

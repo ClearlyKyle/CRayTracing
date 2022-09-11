@@ -5,10 +5,11 @@
 #include "Camera.h"
 #include "Image.h"
 
-#include "Scenes/Single_Cylinder.h"
-#include "Scenes/Multiple_Shapes.h"
-#include "Scenes/Texture_Mapping.h"
-#include "Scenes/Image_Texture.h"
+#include "Scenes/Scene_Single_Cylinder.h"
+#include "Scenes/Scene_Multiple_Shapes.h"
+#include "Scenes/Scene_Texture_Mapping.h"
+#include "Scenes/Scene_Image_Texture.h"
+#include "Scenes/Scene_Refractive_Shapes.h"
 
 static struct Raycaster
 {
@@ -27,7 +28,8 @@ void Ray_Tracing_Init()
     // Raycaster.scene = Scene_Single_Cylinder();
     // Raycaster.scene = Scene_Multiple_Shapes();
     // Raycaster.scene = Scene_Texture_Mapping();
-    Raycaster.scene = Scene_Image_Texture();
+    // Raycaster.scene = Scene_Image_Texture();
+    Raycaster.scene = Scene_Refractive_Shapes();
 }
 
 void Ray_Tracing_Update()
