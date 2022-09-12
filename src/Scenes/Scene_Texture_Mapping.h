@@ -54,37 +54,37 @@ inline Scene Scene_Texture_Mapping(void)
     scene.objects.shapes[0] = (Shape){.type      = SHAPE_CONE,     // Cone
                                       .mat       = &scene.mats[2], // Blue Diffuse
                                       .visible   = true,
-                                      .transform = Transform_Set((vec3){-1.0, -2.0, -2.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 1.0})};
+                                      .transform = Transform_Set((vec3){-1.0, -2.0, -2.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 1.0}, false)};
 
     scene.objects.shapes[1] = (Shape){.type      = SHAPE_SPHERE,   // Left Sphere
                                       .mat       = &scene.mats[0], // Silver Metal
                                       .visible   = true,
-                                      .transform = Transform_Set((vec3){1.0, -1.0, 0.5}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5})};
+                                      .transform = Transform_Set((vec3){1.0, -1.0, 0.5}, (vec3){0.0, 0.0, 0.0}, (vec3){0.5, 0.5, 0.5}, false)};
 
     scene.objects.shapes[2] = (Shape){.type      = SHAPE_SPHERE,   // Right Sphere
                                       .mat       = &scene.mats[3], // Yellow Diffuse
                                       .visible   = true,
-                                      .transform = Transform_Set((vec3){2.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){1.0, 1.0, 1.0})};
+                                      .transform = Transform_Set((vec3){2.0, 0.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){1.0, 1.0, 1.0}, false)};
 
     scene.objects.shapes[3] = (Shape){.type      = SHAPE_PLANE,    // Floor
                                       .mat       = &scene.mats[5], // Floor
                                       .visible   = true,
-                                      .transform = Transform_Set((vec3){0.0, 0.0, 1.0}, (vec3){0.0, 0.0, 0.0}, (vec3){16.0, 16.0, 1.0})};
+                                      .transform = Transform_Set((vec3){0.0, 0.0, 1.0}, (vec3){0.0, 0.0, 0.0}, (vec3){16.0, 16.0, 1.0}, false)};
 
     scene.objects.shapes[4] = (Shape){.type      = SHAPE_PLANE,    // Left Wall
                                       .mat       = &scene.mats[6], // Wall
                                       .visible   = true,
-                                      .transform = Transform_Set((vec3){-4.0, 0.0, 0.0}, (vec3){0.0, -M_PI / 2.0, -M_PI / 2.0}, (vec3){16.0, 16.0, 1.0})};
+                                      .transform = Transform_Set((vec3){-4.0, 0.0, 0.0}, (vec3){0.0, -M_PI / 2.0, -M_PI / 2.0}, (vec3){16.0, 16.0, 1.0}, false)};
 
     scene.objects.shapes[5] = (Shape){.type      = SHAPE_PLANE,    // Right Wall
                                       .mat       = &scene.mats[6], // Wall
                                       .visible   = true,
-                                      .transform = Transform_Set((vec3){0.0, 4.0, 0.0}, (vec3){-M_PI / 2.0, 0.0, 0.0}, (vec3){16.0, 16.0, 1.0})};
+                                      .transform = Transform_Set((vec3){0.0, 4.0, 0.0}, (vec3){-M_PI / 2.0, 0.0, 0.0}, (vec3){16.0, 16.0, 1.0}, false)};
 
     scene.objects.shapes[6] = (Shape){.type      = SHAPE_CYLINDER, // Cylinder1
                                       .mat       = &scene.mats[1], // Orange Diffuse
                                       .visible   = true,
-                                      .transform = Transform_Set((vec3){-1.0, -2.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){1.0, 1.0, 1.0})};
+                                      .transform = Transform_Set((vec3){-1.0, -2.0, 0.0}, (vec3){0.0, 0.0, 0.0}, (vec3){1.0, 1.0, 1.0}, false)};
     return scene;
 }
 

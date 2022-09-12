@@ -48,27 +48,27 @@ inline Scene Scene_Image_Texture(void)
     scene.objects.shapes[0] = (Shape){.type      = SHAPE_PLANE,    // Floor
                                       .mat       = &scene.mats[0], // Floor
                                       .visible   = true,
-                                      .transform = Transform_Set((vec3){0.0, 0.0, 1.0}, (vec3){0.0, 0.0, 0.0}, (vec3){16.0, 16.0, 16.0})};
+                                      .transform = Transform_Set((vec3){0.0, 0.0, 1.0}, (vec3){0.0, 0.0, 0.0}, (vec3){16.0, 16.0, 16.0}, false)};
 
     scene.objects.shapes[1] = (Shape){.type      = SHAPE_PLANE,    // Image Plane
                                       .mat       = &scene.mats[1], // Image Material
                                       .visible   = true,
-                                      .transform = Transform_Set((vec3){0.0, 0.0, -0.75}, (vec3){-M_PI / 2.0, 0.0, 0.0}, (vec3){1.75, 1.75, 1.0})};
+                                      .transform = Transform_Set((vec3){0.0, 0.0, -0.75}, (vec3){-M_PI / 2.0, 0.0, 0.0}, (vec3){1.75, 1.75, 1.0}, false)};
 
     scene.objects.shapes[2] = (Shape){.type      = SHAPE_SPHERE,   // Sphere
                                       .mat       = &scene.mats[2], // Sphere Material 1
                                       .visible   = true,
-                                      .transform = Transform_Set((vec3){-2.0, -2.0, 0.25}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75})};
+                                      .transform = Transform_Set((vec3){-2.0, -2.0, 0.25}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75}, false)};
 
     scene.objects.shapes[3] = (Shape){.type      = SHAPE_SPHERE,   // Sphere
                                       .mat       = &scene.mats[3], // Sphere Material 2
                                       .visible   = true,
-                                      .transform = Transform_Set((vec3){-2.0, -0.5, 0.25}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75})};
+                                      .transform = Transform_Set((vec3){-2.0, -0.5, 0.25}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75}, false)};
 
     scene.objects.shapes[4] = (Shape){.type      = SHAPE_SPHERE,   // Sphere
                                       .mat       = &scene.mats[4], // Sphere Material 3
                                       .visible   = true,
-                                      .transform = Transform_Set((vec3){-2.0, -1.25, -1.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75})};
+                                      .transform = Transform_Set((vec3){-2.0, -1.25, -1.0}, (vec3){0.0, 0.0, 0.0}, (vec3){0.75, 0.75, 0.75}, false)};
 
     return scene;
 }
