@@ -98,7 +98,7 @@ void Ray_Tracing_Update()
                 if (Raycaster.scene.objects.shapes[closest_object_index].mat)
                 {
                     // Use the material to compute the color.
-                    // Material_Set_Reflection_Ray_Count(0); // NOTE : can this be moved?
+                    Material_Set_Reflection_Ray_Count(0);
 
                     // Call the matrials Compute_Colour - eg, basic material
                     const vec3 colour = Material_Compute_Colour(Raycaster.scene.objects,

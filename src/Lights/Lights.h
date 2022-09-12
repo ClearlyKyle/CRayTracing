@@ -24,6 +24,7 @@ enum LightTypes
 
 typedef union
 {
+    // enum LightTypes type;
     PointLight pointLight;
 } LightObjects;
 
@@ -31,6 +32,7 @@ typedef struct LightArray
 {
     enum LightTypes type;
     LightObjects    object;
+    // PointLight      pointLight;
 } LightArray;
 
 typedef struct Lights
