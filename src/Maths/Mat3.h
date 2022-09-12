@@ -46,7 +46,7 @@ inline mat3 mat3_mul_mat3(const mat3 mat1, const mat3 mat2)
 
 inline mat3 mat3_scale(const mat3 mat, const double s)
 {
-    mat3 dest = {0};
+    mat3 dest = mat;
 
     dest.elements[0][0] *= s;
     dest.elements[0][1] *= s;
@@ -65,10 +65,10 @@ inline mat3 mat3_inverse(const mat3 mat)
 {
     mat3 dest = {0};
 
-    double det;
-    double a = mat.elements[0][0], b = mat.elements[0][1], c = mat.elements[0][2],
-           d = mat.elements[1][0], e = mat.elements[1][1], f = mat.elements[1][2],
-           g = mat.elements[2][0], h = mat.elements[2][1], i = mat.elements[2][2];
+    double       det;
+    const double a = mat.elements[0][0], b = mat.elements[0][1], c = mat.elements[0][2],
+                 d = mat.elements[1][0], e = mat.elements[1][1], f = mat.elements[1][2],
+                 g = mat.elements[2][0], h = mat.elements[2][1], i = mat.elements[2][2];
 
     dest.elements[0][0] = e * i - f * h;
     dest.elements[0][1] = -(b * i - h * c);
@@ -80,7 +80,7 @@ inline mat3 mat3_inverse(const mat3 mat)
     dest.elements[2][1] = -(a * h - g * b);
     dest.elements[2][2] = a * e - b * d;
 
-    det = 1.0f / (a * dest.elements[0][0] + b * dest.elements[1][0] + c * dest.elements[2][0]);
+    det = 1.0 / (a * dest.elements[0][0] + b * dest.elements[1][0] + c * dest.elements[2][0]);
 
     return mat3_scale(dest, det);
 }
@@ -104,7 +104,8 @@ inline void mat3_transpose(mat3 *mat)
     mat->elements[2][1] = tmp.elements[2][1];
 }
 
-inline mat3 mat3_transpose_to(const mat3 mat)
+// source matrix will not be transposed unless dest is mat
+inline mat3 mat3_transpose_to(mat3 mat)
 {
     mat3 dest = {0};
 
