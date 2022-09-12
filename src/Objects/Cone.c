@@ -124,19 +124,13 @@ bool Cone_Test_Intersection(Shape *const shape,
         *int_point = Transform_Apply_Forward(transform, valid_POI);
 
         // Compute the local normal.
-        vec3       local_origin = {0.0, 0.0, 0.0};
-        const vec3 globalOrigin = Transform_Apply_Forward(transform, local_origin);
-
         vec3 org_normal;
         org_normal.x = valid_POI.x;
         org_normal.y = valid_POI.y;
         org_normal.z = -sqrt(pow(org_normal.x, 2.0) + pow(org_normal.y, 2.0));
 
-        vec3 new_normal = vec3_sub(Transform_Apply_Forward(transform, org_normal), globalOrigin);
-        new_normal      = vec3_normalise(new_normal);
-
-        *local_normal = new_normal;
-        *local_colour = shape->base_colour;
+        *local_normal = Transform_Apply_Normal(transform, org_normal);
+        *local_normal = vec3_normalise(*local_normal);
 
         // UV Coordinates
         const double x = valid_POI.x;
@@ -161,16 +155,11 @@ bool Cone_Test_Intersection(Shape *const shape,
                 // Transform the intersection point back into world coordinates.
                 *int_point = Transform_Apply_Forward(transform, valid_POI);
 
-                // Compute the local normal.
-                vec3 local_origin  = {0.0, 0.0, 0.0};
-                vec3 normal_vector = {0.0, 0.0, 1.0};
+                // Compute the local normal.s
+                const vec3 normal_vector = {0.0, 0.0, 1.0};
+                *local_normal            = Transform_Apply_Normal(transform, normal_vector);
+                *local_normal            = vec3_normalise(*local_normal);
 
-                const vec3 globalOrigin = Transform_Apply_Forward(transform, local_origin);
-
-                vec3 new_normal = vec3_sub(Transform_Apply_Forward(transform, normal_vector), globalOrigin);
-                new_normal      = vec3_normalise(new_normal);
-
-                *local_normal = new_normal;
                 *local_colour = base_colour;
 
                 // UV Coordinates

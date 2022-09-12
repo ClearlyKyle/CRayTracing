@@ -140,14 +140,10 @@ bool Cylinder_Test_Intersection(Shape *const shape,
         *int_point = Transform_Apply_Forward(transform, valid_POI);
 
         // Compute the local normal.
-        vec3       local_origin = {0.0, 0.0, 0.0};
-        const vec3 globalOrigin = Transform_Apply_Forward(transform, local_origin);
-
         const vec3 org_normal = {valid_POI.x, valid_POI.y, 0.0};
-        vec3       new_normal = vec3_sub(Transform_Apply_Forward(transform, org_normal), globalOrigin);
-        new_normal            = vec3_normalise(new_normal);
+        *local_normal         = Transform_Apply_Normal(transform, org_normal);
+        *local_normal         = vec3_normalise(*local_normal);
 
-        *local_normal = new_normal;
         *local_colour = base_colour;
 
         // UV Coordinates
@@ -174,15 +170,10 @@ bool Cylinder_Test_Intersection(Shape *const shape,
                 *int_point = Transform_Apply_Forward(transform, valid_POI);
 
                 // Compute the local normal.
-                vec3 local_origin  = {0.0, 0.0, 0.0};
-                vec3 normal_vector = {0.0, 0.0, 0.0 + valid_POI.z};
+                const vec3 normal_vector = {0.0, 0.0, 0.0 + valid_POI.z};
+                *local_normal            = Transform_Apply_Normal(transform, normal_vector);
+                *local_normal            = vec3_normalise(*local_normal);
 
-                const vec3 globalOrigin = Transform_Apply_Forward(transform, local_origin);
-
-                vec3 new_normal = vec3_sub(Transform_Apply_Forward(transform, normal_vector), globalOrigin);
-                new_normal      = vec3_normalise(new_normal);
-
-                *local_normal = new_normal;
                 *local_colour = base_colour;
 
                 // UV Coordinates
