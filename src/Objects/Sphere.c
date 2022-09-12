@@ -43,7 +43,7 @@ bool Sphere_Test_Intersection(Shape *const shape,
 
         /* If either t1 or t2 are negative, then at least part of the object is
                 behind the camera and so we will ignore it. */
-        if ((t1 < 0.0) || (t2 < 0.0))
+        if ((t1 < 0.0) && (t2 < 0.0))
         {
             return false;
         }
@@ -52,21 +52,47 @@ bool Sphere_Test_Intersection(Shape *const shape,
             // Determine which point of intersection was closest to the camera.
             if (t1 < t2)
             {
-                poi = vec3_add(back_ray.point1, vec3_mul_scal(vhat, t1));
+                if (t1 > 0.0)
+                {
+                    poi = vec3_add(back_ray.point1, vec3_mul_scal(vhat, t1));
+                }
+                else
+                {
+                    if (t2 > 0.0)
+                    {
+                        poi = vec3_add(back_ray.point1, vec3_mul_scal(vhat, t2));
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
             }
             else
             {
-                poi = vec3_add(back_ray.point1, vec3_mul_scal(vhat, t2));
+                if (t2 > 0.0)
+                {
+                    poi = vec3_add(back_ray.point1, vec3_mul_scal(vhat, t2));
+                }
+                else
+                {
+                    if (t1 > 0.0)
+                    {
+                        poi = vec3_add(back_ray.point1, vec3_mul_scal(vhat, t1));
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
             }
 
             // Transform the intersection point back into world coordinates.
             *int_point = Transform_Apply_Forward(transform, poi);
 
             // Compute the local normal (easy for a sphere at the origin!).
-            const vec3 origin     = {0.0, 0.0, 0.0};
-            const vec3 new_origin = Transform_Apply_Forward(transform, origin);
-
-            *local_normal = vec3_normalise(vec3_sub(*int_point, new_origin));
+            *local_normal = Transform_Apply_Normal(transform, poi);
+            *local_normal = vec3_normalise(*local_normal);
 
             // Return the base color.
             *local_colour = base_colour;
@@ -76,15 +102,12 @@ bool Sphere_Test_Intersection(Shape *const shape,
             const double y = poi.y;
             const double z = poi.z;
 
-            double u = atan(sqrt(pow(x, 2.0) + pow(y, 2.0)) / z);
-            double v = atan(y / x);
-            if (x < 0.0)
-            {
-                v += M_PI;
-            }
+            const double one_over_pie = 1.0 / M_PI;
+            const double u            = atan2(sqrt(pow(x, 2.0) + pow(y, 2.0)), z) * one_over_pie;
+            const double v            = atan2(y, x) * one_over_pie;
 
-            u /= M_PI;
-            v /= M_PI;
+            // u /= M_PI;
+            // v /= M_PI;
 
             shape->uv_coordinates = (vec2){u, v};
         }

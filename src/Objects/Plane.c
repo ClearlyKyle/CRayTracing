@@ -41,12 +41,9 @@ bool Plane_Test_Intersection(Shape *const shape,
                 *int_point = Transform_Apply_Forward(transform, poi);
 
                 // Compute the local normal.
-                const vec3 localOrigin  = {0.0, 0.0, 0.0};
-                const vec3 normalVector = {0.0, 0.0, -1.0};
-
-                const vec3 globalOrigin = Transform_Apply_Forward(transform, localOrigin);
-                *local_normal           = vec3_sub(Transform_Apply_Forward(transform, normalVector), globalOrigin);
-                *local_normal           = vec3_normalise(*local_normal);
+                const vec3 normal_vector = {0.0, 0.0, -1.0};
+                *local_normal            = Transform_Apply_Normal(transform, normal_vector);
+                *local_normal            = vec3_normalise(*local_normal);
 
                 // Return the base color.
                 *local_colour = base_colour;
