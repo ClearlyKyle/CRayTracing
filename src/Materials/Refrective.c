@@ -3,7 +3,7 @@
 #include "../Lights/Lights.h"
 
 // Forward declarations
-static vec3 Material_Refractive_Compute_Translucency(Objects objects, const Lights lights, const size_t current_object_index, vec3 *const int_point, vec3 *const local_normal, const Ray *indicent_ray);
+static vec3 Material_Refractive_Compute_Translucency(const Material mat, Objects objects, const Lights lights, const size_t current_object_index, vec3 *const int_point, vec3 *const local_normal, const Ray *indicent_ray);
 static vec3 Material_Refractive_Compute_Specular(const Material mat, Objects objects, const Lights lights, vec3 *const int_point, vec3 *const local_normal, const Ray *camera_ray);
 
 vec3 Material_Refrective_Compute_Colour(Objects      objects,
@@ -33,6 +33,7 @@ vec3 Material_Refrective_Compute_Colour(Objects      objects,
     {
         dif_colour = Material_Base_Compute_Diffuse_Colour(objects, lights, current_object_index, int_point, local_normal, mat.base_colour);
     }
+
     // Compute the reflection component.
     if (mat.reflectivity > 0.0)
         ref_colour = Material_Base_Compute_Reflection_Colour(objects, lights, current_object_index, int_point, local_normal, camera_ray, mat.base_colour);
@@ -44,7 +45,7 @@ vec3 Material_Refrective_Compute_Colour(Objects      objects,
 
     // Compute the refractive component.
     if (mat.translucency > 0.0)
-        trn_colour = Material_Refractive_Compute_Translucency(objects, lights, current_object_index, int_point, local_normal, camera_ray);
+        trn_colour = Material_Refractive_Compute_Translucency(mat, objects, lights, current_object_index, int_point, local_normal, camera_ray);
 
     // And combine with the current color.
     mat_colour.x = (trn_colour.x * mat.translucency) + (mat_colour.x * (1.0 - mat.translucency));
@@ -64,10 +65,10 @@ vec3 Material_Refrective_Compute_Colour(Objects      objects,
 static Ray _Compute_Refracted_Ray(const Ray indicent_ray, vec3 normal, vec3 int_point, const double ior)
 {
     // Compute the refracted vector.
-    vec3 p          = vec3_normalise(indicent_ray.lab);
-    vec3 tmp_normal = normal;
+    const vec3 p          = vec3_normalise(indicent_ray.lab);
+    vec3       tmp_normal = normal;
 
-    const double r = 1.0 / ior;
+    const double r = ior;
     double       c = -vec3_dot(tmp_normal, p);
 
     if (c < 0.0)
@@ -90,42 +91,18 @@ static Ray _Compute_Refracted_Ray(const Ray indicent_ray, vec3 normal, vec3 int_
     return refracted_ray;
 }
 
-static vec3 Material_Refractive_Compute_Translucency(Objects      objects,
-                                                     const Lights lights,
-                                                     const size_t current_object_index,
-                                                     vec3 *const  int_point,
-                                                     vec3 *const  local_normal,
-                                                     const Ray   *indicent_ray)
+static vec3 Material_Refractive_Compute_Translucency(const Material mat,
+                                                     Objects        objects,
+                                                     const Lights   lights,
+                                                     const size_t   current_object_index,
+                                                     vec3 *const    int_point,
+                                                     vec3 *const    local_normal,
+                                                     const Ray     *indicent_ray)
 {
-    double ior = 1.0;
+    const double ior = mat.ior;
 
-    vec3 trn_colour = VEC3_INIT_ZERO;
-
-    //// Compute the refracted vector.
-    // vec3 p          = vec3_normalise(indicent_ray->lab);
-    // vec3 tmp_normal = *local_normal;
-
-    // const double r = 1.0 / ior;
-    // double       c = -vec3_dot(tmp_normal, p);
-
-    // if (c < 0.0)
-    //{
-    //     tmp_normal = vec3_mul_scal(tmp_normal, -1.0);
-    //     c          = -vec3_dot(tmp_normal, p);
-    // }
-
-    //// vec3 refracted_vector = r * p + (r * c - sqrtf(1.0 - pow(r, 2.0) * (1.0 - pow(c, 2.0)))) * tempNormal;
-    // const double brackets         = (r * c - sqrtf(1.0 - pow(r, 2.0) * (1.0 - pow(c, 2.0))));
-    // const vec3   right_of_mul     = vec3_mul_scal(tmp_normal, brackets);
-    // const vec3   left_of_add      = vec3_mul_scal(p, r);
-    // const vec3   refracted_vector = vec3_add(left_of_add, right_of_mul);
-
-    //// Construct the refracted ray.
-    // const vec3 ray_p1        = vec3_add(*int_point, vec3_mul_scal(refracted_vector, 0.01));
-    // const vec3 ray_p2        = vec3_add(*int_point, refracted_vector);
-    // const Ray  refracted_ray = Ray_Init(ray_p1, ray_p2);
-
-    const Ray refracted_ray = _Compute_Refracted_Ray(*indicent_ray, *local_normal, *int_point, ior);
+    // Compute Refracted ray, CARE! look at "1.0 / ior"
+    const Ray refracted_ray = _Compute_Refracted_Ray(*indicent_ray, *local_normal, *int_point, 1.0 / ior);
 
     // Test for secondary intersection with this object.
     size_t closest_object;
@@ -148,28 +125,6 @@ static vec3 Material_Refractive_Compute_Translucency(Objects      objects,
     if (test)
     {
         // Compute the refracted vector.
-        // const vec3 p2          = vec3_normalise(refracted_ray.lab);
-        // vec3       tmp_normal2 = new_local_normal;
-
-        // const double r2 = ior;
-        // double       c2 = -vec3_dot(tmp_normal2, p2);
-        // if (c2 < 0.0)
-        //{
-        //     tmp_normal2 = vec3_mul_scal(tmp_normal2, -1.0);
-        //     c2          = -vec3_dot(tmp_normal2, p2);
-        // }
-
-        //// vec3 refracted_vector2 = r2 * p2 + (r2 * c2 - sqrtf(1.0 - pow(r2, 2.0) * (1.0 - pow(c2, 2.0)))) * tempNormal2;
-        // const double brackets2         = (r2 * c2 - sqrtf(1.0 - pow(r2, 2.0) * (1.0 - pow(c2, 2.0))));
-        // const vec3   right_of_mul2     = vec3_mul_scal(tmp_normal2, brackets2);
-        // const vec3   left_of_add2      = vec3_mul_scal(p2, r2);
-        // const vec3   refracted_vector2 = vec3_add(left_of_add2, right_of_mul2);
-
-        //// Construct the refracted ray.
-        // const vec3 ray_p1         = vec3_add(*int_point, vec3_mul_scal(refracted_vector, 0.01));
-        // const vec3 ray_p2         = vec3_add(*int_point, refracted_vector);
-        // const Ray  refracted_ray2 = Ray_Init(ray_p1, ray_p2);
-
         const Ray refracted_ray2 = _Compute_Refracted_Ray(refracted_ray, new_local_normal, new_int_point, ior);
 
         // Cast this ray into the scene.
@@ -207,7 +162,6 @@ static vec3 Material_Refractive_Compute_Translucency(Objects      objects,
         // Leave matColor as it is.
     }
 
-    trn_colour = mat_colour;
     return mat_colour;
 }
 
@@ -232,7 +186,7 @@ static vec3 Material_Refractive_Compute_Specular(const Material mat,
         const vec3 light_direction = vec3_normalise(vec3_sub(lights.lights[current_light].object.pointLight.location, *int_point));
 
         // Compute a start point.
-        const vec3 start_point = vec3_add(*int_point, vec3_add_scal(light_direction, 0.001));
+        const vec3 start_point = vec3_add(*int_point, vec3_mul_scal(light_direction, 0.001));
 
         // Construct a ray from the point of intersection to the light.
         const Ray light_ray = Ray_Init(start_point, vec3_add(start_point, light_direction));
@@ -257,14 +211,11 @@ static vec3 Material_Refractive_Compute_Specular(const Material mat,
             }
         }
 
-        /* If no intersections were found, then proceed with
-                computing the specular component. */
+        /* If no intersections were found, then proceed with computing the specular component. */
         if (!valid_intersection)
         {
             // Compute the reflection vector.
-            const vec3 d = light_ray.lab;
-
-            const vec3 r = vec3_normalise(vec3_reflection(d, *local_normal));
+            const vec3 r = vec3_normalise(vec3_reflection(light_ray.lab, *local_normal));
 
             // Compute the dot product.
             const vec3   v           = vec3_normalise(camera_ray->lab);
