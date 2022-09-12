@@ -9,8 +9,6 @@ vec3 Material_Compute_Colour(Objects      objects,
                              vec3 *const  local_normal,
                              const Ray   *camera_ray)
 {
-    Reflection_Ray_Count = 0;
-
     const enum Matrial_type current_material_type = objects.shapes[current_object_index].mat->type;
 
     return Compute_Colour_fptr_array[current_material_type](objects,

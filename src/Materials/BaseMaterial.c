@@ -2,10 +2,10 @@
 
 #include "../Lights/Lights.h"
 
-// void Material_Set_Reflection_Ray_Count(const int value)
-//{
-//     Reflection_Ray_Count = value;
-// }
+void Material_Set_Reflection_Ray_Count(const int value)
+{
+    Reflection_Ray_Count = value;
+}
 
 // BASE MATERIAL
 vec3 Material_Base_Compute_Colour(Objects      objects,
@@ -57,6 +57,7 @@ vec3 Material_Base_Compute_Diffuse_Colour(Objects      objects,
             // app.running = false;
             break;
         }
+
         if (validIllum)
         {
             illumFound = true;
@@ -71,6 +72,12 @@ vec3 Material_Base_Compute_Diffuse_Colour(Objects      objects,
         diffuse_colour.x = red * base_colour.x;
         diffuse_colour.y = green * base_colour.y;
         diffuse_colour.z = blue * base_colour.z;
+    }
+    else
+    {
+        diffuse_colour.x = Ambient_Colour.x * Ambient_Intensity * base_colour.x;
+        diffuse_colour.y = Ambient_Colour.y * Ambient_Intensity * base_colour.y;
+        diffuse_colour.z = Ambient_Colour.z * Ambient_Intensity * base_colour.z;
     }
 
     // Return the material color.

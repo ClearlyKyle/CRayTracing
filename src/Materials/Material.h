@@ -24,6 +24,7 @@ typedef struct Material
     double             reflectivity;
     double             shininess;
 
+    // Refractive Paramters
     double translucency;
     double ior;
 
@@ -32,9 +33,11 @@ typedef struct Material
 } Material;
 
 // ----------------------------------------------------------------------
-static const int Max_Reflection_Rays  = 3;
-static int       Reflection_Ray_Count = 0;
-// void             Material_Set_Reflection_Ray_Count(const int value);
+static const vec3   Ambient_Colour       = {1.0, 1.0, 1.0};
+static const double Ambient_Intensity    = 0.2;
+static const int    Max_Reflection_Rays  = 3;
+static int          Reflection_Ray_Count = 0;
+void                Material_Set_Reflection_Ray_Count(const int value);
 
 // Compute Colour Function pointer
 typedef vec3 (*Compute_Colour_fptr)(Objects objects, const Lights lights, const size_t current_object_index, vec3 *const int_point, vec3 *const local_normal, const Ray *camera_ray);
