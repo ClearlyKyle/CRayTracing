@@ -16,7 +16,7 @@ enum Shapes
     SHAPE_PLANE,
     SHAPE_CYLINDER,
     SHAPE_CONE,
-    SHAPE_BOX,
+    SHAPE_CUBE,
     SHAPE_COUNT,
 };
 
@@ -65,18 +65,18 @@ bool Cone_Test_Intersection(Shape *const shape,
                             vec3 *const  local_normal,
                             vec3 *const  local_colour);
 
-bool Box_Test_Intersection(Shape *const shape,
-                           const Ray    ray,
-                           vec3 *const  int_point,
-                           vec3 *const  local_normal,
-                           vec3 *const  local_colour);
+bool Cube_Test_Intersection(Shape *const shape,
+                            const Ray    ray,
+                            vec3 *const  int_point,
+                            vec3 *const  local_normal,
+                            vec3 *const  local_colour);
 
 const static shape_test_intersection _intersection_functions[] = {
     Sphere_Test_Intersection,
     Plane_Test_Intersection,
     Cylinder_Test_Intersection,
     Cone_Test_Intersection,
-    Box_Test_Intersection,
+    Cube_Test_Intersection,
 };
 
 // -------------------------------------------------
