@@ -1,10 +1,10 @@
 #include "Objects.h"
 
-bool Box_Test_Intersection(Shape *const shape,
-                           const Ray    ray,
-                           vec3 *const  int_point,
-                           vec3 *const  local_normal,
-                           vec3 *const  local_colour)
+bool Cube_Test_Intersection(Shape *const shape,
+                            const Ray    ray,
+                            vec3 *const  int_point,
+                            vec3 *const  local_normal,
+                            vec3 *const  local_colour)
 {
     if (!shape->visible)
         return false;
@@ -114,7 +114,7 @@ bool Box_Test_Intersection(Shape *const shape,
         const vec3 poi = vec3_add(bck_ray.point1, vec3_mul_scal(k, final_t));
 
         // Compute the normal vector
-        vec3 normal_vector;
+        vec3 normal_vector = VEC3_INIT_ZERO;
         switch (final_index)
         {
         case 0:
@@ -146,7 +146,7 @@ bool Box_Test_Intersection(Shape *const shape,
         *int_point = Transform_Apply_Forward(transform, poi);
 
         // Transform the normal vector.
-        *local_normal = Transform_Apply_Normal(transform, *local_normal);
+        *local_normal = Transform_Apply_Normal(transform, normal_vector);
         *local_normal = vec3_normalise(*local_normal);
 
         // Return the base color.
