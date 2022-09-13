@@ -10,6 +10,7 @@
 #include "Scenes/Scene_Texture_Mapping.h"
 #include "Scenes/Scene_Image_Texture.h"
 #include "Scenes/Scene_Refractive_Shapes.h"
+#include "Scenes/Scene_Cube.h"
 
 static struct Raycaster
 {
@@ -29,7 +30,8 @@ void Ray_Tracing_Init()
     // Raycaster.scene = Scene_Multiple_Shapes();
     // Raycaster.scene = Scene_Texture_Mapping();
     // Raycaster.scene = Scene_Image_Texture();
-    Raycaster.scene = Scene_Refractive_Shapes();
+    // Raycaster.scene = Scene_Refractive_Shapes();
+    Raycaster.scene = Scene_Cube();
 }
 
 void Ray_Tracing_Update()
